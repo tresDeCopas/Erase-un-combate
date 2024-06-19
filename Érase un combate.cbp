@@ -53,7 +53,11 @@
 		<Unit filename="AnimacionPorFrames.hpp" />
 		<Unit filename="Bitacora.cpp" />
 		<Unit filename="Bitacora.hpp" />
+		<Unit filename="Combate.cpp" />
+		<Unit filename="Combate.hpp" />
 		<Unit filename="Constantes.hpp" />
+		<Unit filename="ContenedorDePersonajes.cpp" />
+		<Unit filename="ContenedorDePersonajes.hpp" />
 		<Unit filename="ContenedorDeRecursos.hpp" />
 		<Unit filename="ContenedorDeRecursos.tpp" />
 		<Unit filename="Enums.hpp" />
@@ -61,6 +65,8 @@
 		<Unit filename="GestorDeControles.hpp" />
 		<Unit filename="Hitbox.cpp" />
 		<Unit filename="Hitbox.hpp" />
+		<Unit filename="JuanCuesta.cpp" />
+		<Unit filename="JuanCuesta.hpp" />
 		<Unit filename="Personaje.cpp" />
 		<Unit filename="Personaje.hpp" />
 		<Unit filename="ReproductorDeMusica.cpp" />

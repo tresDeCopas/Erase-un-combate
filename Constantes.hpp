@@ -70,4 +70,11 @@ const sf::Keyboard::Key TECLA_SALIDA = sf::Keyboard::Key::Escape;
 // Volumen máximo del reproductor de música
 const float VOLUMEN_MAXIMO_MUSICA = 100.0;
 
+/*
+    CONSTANTES PARA LOS PERSONAJES
+*/
+
+// Puntos de vida máximos de un personaje
+const int MAX_PUNTOS_DE_VIDA = 100;
+
 #endif // __CONSTANTES_HPP__

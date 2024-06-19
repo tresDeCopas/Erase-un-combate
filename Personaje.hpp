@@ -33,6 +33,9 @@ class Personaje : public sf::Drawable {
 
     public:
 
+        // Construye el personaje
+        Personaje(std::map<EstadoPersonaje,Animacion*> animaciones);
+
         // Indica que se está pulsando un botón
         void realizarAccion(Accion accion);
 
@@ -49,8 +52,14 @@ class Personaje : public sf::Drawable {
         // Devuelve los puntos de vida actuales
         int getPuntosDeVida();
 
+        // Establece el jugador asociado
+        void setJugador(Jugador jugador);
+
         // Cambia el estado
         void cambiarEstado(EstadoPersonaje estadoNuevo);
+
+        // Devuelve un puntero a un clon del personaje
+        virtual Personaje * clonar() = 0;
 
         // Las clases que heredan de sf::Drawable deben implementar draw
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
