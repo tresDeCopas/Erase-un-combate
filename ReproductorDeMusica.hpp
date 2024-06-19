@@ -1,43 +1,58 @@
-#ifndef __MUSIC_PLAYER_HPP__
-#define __MUSIC_PLAYER_HPP__
+#ifndef __REPRODUCTOR_DE_MUSICA_HPP__
+#define __REPRODUCTOR_DE_MUSICA_HPP__
 
 #include <SFML/Audio.hpp>
-#include "Utilities.hpp"
+#include "Constantes.hpp"
+#include "Enums.hpp"
 #include <string>
 #include <map>
 
-// Plays music (no way)
-// MusicPlayer is a Singleton
-class MusicPlayer
+/*
+    Clase que se encarga de reproducir música para que el
+    resto de clases no se tengan que preocupar de eso
+*/
+class ReproductorDeMusica
 {
-    protected:
-        MusicPlayer(){}
-
-        static MusicPlayer * musicPlayer;
-
     private:
-        sf::Music currentMusic;
-        std::map<MusicID, std::string> filenames;
+        ReproductorDeMusica(){
+            volumenActual = VOLUMEN_MAXIMO_MUSICA;
+        }
+
+        static ReproductorDeMusica * reproductorDeMusica;
+
+        sf::Music musicaActual;
+        std::map<IDMusica, std::string> rutasDeFicheros;
+        float volumenActual;
 
     public:
-        void load(MusicID identifier, const std::string path);
-        void play(MusicID theme);
-        void stop();
-        float getVolume();
-        void alterVolume(float change);
 
-        // Load all music from its files in disk
-        void loadAllMusic();
+        // Guarda la ruta indicada en el mapa de rutas para acceder después
+        void cargar(IDMusica identificador, const std::string ruta);
 
-        // NEVER COPY A SINGLETON
-        MusicPlayer(MusicPlayer &other) = delete;
+        // Reproduce la canción dado su identificador
+        void reproducir(IDMusica cancion);
 
-        // NEVER ASSIGN A SINGLETON
-        void operator=(const MusicPlayer &) = delete;
+        // Detiene por completo la reproducción de la canción
+        void detener();
 
-        // Extremeny important static method to get the instance
-        static MusicPlayer * getInstance();
+        // Devuelve el volumen de la canción actual
+        float obtenerVolumen();
+
+        // Establece el nuevo volumen para la canción actual y las siguientes
+        void establecerVolumen(float nuevoVolumen);
+
+        // Carga todas las canciones
+        void cargarTodaLaMusica();
+
+        // NUNCA SE COPIA UN SINGLETON
+        ReproductorDeMusica(ReproductorDeMusica &otro) = delete;
+
+        // NUNCA SE ASIGNA UN SINGLETON
+        void operator=(const ReproductorDeMusica &) = delete;
+
+        // Devuelve la única instancia
+        static ReproductorDeMusica * unicaInstancia();
 
 };
 
-#endif // __MUSIC_PLAYER_HPP__
+#endif // __REPRODUCTOR_DE_MUSICA_HPP__
