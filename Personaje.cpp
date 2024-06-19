@@ -4,6 +4,8 @@
 
 Personaje::Personaje(std::map<EstadoPersonaje,Animacion*> animaciones){
     puntosDeVida = MAX_PUNTOS_DE_VIDA;
+    velY = 0;
+    velX = 0;
 }
 
 void Personaje::realizarAccion(Accion accion){
@@ -27,4 +29,8 @@ void Personaje::cambiarEstado(EstadoPersonaje estadoNuevo){
     animaciones.at(estadoNuevo)->setPosicion(animaciones.at(estado)->getPosicion());
     animaciones.at(estadoNuevo)->resetear();
     estado = estadoNuevo;
+}
+
+void Personaje::draw(sf::RenderTarget& target, sf::RenderStates states) const{
+    target.draw(*(animaciones.at(estado)),states);
 }

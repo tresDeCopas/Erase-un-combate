@@ -15,13 +15,11 @@ class JuanCuesta : public Personaje {
 
         using Personaje::Personaje;
 
-        virtual void actualizar();
+        virtual void actualizar(sf::Vector2u posicionEnemigo);
 
         virtual void comprobarColisiones(std::list<Animacion*> &animaciones);
 
         virtual Personaje * clonar();
-
-        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 
 #endif // __JUAN_CUESTA_HPP__

@@ -74,7 +74,19 @@ const float VOLUMEN_MAXIMO_MUSICA = 100.0;
     CONSTANTES PARA LOS PERSONAJES
 */
 
+// Gravedad del escenario
+const float GRAVEDAD = 0.4;
+
 // Puntos de vida máximos de un personaje
 const int MAX_PUNTOS_DE_VIDA = 100;
+
+// Velocidad máxima en el eje X a la que se puede mover un personaje
+const float VELOCIDAD_ANDAR_MAX = 3;
+
+// Aumento de velocidad cada frame al andar
+const float VELOCIDAD_ANDAR_AUMENTO = 0.5;
+
+// Velocidad que se consigue en el eje Y al saltar
+const float VELOCIDAD_SALTO = -3;
 
 #endif // __CONSTANTES_HPP__

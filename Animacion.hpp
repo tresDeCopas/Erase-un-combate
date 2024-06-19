@@ -6,7 +6,7 @@
 /*
     Clase abstracta para cualquier tipo de animaciones
 */
-class Animacion {
+class Animacion : public sf::Drawable {
     protected:
         // Sprite para la animación
         sf::Sprite sprite;

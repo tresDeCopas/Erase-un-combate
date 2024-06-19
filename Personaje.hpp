@@ -14,10 +14,16 @@
 */
 class Personaje : public sf::Drawable {
 
-    private:
+    protected:
 
         // Cantidad actual de puntos de vida
         int puntosDeVida;
+
+        // Velocidad en el eje Y
+        float velY;
+
+        // Velocidad en el eje X
+        float velX;
 
         // Jugador al que está asociado el personaje
         Jugador jugador;
@@ -43,7 +49,7 @@ class Personaje : public sf::Drawable {
         void detenerAccion(Accion accion);
 
         // Actualiza la posición del personaje y demás según los botones que estén pulsados
-        virtual void actualizar() = 0;
+        virtual void actualizar(sf::Vector2u posicionEnemigo) = 0;
 
         // Comprueba si la hitbox del personaje ha colisionado con algún ataque enemigo y
         // reacciona de forma adecuada
@@ -62,7 +68,7 @@ class Personaje : public sf::Drawable {
         virtual Personaje * clonar() = 0;
 
         // Las clases que heredan de sf::Drawable deben implementar draw
-        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
+        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 };
 
