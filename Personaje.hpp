@@ -8,13 +8,13 @@
 #include <list>
 
 /*
-    Esta clase abstracta define las cualidades de un personaje genérico
-    Los personajes creados deben heredar de esta clase obligatoriamente e implementar
-    todas las funciones por su cuenta, incluyendo el constructor
+    Esta clase define las cualidades de un personaje genérico, pudiendo ser
+    utilizada por todos los posibles personajes al ser estos lo suficientemente
+    parecidos como para compartir clase
 */
 class Personaje : public sf::Drawable {
 
-    protected:
+    private:
 
         // Cantidad actual de puntos de vida
         int puntosDeVida;
@@ -24,6 +24,9 @@ class Personaje : public sf::Drawable {
 
         // Velocidad en el eje X
         float velX;
+
+        // Verdadero si el personaje está mirando hacia la derecha (el enemigo está a la derecha)
+        bool mirandoDerecha;
 
         // Jugador al que está asociado el personaje
         Jugador jugador;
@@ -37,6 +40,15 @@ class Personaje : public sf::Drawable {
         // Indica qué acciones están siendo realizadas
         std::map<Accion,bool> accionesRealizadas;
 
+        // Función auxiliar para moverse un poco a la derecha
+        void moverseDerecha();
+
+        // Función auxiliar para moverse un poco a la izquierda
+        void moverseIzquierda();
+
+        // Función auxiliar para disminuir la velocidad un poco hacia 0
+        void pararMovimiento();
+
     public:
 
         // Construye el personaje
@@ -49,11 +61,11 @@ class Personaje : public sf::Drawable {
         void detenerAccion(Accion accion);
 
         // Actualiza la posición del personaje y demás según los botones que estén pulsados
-        virtual void actualizar(sf::Vector2u posicionEnemigo) = 0;
+        virtual void actualizar(sf::Vector2f posicionEnemigo);
 
         // Comprueba si la hitbox del personaje ha colisionado con algún ataque enemigo y
         // reacciona de forma adecuada
-        virtual void comprobarColisiones(std::list<Animacion*> &animaciones) = 0;
+        virtual void comprobarColisiones(std::list<Animacion*> &animaciones);
 
         // Devuelve los puntos de vida actuales
         int getPuntosDeVida();
@@ -63,9 +75,6 @@ class Personaje : public sf::Drawable {
 
         // Cambia el estado
         void cambiarEstado(EstadoPersonaje estadoNuevo);
-
-        // Devuelve un puntero a un clon del personaje
-        virtual Personaje * clonar() = 0;
 
         // Las clases que heredan de sf::Drawable deben implementar draw
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

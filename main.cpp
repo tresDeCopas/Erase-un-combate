@@ -9,6 +9,11 @@ int main()
     shape.setPosition(150,100);
     shape.setFillColor(sf::Color::Green);
 
+    sf::Sprite sprite;
+    sf::Texture texture;
+    texture.loadFromFile("sprites/juancuesta/quieto.png");
+    sprite.setTexture(texture);
+
     while (VentanaPrincipal::unicaInstancia()->isOpen())
     {
         sf::Event event;

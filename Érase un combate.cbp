@@ -65,8 +65,6 @@
 		<Unit filename="GestorDeControles.hpp" />
 		<Unit filename="Hitbox.cpp" />
 		<Unit filename="Hitbox.hpp" />
-		<Unit filename="JuanCuesta.cpp" />
-		<Unit filename="JuanCuesta.hpp" />
 		<Unit filename="Personaje.cpp" />
 		<Unit filename="Personaje.hpp" />
 		<Unit filename="ReproductorDeMusica.cpp" />

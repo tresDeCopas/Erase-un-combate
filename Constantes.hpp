@@ -89,4 +89,14 @@ const float VELOCIDAD_ANDAR_AUMENTO = 0.5;
 // Velocidad que se consigue en el eje Y al saltar
 const float VELOCIDAD_SALTO = -3;
 
+// Posición en el eje Y del suelo
+const float ALTURA_SUELO = 180;
+
+/*
+    CONSTANTES AUXILIARES PARA COSAS DE C++
+*/
+
+// Si dos floats se diferencian en menos que este número, se consideran iguales
+const float UMBRAL_FLOAT = 0.0001;
+
 #endif // __CONSTANTES_HPP__

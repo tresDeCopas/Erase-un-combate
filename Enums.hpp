@@ -43,9 +43,10 @@ enum class EstadoPersonaje {
     GOLPEADO_MEDIO,     // Ha sufrido un ataque medio
     GOLPEADO_GRANDE,    // Ha sufrido un ataque grande
     GOLPEADO_BAJO,      // Ha sufrido un ataque bajo
-    SALTANDO,           // Está en el aire después de saltar
-    ANDANDO_IZQUIERDA,  // Está andando hacia la izquierda
-    ANDANDO_DERECHA,    // Está andando hacia la derecha
+    SALTANDO_SUBIENDO,  // Está en el aire subiendo después de saltar
+    SALTANDO_BAJANDO,   // Está en el aire bajando después de saltar y alcanzar la máxima altura
+    ANDANDO_ACERCANDOSE,// Está andando hacia el enemigo
+    ANDANDO_ALEJANDOSE, // Está andando alejándose del enemigo
     BLOQUEANDO,         // Está bloqueando un ataque
     PREPARANDO_SUPER,   // Está preparándose para lanzar el super ataque
     ATACANDO_SUPER,     // Está haciendo el super ataque
@@ -68,16 +69,6 @@ enum class Control{
 /*
     ENUMERADOS DE IDENTIFICADORES
 */
-
-// Enumerado para los identificadores de personajes
-enum class IDPersonaje {
-    JUAN_CUESTA
-};
-
-// Enumerado para los identificadores de escenarios
-enum class IDEscenario {
-
-};
 
 // Enumerado para los identificadores de texturas
 enum class IDTextura {

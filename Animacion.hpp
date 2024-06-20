@@ -19,6 +19,9 @@ class Animacion : public sf::Drawable {
         // Resetea la animación al estado inicial
         virtual void resetear() = 0;
 
+        // Le da la vuelta al sprite
+        void voltear();
+
         // Coloca el sprite en la posición indicada con respecto a la esquina superior
         // izquierda de la ventana
         void setPosicion(float x, float y);
