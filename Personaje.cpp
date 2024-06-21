@@ -1,18 +1,24 @@
 #include "Personaje.hpp"
 #include "Enums.hpp"
 #include "Constantes.hpp"
+#include <iostream>
 
 Personaje::Personaje(std::map<EstadoPersonaje,Animacion*> animaciones){
     puntosDeVida = MAX_PUNTOS_DE_VIDA;
     velY = 0;
     velX = 0;
+    this->animaciones = animaciones;
+    estado = EstadoPersonaje::QUIETO;
+    mirandoDerecha = true;
 }
 
 void Personaje::realizarAccion(Accion accion){
+    std::cerr << "Realizando accion" << std::endl;
     accionesRealizadas[accion] = true;
 }
 
 void Personaje::detenerAccion(Accion accion){
+    std::cerr << "Deteniendo accion" << std::endl;
     accionesRealizadas[accion] = false;
 }
 
@@ -20,8 +26,28 @@ int Personaje::getPuntosDeVida(){
     return puntosDeVida;
 }
 
+void Personaje::setPosicion(float x, float y){
+    animaciones[estado]->setPosicion(x,y);
+}
+
+void Personaje::setPosicion(sf::Vector2f posicion){
+    animaciones[estado]->setPosicion(posicion);
+}
+
+sf::Vector2f Personaje::getPosicion(){
+    return animaciones[estado]->getPosicion();
+}
+
 void Personaje::setJugador(Jugador jugador){
     this->jugador = jugador;
+}
+
+std::map<EstadoPersonaje,Animacion*> Personaje::getAnimaciones(){
+    return animaciones;
+}
+
+void Personaje::setAnimaciones(std::map<EstadoPersonaje,Animacion*> animaciones){
+    this->animaciones = animaciones;
 }
 
 void Personaje::cambiarEstado(EstadoPersonaje estadoNuevo){
@@ -88,6 +114,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         if(accionesRealizadas[Accion::ARRIBA])
         {
             velY = VELOCIDAD_SALTO;
+            accionesRealizadas[Accion::ARRIBA] = false;
             cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
         }
         else if (accionesRealizadas[Accion::DERECHA])
@@ -118,7 +145,11 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
 
     case EstadoPersonaje::ANDANDO_ACERCANDOSE:
 
-        if(accionesRealizadas[Accion::DERECHA]){
+        if(accionesRealizadas[Accion::ARRIBA]){
+            velY = VELOCIDAD_SALTO;
+            accionesRealizadas[Accion::ARRIBA] = false;
+            cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
+        } else if(accionesRealizadas[Accion::DERECHA]){
             moverseDerecha();
             if(!mirandoDerecha){
                 cambiarEstado(EstadoPersonaje::ANDANDO_ALEJANDOSE);
@@ -136,7 +167,11 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         break;
     case EstadoPersonaje::ANDANDO_ALEJANDOSE:
 
-        if(accionesRealizadas[Accion::DERECHA]){
+        if(accionesRealizadas[Accion::ARRIBA]){
+            velY = VELOCIDAD_SALTO;
+            accionesRealizadas[Accion::ARRIBA] = false;
+            cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
+        } else if(accionesRealizadas[Accion::DERECHA]){
             moverseDerecha();
             if(mirandoDerecha){
                 cambiarEstado(EstadoPersonaje::ANDANDO_ACERCANDOSE);
@@ -155,13 +190,22 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
 
     case EstadoPersonaje::SALTANDO_SUBIENDO:
         velY+=GRAVEDAD;
-        if(velY < 0)
+
+        if(accionesRealizadas[Accion::DERECHA]) moverseDerecha();
+        else if (accionesRealizadas[Accion::IZQUIERDA]) moverseIzquierda();
+
+        if(velY > 0)
             cambiarEstado(EstadoPersonaje::SALTANDO_BAJANDO);
         break;
 
     case EstadoPersonaje::SALTANDO_BAJANDO:
         velY+=GRAVEDAD;
+
+        if(accionesRealizadas[Accion::DERECHA]) moverseDerecha();
+        else if (accionesRealizadas[Accion::IZQUIERDA]) moverseIzquierda();
+
         if(animaciones[estado]->getPosicion().y > ALTURA_SUELO){
+            animaciones[estado]->setPosicion(animaciones[estado]->getPosicion().x,ALTURA_SUELO);
             velY = 0;
             cambiarEstado(EstadoPersonaje::QUIETO);
         }

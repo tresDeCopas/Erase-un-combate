@@ -19,9 +19,9 @@ template <class Recurso, class Identificador>
 class ContenedorDeRecursos;
 
 // Ahora ponemos typedefs para no tener que escribir la biblia cada dos por tres
-typedef ContenedorDeRecursos<sf::Texture,IDTextura> ContenedorDeTexturas;
-typedef ContenedorDeRecursos<sf::SoundBuffer,IDSonido> ContenedorDeSonidos;
-typedef ContenedorDeRecursos<sf::Font,IDFuente> ContenedorDeFuentes;
+typedef ContenedorDeRecursos<sf::Texture,std::string> ContenedorDeTexturas;
+typedef ContenedorDeRecursos<sf::SoundBuffer,std::string> ContenedorDeSonidos;
+typedef ContenedorDeRecursos<sf::Font,std::string> ContenedorDeFuentes;
 
 // Y ahora podemos usar los typedefs
 template <class Recurso, class Identificador>

@@ -1,5 +1,6 @@
 #include "Bitacora.hpp"
 #include "Constantes.hpp"
+#include <iostream>
 
 Bitacora * Bitacora::bitacora = nullptr;
 
@@ -21,7 +22,9 @@ Bitacora::Bitacora(){
     ti = localtime(&tt);
 
     ficheroBitacora << "----------------------------------------------" << std::endl;
-    ficheroBitacora << "Queridos convecinos, gracias por asistir a esta junta. Hoy estamos a: " << asctime(ti) << std::endl << std::endl;
+    ficheroBitacora << "Juan Cuesta: Queridos convecinos, gracias por asistir a esta junta. Hoy estamos a: " << asctime(ti) << std::endl << std::endl;
+
+    comprobarGrafica();
 }
 
 Bitacora::~Bitacora(){
@@ -31,6 +34,8 @@ Bitacora::~Bitacora(){
 void Bitacora::escribir(std::string cosillas)
 {
     ficheroBitacora << cosillas << std::endl;
+    if(DEBUG)
+        std::cerr << cosillas << std::endl;
 }
 
 void Bitacora::comprobarGrafica(){

@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <list>
+#include <memory>
 
 /*
     Esta clase define las cualidades de un personaje genérico, pudiendo ser
@@ -70,8 +71,21 @@ class Personaje : public sf::Drawable {
         // Devuelve los puntos de vida actuales
         int getPuntosDeVida();
 
+        // Establece la posición del personaje
+        void setPosicion(float x, float y);
+        void setPosicion(sf::Vector2f posicion);
+
+        // Devuelve la posición del personaje
+        sf::Vector2f getPosicion();
+
         // Establece el jugador asociado
         void setJugador(Jugador jugador);
+
+        // Devuelve el mapa de animaciones
+        std::map<EstadoPersonaje,Animacion*> getAnimaciones();
+
+        // Establece el mapa de animaciones
+        void setAnimaciones(std::map<EstadoPersonaje,Animacion*> animaciones);
 
         // Cambia el estado
         void cambiarEstado(EstadoPersonaje estadoNuevo);

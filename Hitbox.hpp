@@ -17,16 +17,24 @@ class Hitbox {
         // Daño que quita el ataque de la hitbox (si es un ataque)
         int fuerzaAtaque;
 
+        // Indica si el ataque es bajo (los ataques realizados mientras el
+        // personaje está agachado serán efectivos aún si el otro personaje está
+        // protegiéndose)
+        bool bajo;
+
     public:
 
         // Constructor
-        Hitbox(sf::IntRect rectangulo, int fuerzaAtaque);
+        Hitbox(sf::IntRect rectangulo, int fuerzaAtaque, bool bajo);
 
         // Devuelve el rectángulo
         sf::IntRect getRectangulo();
 
         // Devuelve la fuerza de ataque
         int getFuerzaAtaque();
+
+        // Devuelve si el ataque es bajo
+        bool esAtaqueBajo();
 
 };
 

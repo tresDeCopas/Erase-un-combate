@@ -34,6 +34,9 @@ class Animacion : public sf::Drawable {
         void mover(float x, float y);
         void mover(sf::Vector2f diferencia);
 
+        // Devuelve un clon de la animación
+        virtual Animacion * clonar() = 0;
+
         // Las clases que heredan de sf::Drawable deben implementar draw
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };

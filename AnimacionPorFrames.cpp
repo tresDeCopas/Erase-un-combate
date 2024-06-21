@@ -1,6 +1,7 @@
 #include "AnimacionPorFrames.hpp"
 #include "Constantes.hpp"
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente) {
 
@@ -18,7 +19,15 @@ AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX
 }
 
 void AnimacionPorFrames::actualizar() {
-    // TODO
+    if(tipoBucle == TipoBucle::NORMAL){
+        frameActual++;
+        if(frameActual >= rectanguloCorrespondiente.size()) frameActual = 0;
+    } else if (tipoBucle == TipoBucle::AL_REVES){
+        if(frameActual == 0) frameActual = rectanguloCorrespondiente.size()-1;
+        else frameActual--;
+    }
+
+    sprite.setTextureRect(sf::IntRect(rectanguloCorrespondiente[frameActual]*sprite.getTextureRect().width,0,sprite.getTextureRect().width,sprite.getTextureRect().height));
 }
 
 int AnimacionPorFrames::getNumeroRectangulo() {
@@ -35,13 +44,19 @@ void AnimacionPorFrames::resetear(){
     pingPongHaciaDelante = true;
 }
 
+Animacion * AnimacionPorFrames::clonar(){
+    return new AnimacionPorFrames(*this);
+}
+
 void AnimacionPorFrames::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(sprite,states);
 
-    if(HITBOX_MOSTRAR){
+    if(DEBUG){
         for(Hitbox h : hitboxes.at(rectanguloCorrespondiente.at(frameActual))){
-            sf::RectangleShape rectanguloHitbox;
+            sf::RectangleShape rectanguloHitbox(sf::Vector2f(h.getRectangulo().width,h.getRectangulo().height));
+            rectanguloHitbox.setPosition(h.getRectangulo().left,h.getRectangulo().top);
             rectanguloHitbox.setFillColor(sf::Color::Transparent);
+            rectanguloHitbox.setOutlineThickness(10);
             rectanguloHitbox.setOutlineColor(h.getFuerzaAtaque() > 0 ? HITBOX_ATAQUE_COLOR : HITBOX_NO_ATAQUE_COLOR);
             target.draw(rectanguloHitbox,states);
         }
