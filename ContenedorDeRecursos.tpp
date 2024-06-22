@@ -37,6 +37,11 @@ Recurso& ContenedorDeRecursos<Recurso,Identificador>::obtener(Identificador id){
     // el tipo se sabe por el contexto y no hace falta ponerlo)
     auto encontrado = mapaDeRecursos.find(id);
 
+    if(encontrado == mapaDeRecursos.end()){
+        cargar(id,id);
+        return obtener(id);
+    }
+
     // Una vez se tiene el elemento (es un par (Identificador,std::unique_ptr<Recurso>)), se saca
     // el recurso y se devuelve. Como el segundo elemento es un puntero, se
     // usa el asterisco para decir que vamos a devolver el propio objeto (en realidad
@@ -71,11 +76,13 @@ ContenedorDeFuentes * ContenedorDeRecursos<Recurso,Identificador>::unicaInstanci
 template <class Recurso, class Identificador>
 void ContenedorDeRecursos<Recurso,Identificador>::cargarTodasLasTexturas()
 {
+    /*
     cargar("sprites/juan-cuesta/quieto.png","sprites/juan-cuesta/quieto.png");
     cargar("sprites/juan-cuesta/andando-acercandose.png","sprites/juan-cuesta/andando-acercandose.png");
     cargar("sprites/juan-cuesta/andando-alejandose.png","sprites/juan-cuesta/andando-alejandose.png");
     cargar("sprites/juan-cuesta/saltando-subiendo.png","sprites/juan-cuesta/saltando-subiendo.png");
     cargar("sprites/juan-cuesta/saltando-bajando.png","sprites/juan-cuesta/saltando-bajando.png");
+    */
 }
 
 template <class Recurso, class Identificador>

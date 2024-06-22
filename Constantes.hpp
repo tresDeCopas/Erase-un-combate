@@ -84,6 +84,9 @@ const std::string SECUENCIA_FIN_FICHERO = "####";
     CONSTANTES PARA LOS PERSONAJES
 */
 
+// Origen de los personajes (usando la plantilla)
+const sf::Vector2f PERSONAJE_PLANTILLA_ORIGEN = sf::Vector2f(64,100);
+
 // Gravedad del escenario
 const float GRAVEDAD = 0.3;
 

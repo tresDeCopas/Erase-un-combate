@@ -2,6 +2,7 @@
 #include "ContenedorDeRecursos.hpp"
 #include "Bitacora.hpp"
 #include "Utilidades.hpp"
+#include <SFML/Audio.hpp>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -51,6 +52,9 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
     // En esta variable se guarda el número de rectángulos de la animación actual
     int numeroRectangulos;
+
+    // En esta variable se guarda el sonido que se reproducirá en cada animación
+    sf::Sound sonido;
 
     // Se abre el fichero con información de los personajes
     std::ifstream fichero("ficheros/personajes.txt");
@@ -150,14 +154,42 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                 contadorFrame++;
             }
 
-            Animacion * anim = new AnimacionPorFrames(0,0,64,100,numeroRectangulos,ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
-                                                                            util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo);
+            // Nos saltamos dos líneas, y ahora puede haber información sobre los sonidos o no
+            std::getline(fichero,linea);
+            std::getline(fichero,linea);
+
+            Animacion * anim;
+
+            if(util::separarString(linea,':')[0] == "Sonido"){
+
+                bool repetirSonido = util::separarString(linea,':')[1] == "Repetir";
+
+                sonido.setBuffer(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener("sonidos/"+nombrePersonaje+"/"+nombreEstado+".wav"));
+
+                // Avanzamos de línea para conseguir la lista de frames
+                std::getline(fichero,linea);
+
+                std::set<int> framesConSonido;
+
+                for(std::string s : util::separarString(linea,',')){
+                    framesConSonido.insert(std::stoi(s));
+                }
+
+                anim = new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
+                                              ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
+                                              util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,sonido,framesConSonido,repetirSonido);
+
+                // Nos saltamos dos líneas otra vez para salir de este estado
+                std::getline(fichero,linea);
+                std::getline(fichero,linea);
+
+            } else {
+                anim = new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
+                                              ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
+                                              util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo);
+            }
 
             animaciones.insert(std::pair<EstadoPersonaje,Animacion*>(util::stringAEstadoPersonaje(nombreEstado),anim));
-
-            // Se salta una línea en blanco y se consigue una línea que a lo mejor es para un estado
-            std::getline(fichero,linea);
-            std::getline(fichero,linea);
 
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: se terminó de cargar la animación para el estado " + nombreEstado + ".\n");
         }

@@ -18,12 +18,41 @@ AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX
     resetear();
 }
 
+AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente, sf::Sound sonido, std::set<int> framesConSonido, bool repetirSonido) {
+
+    sprite.setTexture(textura);
+    sprite.setTextureRect(sf::IntRect(0, 0, textura.getSize().x/numRectangulos, textura.getSize().y));
+    sprite.setOrigin(origenX,origenY);
+    sprite.setPosition(posicionX,posicionY);
+
+    this->tipoBucle = tipoBucle;
+    this->numRepeticionesTotal = numRepeticionesTotal;
+    this->hitboxes = hitboxes;
+    this->rectanguloCorrespondiente = rectanguloCorrespondiente;
+    this->sonido = sonido;
+    this->framesConSonido = framesConSonido;
+    this->repetirSonido = repetirSonido;
+
+    sonidoYaReproducido = false;
+
+    resetear();
+}
+
 void AnimacionPorFrames::actualizar() {
+
+    if(!sonidoYaReproducido && framesConSonido.count(frameActual)) sonido.play();
+
     if(tipoBucle == TipoBucle::NORMAL){
         frameActual++;
-        if(frameActual >= rectanguloCorrespondiente.size()) frameActual = 0;
+        if(frameActual >= rectanguloCorrespondiente.size()) {
+            frameActual = 0;
+            if(!repetirSonido) sonidoYaReproducido = true;
+        }
     } else if (tipoBucle == TipoBucle::AL_REVES){
-        if(frameActual == 0) frameActual = rectanguloCorrespondiente.size()-1;
+        if(frameActual == 0) {
+            frameActual = rectanguloCorrespondiente.size()-1;
+            if(!repetirSonido) sonidoYaReproducido = true;
+        }
         else frameActual--;
     }
 
@@ -42,6 +71,7 @@ void AnimacionPorFrames::resetear(){
     frameActual = 0;
     numRepeticionesActual = 0;
     pingPongHaciaDelante = true;
+    sonidoYaReproducido = false;
 }
 
 Animacion * AnimacionPorFrames::clonar(){
@@ -54,9 +84,9 @@ void AnimacionPorFrames::draw(sf::RenderTarget& target, sf::RenderStates states)
     if(DEBUG){
         for(Hitbox h : hitboxes.at(rectanguloCorrespondiente.at(frameActual))){
             sf::RectangleShape rectanguloHitbox(sf::Vector2f(h.getRectangulo().width,h.getRectangulo().height));
-            rectanguloHitbox.setPosition(h.getRectangulo().left,h.getRectangulo().top);
+            rectanguloHitbox.setPosition(sprite.getPosition().x-PERSONAJE_PLANTILLA_ORIGEN.x+h.getRectangulo().left,sprite.getPosition().y-PERSONAJE_PLANTILLA_ORIGEN.y+h.getRectangulo().top);
             rectanguloHitbox.setFillColor(sf::Color::Transparent);
-            rectanguloHitbox.setOutlineThickness(10);
+            rectanguloHitbox.setOutlineThickness(1);
             rectanguloHitbox.setOutlineColor(h.getFuerzaAtaque() > 0 ? HITBOX_ATAQUE_COLOR : HITBOX_NO_ATAQUE_COLOR);
             target.draw(rectanguloHitbox,states);
         }
