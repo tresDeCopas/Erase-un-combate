@@ -138,12 +138,19 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
             else
                 cambiarEstado(EstadoPersonaje::ANDANDO_ALEJANDOSE);
         }
+        else if (accionesRealizadas[Accion::ATACAR]){
+            cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
+            accionesRealizadas[Accion::ATACAR] = false;
+        }
 
         break;
 
     case EstadoPersonaje::ANDANDO_ACERCANDOSE:
 
-        if(accionesRealizadas[Accion::ARRIBA]){
+        if (accionesRealizadas[Accion::ATACAR]){
+            cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
+            accionesRealizadas[Accion::ATACAR] = false;
+        } else if(accionesRealizadas[Accion::ARRIBA]){
             velY = VELOCIDAD_SALTO;
             accionesRealizadas[Accion::ARRIBA] = false;
             cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
@@ -165,7 +172,10 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         break;
     case EstadoPersonaje::ANDANDO_ALEJANDOSE:
 
-        if(accionesRealizadas[Accion::ARRIBA]){
+        if (accionesRealizadas[Accion::ATACAR]){
+            cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
+            accionesRealizadas[Accion::ATACAR] = false;
+        } else if(accionesRealizadas[Accion::ARRIBA]){
             velY = VELOCIDAD_SALTO;
             accionesRealizadas[Accion::ARRIBA] = false;
             cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
@@ -207,6 +217,16 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
             velY = 0;
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
+        break;
+
+    case EstadoPersonaje::ATAQUE_NORMAL_1:
+
+        pararMovimiento();
+
+        if(animaciones[estado]->haTerminado())
+            cambiarEstado(EstadoPersonaje::QUIETO);
+        break;
+
     }
 
     // Una vez se hace todo, se aumenta la velocidad según se vea

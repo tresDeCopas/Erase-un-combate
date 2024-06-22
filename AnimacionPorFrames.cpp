@@ -54,9 +54,38 @@ void AnimacionPorFrames::actualizar() {
             if(!repetirSonido) sonidoYaReproducido = true;
         }
         else frameActual--;
+    } else if (tipoBucle == TipoBucle::SIN_BUCLE){
+        if(frameActual < rectanguloCorrespondiente.size()-1)
+            frameActual++;
     }
 
     sprite.setTextureRect(sf::IntRect(rectanguloCorrespondiente[frameActual]*sprite.getTextureRect().width,0,sprite.getTextureRect().width,sprite.getTextureRect().height));
+}
+
+void AnimacionPorFrames::voltear(){
+    // Al escalar el eje X por -1 se le da la vuelta muy guay todo pero no es suficiente
+    sprite.scale(-1,1);
+
+    // También hay que voltear las hitboxes
+    for(auto const &[entero, listaHitboxes] : hitboxes){
+        std::list<Hitbox> nuevaLista;
+
+        for(Hitbox hitbox : listaHitboxes){
+
+            // Esto se explicaría mejor con un dibujito pero bueno
+            int puntoCentral = sprite.getTextureRect().width/2;
+
+            int derecha = hitbox.getRectangulo().left+hitbox.getRectangulo().width;
+
+            int nuevaIzquierda = derecha - (derecha-puntoCentral)*2;
+
+            Hitbox nuevaHitbox(sf::IntRect(nuevaIzquierda,hitbox.getRectangulo().top,hitbox.getRectangulo().width,hitbox.getRectangulo().height),hitbox.getFuerzaAtaque(),hitbox.esAtaqueBajo());
+
+            nuevaLista.push_back(nuevaHitbox);
+        }
+
+        hitboxes[entero] = nuevaLista;
+    }
 }
 
 int AnimacionPorFrames::getNumeroRectangulo() {
@@ -65,6 +94,10 @@ int AnimacionPorFrames::getNumeroRectangulo() {
 
 void AnimacionPorFrames::setTipoBucle(TipoBucle tipoBucle){
     this->tipoBucle = tipoBucle;
+}
+
+bool AnimacionPorFrames::haTerminado(){
+    return tipoBucle == TipoBucle::SIN_BUCLE && frameActual == rectanguloCorrespondiente.size()-1;
 }
 
 void AnimacionPorFrames::resetear(){

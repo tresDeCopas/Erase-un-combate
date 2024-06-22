@@ -58,11 +58,17 @@ class AnimacionPorFrames : public Animacion {
         // Actualiza la animación (avanza un frame)
         virtual void actualizar();
 
+        // Le da la vuelta al sprite
+        virtual void voltear();
+
         // Devuelve qué rectángulo se está mostrando actualmente
         int getNumeroRectangulo();
 
         // Cambia el tipo de bucle para la animación
         void setTipoBucle(TipoBucle tipoBucle);
+
+        // Devuelve si ha terminado la animación (si el tipo de bucle es "SIN_BUCLE")
+        bool haTerminado();
 
         // Resetea la animación al primer frame y el primer rectángulo
         virtual void resetear();

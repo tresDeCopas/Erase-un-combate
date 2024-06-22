@@ -111,6 +111,28 @@ Hitboxes:
 Frames:
 0,0,0,0,0,1,1,1,1,1,2,2,2,2,2
 
+Estado:ataque-normal-1
+Bucle:sin bucle
+
+Rectangulo:0
+Hitboxes:
+51,29,27,71,0
+
+Rectangulo:1
+Hitboxes:
+51,29,27,71,0
+93,60,12,12,1
+
+Rectangulo:2
+Hitboxes:
+51,29,27,71,0
+
+Frames:
+0,0,0,0,1,1,1,1,2,2,2,2
+
+Sonido:No repetir
+4
+
 ----
 Personaje:juan-cuesta-sin-casco
 
@@ -224,6 +246,28 @@ Hitboxes:
 
 Frames:
 0,0,0,0,0,1,1,1,1,1,2,2,2,2,2
+
+Estado:ataque-normal-1
+Bucle:sin bucle
+
+Rectangulo:0
+Hitboxes:
+51,29,27,71,0
+
+Rectangulo:1
+Hitboxes:
+51,29,27,71,0
+93,60,12,12,1
+
+Rectangulo:2
+Hitboxes:
+51,29,27,71,0
+
+Frames:
+0,0,0,0,1,1,1,1,2,2,2,2
+
+Sonido:No repetir
+4
 
 ----
 ####
