@@ -1,5 +1,3 @@
-Personaje:juan-cuesta-con-casco
-
 Estado:quieto
 Bucle:normal
 
@@ -21,7 +19,7 @@ Hitboxes:
 
 Frames:
 0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3
-
+--------------------------------------------------------------------------------
 Estado:andando-acercandose
 Bucle:normal
 
@@ -46,7 +44,7 @@ Frames:
 
 Sonido:Repetir
 0,16
-
+--------------------------------------------------------------------------------
 Estado:andando-alejandose
 Bucle:al-reves
 
@@ -71,7 +69,7 @@ Frames:
 
 Sonido:Repetir
 8,24
-
+--------------------------------------------------------------------------------
 Estado:saltando-subiendo
 Bucle:normal
 
@@ -92,7 +90,7 @@ Frames:
 
 Sonido:No repetir
 0
-
+--------------------------------------------------------------------------------
 Estado:saltando-bajando
 Bucle:normal
 
@@ -110,7 +108,7 @@ Hitboxes:
 
 Frames:
 0,0,0,0,0,1,1,1,1,1,2,2,2,2,2
-
+--------------------------------------------------------------------------------
 Estado:ataque-normal-1
 Bucle:sin bucle
 
@@ -132,122 +130,8 @@ Frames:
 
 Sonido:No repetir
 4
-
-----
-Personaje:juan-cuesta-sin-casco
-
-Estado:quieto
-Bucle:normal
-
-Rectangulo:0
-Hitboxes:
-51,29,27,71,0
-
-Rectangulo:1
-Hitboxes:
-51,30,27,70,0
-
-Rectangulo:2
-Hitboxes:
-51,30,27,70,0
-
-Rectangulo:3
-Hitboxes:
-51,29,27,71,0
-
-Frames:
-0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3
-
-Estado:andando-acercandose
-Bucle:normal
-
-Rectangulo:0
-Hitboxes:
-51,29,28,71,0
-
-Rectangulo:1
-Hitboxes:
-51,27,28,73,0
-
-Rectangulo:2
-Hitboxes:
-51,29,28,71,0
-
-Rectangulo:3
-Hitboxes:
-51,27,28,73,0
-
-Frames:
-0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3
-
-Sonido:Repetir
-0,16
-
-Estado:andando-alejandose
-Bucle:al-reves
-
-Rectangulo:0
-Hitboxes:
-51,27,28,73,0
-
-Rectangulo:1
-Hitboxes:
-51,29,28,71,0
-
-Rectangulo:2
-Hitboxes:
-51,27,28,73,0
-
-Rectangulo:3
-Hitboxes:
-51,29,28,71,0
-
-Frames:
-0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3
-
-Sonido:Repetir
-8,24
-
-Estado:saltando-subiendo
-Bucle:normal
-
-Rectangulo:0
-Hitboxes:
-51,26,27,74,0
-
-Rectangulo:1
-Hitboxes:
-51,26,27,74,0
-
-Rectangulo:2
-Hitboxes:
-51,26,27,74,0
-
-Frames:
-0,0,0,0,0,1,1,1,1,1,2,2,2,2,2
-
-Sonido:No repetir
-0
-
-Estado:saltando-bajando
-Bucle:normal
-
-Rectangulo:0
-Hitboxes:
-51,25,27,75,0
-
-Rectangulo:1
-Hitboxes:
-51,25,27,75,0
-
-Rectangulo:2
-Hitboxes:
-51,25,27,75,0
-
-Frames:
-0,0,0,0,0,1,1,1,1,1,2,2,2,2,2
-
-Estado:ataque-normal-1
+--------------------------------------------------------------------------------
+Estado:ataque-normal-2
 Bucle:sin bucle
 
 Rectangulo:0
@@ -257,17 +141,46 @@ Hitboxes:
 Rectangulo:1
 Hitboxes:
 51,29,27,71,0
-93,60,12,12,1
+89,63,17,12,2
 
 Rectangulo:2
 Hitboxes:
 51,29,27,71,0
 
+Rectangulo:3
+Hitboxes:
+51,29,27,71,0
+
 Frames:
-0,0,0,0,1,1,1,1,2,2,2,2
+0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3
+
+Sonido:No repetir
+4
+--------------------------------------------------------------------------------
+Estado:ataque-normal-3
+Bucle:sin bucle
+
+Rectangulo:0
+Hitboxes:
+51,29,27,71,0
+
+Rectangulo:1
+Hitboxes:
+54,29,27,71,0
+86,56,14,16,4
+
+Rectangulo:2
+Hitboxes:
+54,29,27,71,0
+
+Rectangulo:3
+Hitboxes:
+54,29,27,71,0
+
+Frames:
+0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3
 
 Sonido:No repetir
 4
 
-----
 ####

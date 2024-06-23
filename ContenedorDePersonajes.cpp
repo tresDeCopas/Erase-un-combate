@@ -5,7 +5,7 @@
 #include <SFML/Audio.hpp>
 #include <fstream>
 #include <iostream>
-#include <memory>
+#include <filesystem>
 
 ContenedorDePersonajes * ContenedorDePersonajes::contenedorDePersonajes = nullptr;
 
@@ -56,34 +56,31 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
     // En esta variable se guarda el sonido que se reproducirá en cada animación
     sf::Sound sonido;
 
-    // Se abre el fichero con información de los personajes
-    std::ifstream fichero("ficheros/personajes.txt");
+    // Abrimos cada fichero del directorio
+    for(const auto & entrada : std::filesystem::directory_iterator("ficheros/personajes")){
 
-    if(!fichero.is_open()){
-        Bitacora::unicaInstancia()->escribir("Emilio: ... pero señor Juan, es para hoy.");
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Es que creo que he perdido el fichero ficheros/personajes.txt...");
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Qué follon... se suspende la junta.");
-        exit(EXIT_FAILURE);
-    } else {
-        Bitacora::unicaInstancia()->escribir("Emilio: Listo señor Juan.");
-    }
+        // Se abre el fichero con información del personaje actual
+        std::ifstream fichero(entrada.path());
 
-    std::getline(fichero,linea);
+        // Aprovechando que tenemos la ruta del fichero podemos sacar el nombre del personaje
+        nombrePersonaje = entrada.path().stem().string();
 
-    while(linea != SECUENCIA_FIN_FICHERO){
+        if(!fichero.is_open()){
+            Bitacora::unicaInstancia()->escribir("Emilio: ... pero señor Juan, es para hoy.");
+            Bitacora::unicaInstancia()->escribir("Juan Cuesta: Es que creo que he perdido el fichero ficheros/personajes.txt...");
+            Bitacora::unicaInstancia()->escribir("Juan Cuesta: Qué follon... se suspende la junta.");
+            exit(EXIT_FAILURE);
+        } else {
+            Bitacora::unicaInstancia()->escribir("Emilio: Listo señor Juan.");
+            Bitacora::unicaInstancia()->escribir("Juan Cuesta: registrando personaje " + nombrePersonaje + ".");
+        }
 
-        // En esta variable se guarda el mapa que mapea estados a animaciones
+        // En este mapa se van a guardar las animaciones según el estado
         std::map<EstadoPersonaje,Animacion*> animaciones;
 
-        // Se saca el nombre del personaje
-        nombrePersonaje = util::separarString(linea,':')[1];
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: registrando personaje " + nombrePersonaje + ".");
-
-        // Se salta una línea en blanco y se empiezan a leer estados
-        std::getline(fichero,linea);
         std::getline(fichero,linea);
 
-        while(linea != SECUENCIA_DELIMITADORA_FICHERO){
+        while(linea != SECUENCIA_FIN_FICHERO){
 
             // Se obtiene el nombre del estado
             nombreEstado = util::separarString(linea,':')[1];
@@ -196,8 +193,6 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
         Personaje p(animaciones);
         personajes.insert(std::pair<std::string,Personaje>(nombrePersonaje,p));
-
-        std::getline(fichero,linea);
 
         Bitacora::unicaInstancia()->escribir("Juan Cuesta: concluye la inserción del personaje " + nombrePersonaje + ".\n");
     }
