@@ -45,7 +45,7 @@ class AnimacionPorFrames : public Animacion {
         bool sonidoYaReproducido;
 
         // Número de frame actual
-        unsigned int frameActual;
+        int frameActual;
 
     public:
 

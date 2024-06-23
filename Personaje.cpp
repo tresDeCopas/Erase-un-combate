@@ -93,16 +93,6 @@ void Personaje::pararMovimiento(){
 
 void Personaje::actualizar(sf::Vector2f posicionEnemigo){
 
-    // Se comprueba si el enemigo está a la derecha o a la izquierda
-    if((animaciones[estado]->getPosicion().x < posicionEnemigo.x && !mirandoDerecha) ||
-       (animaciones[estado]->getPosicion().x > posicionEnemigo.x && mirandoDerecha)){
-        mirandoDerecha = !mirandoDerecha;
-        for(auto const &[estado, anim] : animaciones){
-            anim->voltear();
-        }
-    }
-    animaciones[estado]->actualizar();
-
     // Según el estado, se hace una cosa u otra
     switch(estado){
     case EstadoPersonaje::QUIETO:
@@ -249,6 +239,17 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         break;
 
     }
+
+    // Se comprueba si el enemigo está a la derecha o a la izquierda
+    if((animaciones[estado]->getPosicion().x < posicionEnemigo.x && !mirandoDerecha) ||
+       (animaciones[estado]->getPosicion().x > posicionEnemigo.x && mirandoDerecha)){
+        mirandoDerecha = !mirandoDerecha;
+        for(auto const &[estado, anim] : animaciones){
+            anim->voltear();
+        }
+    }
+
+    animaciones[estado]->actualizar();
 
     // Una vez se hace todo, se aumenta la velocidad según se vea
     animaciones[estado]->mover(velX,velY);
