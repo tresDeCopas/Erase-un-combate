@@ -12,6 +12,7 @@ sf::RenderWindow * VentanaPrincipal::unicaInstancia()
         // Se desactiva lo de que si mantienes pulsada una tecla se vuelve a pulsar muchas veces
         // porque que pereza
         ventanaPrincipal->setKeyRepeatEnabled(false);
+        ventanaPrincipal->setVerticalSyncEnabled(true);
 
         aumentarZoom();
     }
