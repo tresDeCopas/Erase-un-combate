@@ -12,10 +12,10 @@ Bitacora * Bitacora::unicaInstancia()
 }
 
 Bitacora::Bitacora(){
-    // Abre la bitácora para añadir información al final (append, como se dice en inglés)
+    // Abre la bitï¿½cora para aï¿½adir informaciï¿½n al final (append, como se dice en inglï¿½s)
     ficheroBitacora.open(BITACORA_RUTA,std::ios_base::app);
 
-    // Se registra el día de hoy en la bitácora para situarnos
+    // Se registra el dï¿½a de hoy en la bitï¿½cora para situarnos
     time_t tt;
     struct tm* ti;
     time(&tt);
@@ -39,14 +39,14 @@ void Bitacora::escribir(std::string cosillas)
 }
 
 void Bitacora::comprobarGrafica(){
-    ficheroBitacora << "Juan Cuesta: Primer punto del día: comprobación rutinaria de la tarjeta gráfica." << std::endl;
-    ficheroBitacora << "Emilio: Señor Juan, he estado mirando y la tarjeta gráfica soporta texturas de hasta " << sf::Texture::getMaximumSize() << " píxeles." << std::endl;
+    ficheroBitacora << "Juan Cuesta: Primer punto del dï¿½a: comprobaciï¿½n rutinaria de la tarjeta grï¿½fica." << std::endl;
+    ficheroBitacora << "Emilio: Seï¿½or Juan, he estado mirando y la tarjeta grï¿½fica soporta texturas de hasta " << sf::Texture::getMaximumSize() << " pï¿½xeles." << std::endl;
     if(sf::Texture::getMaximumSize() < MAXIMA_LONGITUD_TEXTURA){
-        ficheroBitacora << "Juan Cuesta: ¡¿Cómo?! Pero bueno, esto es... no doy crédito..." << std::endl;
-        ficheroBitacora << "Paloma: Ay Juan, ¡tranquilízate, hombre ya! ¡Recuerda la úlcera!" << std::endl;
-        ficheroBitacora << "Juan Cuesta: Si es que no puede ser... este juego tiene texturas de hasta " << MAXIMA_LONGITUD_TEXTURA << " píxeles, esta tarjeta gráfica no va a poder aguantarlo..." << std::endl;
-        ficheroBitacora << "Concha: ¡Váyase señor Cuesta! ¡¡VÁYASE!!" << std::endl;
-        ficheroBitacora << "Marisa: La has cagao macho, esto no tira ni de puta coña." << std::endl;
+        ficheroBitacora << "Juan Cuesta: ï¿½ï¿½Cï¿½mo?! Pero bueno, esto es... no doy crï¿½dito..." << std::endl;
+        ficheroBitacora << "Paloma: Ay Juan, ï¿½tranquilï¿½zate, hombre ya! ï¿½Recuerda la ï¿½lcera!" << std::endl;
+        ficheroBitacora << "Juan Cuesta: Si es que no puede ser... este juego tiene texturas de hasta " << MAXIMA_LONGITUD_TEXTURA << " pï¿½xeles, esta tarjeta grï¿½fica no va a poder aguantarlo..." << std::endl;
+        ficheroBitacora << "Concha: ï¿½Vï¿½yase seï¿½or Cuesta! ï¿½ï¿½Vï¿½YASE!!" << std::endl;
+        ficheroBitacora << "Marisa: La has cagao macho, esto no tira ni de puta coï¿½a." << std::endl;
         ficheroBitacora << "Juan Cuesta: A ver, las ultras, que se tranquilicen." << std::endl << std::endl;
     } else {
         ficheroBitacora << "Juan Cuesta: Perfecto, una buena cifra. Prosigamos." << std::endl;

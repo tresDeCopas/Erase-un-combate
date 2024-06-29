@@ -17,6 +17,10 @@ sf::Vector2f Animacion::getPosicion(){
     return sprite.getPosition();
 }
 
+sf::Vector2f Animacion::getPosicionEsqSupIzq() const{
+    return sf::Vector2f(sprite.getPosition().x-sprite.getOrigin().x,sprite.getPosition().y-sprite.getOrigin().y);
+}
+
 void Animacion::mover(float x, float y){
     sprite.move(x,y);
 }

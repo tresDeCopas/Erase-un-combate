@@ -1,47 +1,60 @@
 #ifndef __ANIMACION_HPP__
 #define __ANIMACION_HPP__
 
+#include "Hitbox.hpp"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+
+#include <list>
 
 /*
     Clase abstracta para cualquier tipo de animaciones
 */
 class Animacion : public sf::Drawable {
     protected:
-        // Sprite para la animación
+        // Sprite para la animaciï¿½n
         sf::Sprite sprite;
 
-        // Sonido para la animación
+        // Sonido para la animaciï¿½n
         sf::Sound sonido;
 
     public:
 
-        // Actualiza la animación (avanza un frame)
+        // Actualiza la animaciï¿½n (avanza un frame)
         virtual void actualizar() = 0;
 
-        // Resetea la animación al estado inicial
+        // Resetea la animaciï¿½n al estado inicial
         virtual void resetear() = 0;
 
         // Le da la vuelta al sprite
         virtual void voltear();
 
-        // Coloca el sprite en la posición indicada con respecto a la esquina superior
+        // Dada otra animaciÃ³n, devuelve false si 
+
+        // Coloca el sprite en la posiciï¿½n indicada con respecto a la esquina superior
         // izquierda de la ventana
         void setPosicion(float x, float y);
         void setPosicion(sf::Vector2f posicion);
 
-        // Devuelve la posición actual del sprite
+        // Devuelve la posiciï¿½n actual del sprite (teniendo en cuenta el origen, sea cual sea)
         sf::Vector2f getPosicion();
 
-        // Mueve la posición del sprite con respecto a la posición actual
+        // Devuelve la posiciÃ³n de la esquina superior izquierda del sprite (es decir, no tiene en
+        // cuenta el origen que pueda tener)
+        sf::Vector2f getPosicionEsqSupIzq() const;
+
+        // Devuelve una lista con las hitboxes
+        virtual std::list<Hitbox> getHitboxes() = 0;
+
+        // Mueve la posiciï¿½n del sprite con respecto a la posiciï¿½n actual
         void mover(float x, float y);
         void mover(sf::Vector2f diferencia);
 
-        // Determina si una animación ha terminado
+        // Determina si una animaciï¿½n ha terminado
         virtual bool haTerminado() = 0;
 
-        // Devuelve un clon de la animación
+        // Devuelve un clon de la animaciï¿½n
         virtual Animacion * clonar() = 0;
 
         // Las clases que heredan de sf::Drawable deben implementar draw

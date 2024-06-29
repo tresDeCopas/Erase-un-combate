@@ -126,7 +126,7 @@ Hitboxes:
 51,29,27,71,0
 
 Frames:
-0,0,0,0,1,1,1,1,2,2,2,2
+0,0,0,0,1,2,2,2,2
 
 Sonido:No repetir
 4
@@ -152,7 +152,7 @@ Hitboxes:
 51,29,27,71,0
 
 Frames:
-0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3
+0,0,0,0,1,2,2,2,2,3,3,3,3
 
 Sonido:No repetir
 4
@@ -178,10 +178,39 @@ Hitboxes:
 54,29,27,71,0
 
 Frames:
-0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3
+0,0,0,0,1,2,2,2,2,3,3,3,3
 
 Sonido:No repetir
 4
+--------------------------------------------------------------------------------
+Estado:golpeado-peque
+Bucle:sin bucle
 
-####
+Rectangulo:0
+Hitboxes:
+51,29,27,71,0
+
+Frames:
+0,0,0,0
+
+Sonido:No repetir
+0
+--------------------------------------------------------------------------------
+Estado:golpeado-medio
+Bucle:sin bucle
+
+Rectangulo:0
+Hitboxes:
+51,29,27,71,0
+
+Rectangulo:1
+Hitboxes:
+51,29,27,71,0
+
+Frames:
+0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1
+
+Sonido:No repetir
+0
+
 ####
