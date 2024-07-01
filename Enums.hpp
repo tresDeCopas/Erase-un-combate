@@ -37,7 +37,7 @@ enum class EstadoPersonaje {
     ANDANDO_ALEJANDOSE, // Est� andando alej�ndose del enemigo
     BLOQUEANDO,         // Est� bloqueando un ataque
     PREPARANDO_SUPER,   // Est� prepar�ndose para lanzar el super ataque
-    ATAQUE_SUPER,     // Est� haciendo el super ataque
+    ATAQUE_SUPER,       // Est� haciendo el super ataque
     LEVANTANDOSE,       // Se est� levantando del suelo
     CELEBRANDO          // Est� celebrando su victoria
 };

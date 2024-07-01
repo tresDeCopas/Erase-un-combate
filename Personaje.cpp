@@ -97,7 +97,7 @@ void Personaje::pararMovimiento(){
 
 void Personaje::actualizar(sf::Vector2f posicionEnemigo){
 
-    // Seg�n el estado, se hace una cosa u otra
+    // Según el estado, se hace una cosa u otra
     switch(estado){
     case EstadoPersonaje::QUIETO:
 
@@ -243,14 +243,8 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         break;
     
     case EstadoPersonaje::GOLPEADO_PEQUE:
-        pararMovimiento();
-        if(animaciones[estado]->haTerminado()){
-            cambiarEstado(EstadoPersonaje::QUIETO);
-        }
-
-        break;
-    
     case EstadoPersonaje::GOLPEADO_MEDIO:
+    case EstadoPersonaje::BLOQUEANDO:
         pararMovimiento();
         if(animaciones[estado]->haTerminado()){
             cambiarEstado(EstadoPersonaje::QUIETO);
@@ -260,8 +254,8 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
     }
 
     // Se comprueba si el enemigo está a la derecha o a la izquierda y se voltea el
-    // sprite según sea necesario. Si el personaje está atacando o recibiendo un golpe,
-    // está demasiado ocupado como para ir volteándose
+    // sprite según sea necesario. Si el personaje está atacando o recibiendo un golpe
+    // (incluyendo bloqueo), está demasiado ocupado como para ir volteándose
     switch(estado){
         case EstadoPersonaje::ATAQUE_NORMAL_1:
         case EstadoPersonaje::ATAQUE_NORMAL_2:
@@ -273,6 +267,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         case EstadoPersonaje::GOLPEADO_PEQUE:
         case EstadoPersonaje::GOLPEADO_MEDIO:
         case EstadoPersonaje::GOLPEADO_GRANDE:
+        case EstadoPersonaje::BLOQUEANDO:
             break;
         
         default:
@@ -315,6 +310,8 @@ void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::lis
         else it++;
     }
 
+    // Se encuentra una colisión entre una hitbox del personaje (hurtbox como la llama la chaviza)
+    // y una hitbox del enemigo (la que colisione con más daño)
     Hitbox hitboxElegidaEnemigo = Hitbox(sf::IntRect(0,0,0,0),0,false);
     Hitbox hitboxElegidaPropia = Hitbox(sf::IntRect(0,0,0,0),0,false);
 
@@ -343,11 +340,11 @@ void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::lis
         return;
     }
 
+    // Si sí que hubo golpe, depende ya de cómo le pille al personaje
     switch(estado){
-        case EstadoPersonaje::QUIETO:
         case EstadoPersonaje::GOLPEADO_PEQUE:
+        case EstadoPersonaje::QUIETO:
         case EstadoPersonaje::ANDANDO_ACERCANDOSE:
-        case EstadoPersonaje::ANDANDO_ALEJANDOSE:
         case EstadoPersonaje::ATAQUE_NORMAL_1:
         case EstadoPersonaje::ATAQUE_NORMAL_2:
         case EstadoPersonaje::ATAQUE_NORMAL_3:
@@ -361,6 +358,18 @@ void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::lis
             } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
                 velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
                 cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+            }
+            break;
+        
+        case EstadoPersonaje::BLOQUEANDO:
+        case EstadoPersonaje::ANDANDO_ALEJANDOSE:
+
+            if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
+                cambiarEstado(EstadoPersonaje::BLOQUEANDO);
+            } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                cambiarEstado(EstadoPersonaje::BLOQUEANDO);
             }
             break;
     }
