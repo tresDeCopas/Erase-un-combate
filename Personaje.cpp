@@ -244,9 +244,17 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
     
     case EstadoPersonaje::GOLPEADO_PEQUE:
     case EstadoPersonaje::GOLPEADO_MEDIO:
-    case EstadoPersonaje::BLOQUEANDO:
         pararMovimiento();
         if(animaciones[estado]->haTerminado()){
+            cambiarEstado(EstadoPersonaje::QUIETO);
+        }
+
+        break;
+    case EstadoPersonaje::BLOQUEANDO:
+        pararMovimiento();
+        if(accionesRealizadas[Accion::ATACAR]){
+            cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
+        } else if(animaciones[estado]->haTerminado()){
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
 

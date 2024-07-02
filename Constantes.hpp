@@ -36,8 +36,8 @@ const int MAXIMA_LONGITUD_TEXTURA = 1024;
 */
 
 // Anchura y altura de la ventana principal
-const int VENTANA_ANCHURA = 400;
-const int VENTANA_ALTURA = 300;
+const int VENTANA_ANCHURA = 300;
+const int VENTANA_ALTURA = 200;
 
 // FPS máximos de la ventana principal
 const int VENTANA_FPS = 60;
@@ -103,7 +103,7 @@ const float VELOCIDAD_ANDAR_AUMENTO = 0.3;
 const float VELOCIDAD_SALTO = -7;
 
 // Posici�n en el eje Y del suelo
-const float ALTURA_SUELO = VENTANA_ALTURA-20;
+const float ALTURA_SUELO = VENTANA_ALTURA-10;
 
 // Impulso inicial al recibir un golpe pequeño
 const float IMPULSO_GOLPE_PEQUE = 1;
