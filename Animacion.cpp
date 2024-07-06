@@ -13,6 +13,10 @@ void Animacion::setPosicion(sf::Vector2f posicion){
     setPosicion(posicion.x,posicion.y);
 }
 
+void Animacion::setRotacion(double angulo){
+    sprite.setRotation(angulo);
+}
+
 sf::Vector2f Animacion::getPosicion(){
     return sprite.getPosition();
 }

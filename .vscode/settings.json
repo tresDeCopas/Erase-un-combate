@@ -116,7 +116,8 @@
     "streambuf": "cpp",
     "text_encoding": "cpp",
     "typeinfo": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "*.tpp": "cpp"
   },
   "makefile.launchConfigurations": [
     {

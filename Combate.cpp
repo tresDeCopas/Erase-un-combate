@@ -21,6 +21,9 @@ void Combate::comenzar(){
     // Sacamos la ventana principal para que el nombre no sea tan largo
     sf::RenderWindow * ventana = VentanaPrincipal::unicaInstancia();
 
+    // En esta lista hay efectos como objetos voladores o efectos de golpe
+    std::list<Animacion*> efectos;
+
     // El bucle principal realiza acciones en un orden muy específico para evitar problemas
 
     while(true){
@@ -52,29 +55,50 @@ void Combate::comenzar(){
             }
         }
 
-        // SEGUNDO PASO: ACTUALIZAR PERSONAJES
+        // SEGUNDO PASO: ACTUALIZAR PERSONAJES Y EFECTOS
 
         personajeJugador1.actualizar(personajeJugador2.getPosicion());
         personajeJugador2.actualizar(personajeJugador1.getPosicion());
 
+        for(auto iter = efectos.begin(); iter != efectos.end();){
+            if((*iter)->haTerminado()){
+                delete *iter;
+                iter = efectos.erase(iter);
+            } else {
+                (*iter)->actualizar();
+                iter++;
+            }
+        }
+
         // TERCER PASO: COMPROBAR COLISIONES.
 
-        std::list<Animacion*> animaciones;
-        animaciones.push_back(personajeJugador2.getAnimaciones()[personajeJugador2.getEstado()]);
+        std::list<Animacion*> nuevosEfectos;
 
-        personajeJugador1.comprobarColisiones(animaciones,animaciones);
+        efectos.push_back(personajeJugador2.getAnimaciones()[personajeJugador2.getEstado()]);
 
-        animaciones.pop_back();
-        animaciones.push_back(personajeJugador1.getAnimaciones()[personajeJugador1.getEstado()]);
-        personajeJugador2.comprobarColisiones(animaciones,animaciones);
+        personajeJugador1.comprobarColisiones(efectos,nuevosEfectos);
 
-        // CUARTO PASO: DIBUJAR PERSONAJES
-        // Después de actualizar las animaciones, están listas para ser dibujadas en pantalla
+        efectos.pop_back();
+        efectos.push_back(personajeJugador1.getAnimaciones()[personajeJugador1.getEstado()]);
+        personajeJugador2.comprobarColisiones(efectos,nuevosEfectos);
+
+        efectos.pop_back();
+
+        for(auto iter = nuevosEfectos.begin(); iter != nuevosEfectos.end();iter++){
+            efectos.push_back(*iter);
+        }
+
+        // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
 
         ventana->clear(sf::Color(100,100,100));
+        // ventana->draw(escenario);
         ventana->draw(personajeJugador1);
         ventana->draw(personajeJugador2);
-        // ventana->draw(escenario);
+
+        for(auto iter = efectos.begin(); iter != efectos.end(); iter++){
+            ventana->draw(**iter);
+        }
+
         ventana->display();
     }
 }

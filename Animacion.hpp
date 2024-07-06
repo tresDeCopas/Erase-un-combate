@@ -30,12 +30,13 @@ class Animacion : public sf::Drawable {
         // Le da la vuelta al sprite
         virtual void voltear();
 
-        // Dada otra animación, devuelve false si 
-
         // Coloca el sprite en la posici�n indicada con respecto a la esquina superior
         // izquierda de la ventana
         void setPosicion(float x, float y);
         void setPosicion(sf::Vector2f posicion);
+
+        // Establece la rotación del sprite en grados centígrados
+        void setRotacion(double angulo);
 
         // Devuelve la posici�n actual del sprite (teniendo en cuenta el origen, sea cual sea)
         sf::Vector2f getPosicion();
