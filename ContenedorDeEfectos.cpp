@@ -18,16 +18,13 @@ ContenedorDeEfectos * ContenedorDeEfectos::unicaInstancia()
 }
 
 Animacion* ContenedorDeEfectos::obtenerEfecto(std::string nombre){
-    
     // Es importante copiar la animación al trabajar con punteros
-    Animacion* a = animaciones.at(nombre)->clonar();
-
-    return a;
+    return animaciones.at(nombre)->clonar();
 }
 
 void ContenedorDeEfectos::cargarTodosLosEfectos()
 {
-    Bitacora::unicaInstancia()->escribir("Juan Cuesta: Bien, sigamos... siguiente punto del díaa: registro de efectos especiales. Emilio, apunta, voy a dictarte los efectos en orden descendente de aparición.");
+    Bitacora::unicaInstancia()->escribir("Juan Cuesta: Bien, sigamos... siguiente punto del día: registro de efectos especiales. Emilio, apunta, voy a dictarte los efectos en orden descendente de aparición.");
 
     // En esta variable se van a poner datos del fichero l�nea a l�nea
     std::string linea;
