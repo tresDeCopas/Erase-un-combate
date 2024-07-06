@@ -400,9 +400,11 @@ void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::lis
         anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("bloqueado");
     } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
         anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("golpeado-peque");
-        anim->setRotacion(rand()%360);
+    } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+        anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("golpeado-medio");
     } else {
-        // Es importante volver antes de tiempo o si no anim se queda vacío
+        // Es importante volver antes de tiempo o si no estaríamos modificando anim mientras
+        // es un puntero sin inicializar, lo cual está feo
         return;
     }
 
