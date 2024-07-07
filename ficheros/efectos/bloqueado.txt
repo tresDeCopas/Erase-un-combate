@@ -13,5 +13,8 @@ Hitboxes:
 Rectangulo:3
 Hitboxes:
 
+Rectangulo:4
+Hitboxes:
+
 Frames:
-0,0,0,1,1,1,2,2,2,3,3,3
+0,0,1,1,2,2,3,3,3,4,4,4,4
