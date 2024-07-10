@@ -7,6 +7,7 @@
 #include <SFML/Audio.hpp>
 
 #include <list>
+#include <memory>
 
 /*
     Clase abstracta para cualquier tipo de animaciones
@@ -56,7 +57,7 @@ class Animacion : public sf::Drawable {
         virtual bool haTerminado() = 0;
 
         // Devuelve un clon de la animaci�n
-        virtual Animacion * clonar() = 0;
+        virtual std::shared_ptr<Animacion> clonar() = 0;
 
         // Las clases que heredan de sf::Drawable deben implementar draw
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

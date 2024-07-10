@@ -20,7 +20,7 @@ Personaje ContenedorDePersonajes::obtenerPersonaje(std::string nombre){
     Personaje p = personajes.at(nombre);
 
     // Es importante copiar las animaciones apuntadas por los punteros para no repetir animaciones
-    std::map<EstadoPersonaje,Animacion*> nuevasAnimaciones;
+    std::map<EstadoPersonaje,std::shared_ptr<Animacion>> nuevasAnimaciones;
 
     for(auto &par : p.getAnimaciones()){
         nuevasAnimaciones[par.first] = par.second->clonar();
@@ -76,7 +76,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
         }
 
         // En este mapa se van a guardar las animaciones seg�n el estado
-        std::map<EstadoPersonaje,Animacion*> animaciones;
+        std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones;
 
         std::getline(fichero,linea);
 
@@ -157,7 +157,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
             std::getline(fichero,linea);
             std::getline(fichero,linea);
 
-            Animacion * anim;
+            std::shared_ptr<Animacion> anim;
 
             if(util::separarString(linea,':')[0] == "Sonido"){
 
@@ -174,21 +174,21 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                     framesConSonido.insert(std::stoi(s));
                 }
 
-                anim = new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
-                                              ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
-                                              util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,sonido,framesConSonido,repetirSonido);
+                anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
+                                                  ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
+                                                  util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,sonido,framesConSonido,repetirSonido));
 
                 // Nos saltamos dos l�neas otra vez para salir de este estado
                 std::getline(fichero,linea);
                 std::getline(fichero,linea);
 
             } else {
-                anim = new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
-                                              ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
-                                              util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo);
+                anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
+                                                  ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
+                                                  util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo));
             }
 
-            animaciones.insert(std::pair<EstadoPersonaje,Animacion*>(util::stringAEstadoPersonaje(nombreEstado),anim));
+            animaciones.insert(std::pair<EstadoPersonaje,std::shared_ptr<Animacion>>(util::stringAEstadoPersonaje(nombreEstado),anim));
 
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: se termin� de cargar la animaci�n para el estado " + nombreEstado + ".\n");
         }

@@ -22,7 +22,7 @@ void Combate::comenzar(){
     sf::RenderWindow * ventana = VentanaPrincipal::unicaInstancia();
 
     // En esta lista hay efectos como objetos voladores o efectos de golpe
-    std::list<Animacion*> efectos;
+    std::list<std::shared_ptr<Animacion>> efectos;
 
     // El bucle principal realiza acciones en un orden muy específico para evitar problemas
 
@@ -62,7 +62,6 @@ void Combate::comenzar(){
 
         for(auto iter = efectos.begin(); iter != efectos.end();){
             if((*iter)->haTerminado()){
-                delete *iter;
                 iter = efectos.erase(iter);
             } else {
                 (*iter)->actualizar();
@@ -72,7 +71,7 @@ void Combate::comenzar(){
 
         // TERCER PASO: COMPROBAR COLISIONES.
 
-        std::list<Animacion*> nuevosEfectos;
+        std::list<std::shared_ptr<Animacion>> nuevosEfectos;
 
         efectos.push_back(personajeJugador2.getAnimaciones()[personajeJugador2.getEstado()]);
 

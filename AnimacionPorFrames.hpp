@@ -80,7 +80,7 @@ class AnimacionPorFrames : public Animacion {
         virtual void resetear();
 
         // Devuelve un clon de la animaci�n
-        virtual Animacion * clonar();
+        virtual std::shared_ptr<Animacion> clonar();
 
         // Devuelve una lista con las hitboxes del frame actual
         virtual std::list<Hitbox> getHitboxes();

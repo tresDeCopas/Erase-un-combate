@@ -5,7 +5,7 @@
 #include "ContenedorDeEfectos.hpp"
 #include <iostream>
 
-Personaje::Personaje(std::map<EstadoPersonaje,Animacion*> animaciones){
+Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones){
     puntosDeVida = MAX_PUNTOS_DE_VIDA;
     velY = 0;
     velX = 0;
@@ -46,11 +46,11 @@ void Personaje::setJugador(Jugador jugador){
     this->jugador = jugador;
 }
 
-std::map<EstadoPersonaje,Animacion*> Personaje::getAnimaciones(){
+std::map<EstadoPersonaje,std::shared_ptr<Animacion>> Personaje::getAnimaciones(){
     return animaciones;
 }
 
-void Personaje::setAnimaciones(std::map<EstadoPersonaje,Animacion*> animaciones){
+void Personaje::setAnimaciones(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones){
     this->animaciones = animaciones;
 }
 
@@ -306,7 +306,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
     }
 }
 
-void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::list<Animacion*> &efectosInsertados){
+void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &animaciones, std::list<std::shared_ptr<Animacion>> &efectosInsertados){
 
     // Se sacan las hitboxes de la animación del estado actual
     std::list<Hitbox> hitboxes = this->animaciones[estado]->getHitboxes();
@@ -328,7 +328,7 @@ void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::lis
     Hitbox hitboxElegidaEnemigo = Hitbox(sf::IntRect(0,0,0,0),0,false);
     Hitbox hitboxElegidaPropia = Hitbox(sf::IntRect(0,0,0,0),0,false);
 
-    for(Animacion * anim : animaciones){
+    for(std::shared_ptr<Animacion> anim : animaciones){
         for(Hitbox hEnemigo : anim->getHitboxes()){
             for(Hitbox hPropia : hitboxes){
                 
@@ -393,7 +393,7 @@ void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::lis
     
     sf::Vector2f posicionMedia = util::centroDeInterseccion(hitboxElegidaEnemigo.getRectangulo(),hitboxElegidaPropia.getRectangulo());
     
-    Animacion* anim;
+    std::shared_ptr<Animacion> anim;
     
     // Una vez se sabe dónde se va a colocar, se comprueba cómo está el personaje ahora mismo
     if(estado == EstadoPersonaje::BLOQUEANDO){
