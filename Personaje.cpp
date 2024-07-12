@@ -3,6 +3,7 @@
 #include "Constantes.hpp"
 #include "Utilidades.hpp"
 #include "ContenedorDeEfectos.hpp"
+#include "AnimacionConGravedad.hpp"
 #include <iostream>
 
 Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones){
@@ -400,8 +401,30 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
         anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("bloqueado");
     } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
         anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("golpeado-peque");
+
+        for(int i(0);i < NUM_PARTICULAS_GOLPEADO_PEQUE;++i){
+            int j(1+rand()%TIPO_PEQUE_CUANTAS_PARTICULAS);
+
+            auto particula = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("particula-golpeado-peque-"+std::to_string(j));
+            ((AnimacionConGravedad*)(particula.get()))->setPosicion(posicionMedia);
+            ((AnimacionConGravedad*)(particula.get()))->setVelocidad(sf::Vector2f((mirandoDerecha ? -1 : 1) * util::realAleatorio()*MAX_VELOCIDAD_PARTICULA_PEQUE,-1 * util::realAleatorio()*MAX_VELOCIDAD_PARTICULA_PEQUE));
+
+            efectosInsertados.push_back(particula);
+        }
+
     } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
         anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("golpeado-medio");
+
+        for(int i(0);i < NUM_PARTICULAS_GOLPEADO_MEDIO;++i){
+            int j(1+rand()%TIPO_MEDIO_CUANTAS_PARTICULAS);
+
+            auto particula = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("particula-golpeado-medio-"+std::to_string(j));
+            ((AnimacionConGravedad*)(particula.get()))->setPosicion(posicionMedia);
+            ((AnimacionConGravedad*)(particula.get()))->setVelocidad(sf::Vector2f((mirandoDerecha ? -1 : 1) * util::realAleatorio()*MAX_VELOCIDAD_PARTICULA_MEDIA,-1 * util::realAleatorio()*MAX_VELOCIDAD_PARTICULA_MEDIA));
+
+            efectosInsertados.push_back(particula);
+        }
+
     } else {
         // Es importante volver antes de tiempo o si no estaríamos modificando anim mientras
         // es un puntero sin inicializar, lo cual está feo

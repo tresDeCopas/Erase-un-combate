@@ -33,6 +33,10 @@ void Animacion::mover(sf::Vector2f diferencia){
     mover(diferencia.x,diferencia.y);
 }
 
+void Animacion::chocar(Hitbox hitbox){
+    // Solo las animaciones con gravedad necesitan saber que chocan
+}
+
 void Animacion::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(sprite,states);
 }
