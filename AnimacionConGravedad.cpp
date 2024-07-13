@@ -1,7 +1,7 @@
 #include "AnimacionConGravedad.hpp"
 #include "Constantes.hpp"
 
-AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, sf::Vector2f posicion, sf::Vector2f velocidad) : hitbox(hitbox)
+AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro) : hitbox(hitbox)
 {
     sprite.setTexture(textura);
 
@@ -11,6 +11,7 @@ AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, 
     sprite.setTextureRect(rectangulo);
 
     this->velocidad = velocidad;
+    this->velocidadGiro = velocidadGiro;
 
     sprite.setOrigin(rectangulo.width / 2, rectangulo.height / 2);
 
@@ -19,7 +20,7 @@ AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, 
     resetear();
 }
 
-AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, sf::Vector2f posicion, sf::Vector2f velocidad, sf::Sound sonido) : hitbox(hitbox)
+AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, sf::Sound sonido) : hitbox(hitbox)
 {
     sprite.setTexture(textura);
 
@@ -29,6 +30,7 @@ AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, 
     sprite.setTextureRect(rectangulo);
 
     this->velocidad = velocidad;
+    this->velocidadGiro = velocidadGiro;
 
     sprite.setOrigin(rectangulo.width / 2, rectangulo.height / 2);
 
@@ -42,6 +44,7 @@ AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, 
 void AnimacionConGravedad::actualizar()
 {
     sprite.move(velocidad);
+    sprite.rotate(velocidadGiro);
 
     velocidad.y += GRAVEDAD;
 
@@ -117,6 +120,10 @@ bool AnimacionConGravedad::haTerminado(){
 
 void AnimacionConGravedad::setVelocidad(sf::Vector2f velocidad){
     this->velocidad = velocidad;
+}
+
+void AnimacionConGravedad::setVelocidadGiro(const double &velocidadGiro){
+    this->velocidadGiro = velocidadGiro;
 }
 
 std::shared_ptr<Animacion> AnimacionConGravedad::clonar(){
