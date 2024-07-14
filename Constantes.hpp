@@ -166,4 +166,4 @@ const int MAX_ATAQUE_MEDIO = 6;
 // Si dos floats se diferencian en menos que este n�mero, se consideran iguales
 const float UMBRAL_FLOAT = 0.0001;
 
-#endif // __CONSTANTES_HPP__
+#endif // __CONSTANTES_CPP__
