@@ -3,6 +3,8 @@
 
 sf::RenderWindow * VentanaPrincipal::ventanaPrincipal = nullptr;
 int VentanaPrincipal::zoom = 1;
+int VentanaPrincipal::potenciaVibracion = 0;
+int VentanaPrincipal::contadorVibracion = 0;
 
 sf::RenderWindow * VentanaPrincipal::unicaInstancia()
 {
@@ -28,4 +30,25 @@ void VentanaPrincipal::disminuirZoom(){
     if(zoom == 1) return;
     zoom--;
     ventanaPrincipal->setSize(sf::Vector2u(VENTANA_ANCHURA * zoom,VENTANA_ALTURA * zoom));
+}
+
+void VentanaPrincipal::actualizar(){
+    if(potenciaVibracion == 0) return;
+
+    if(contadorVibracion > 0) {
+        contadorVibracion--;
+        return;
+    }
+
+    ventanaPrincipal->setPosition(sf::Vector2i(ventanaPrincipal->getPosition().x,ventanaPrincipal->getPosition().y+potenciaVibracion));
+
+    if(potenciaVibracion < 0) potenciaVibracion++;
+
+    potenciaVibracion *= -1;
+
+    contadorVibracion = VIBRACION_RETRASO;
+}
+
+void VentanaPrincipal::vibrar(int potenciaVibracion){
+    VentanaPrincipal::potenciaVibracion = potenciaVibracion;
 }

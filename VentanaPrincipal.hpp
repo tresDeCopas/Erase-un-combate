@@ -4,28 +4,41 @@
 #include <SFML/Graphics.hpp>
 
 /*
-    Clase Singleton para tener una ventana global
+    Clase "Singleton" para tener una ventana global. En vez de ser un Singleton de la propia clase, lo es
+    de una ventana sf::RenderWindow, que es un poco mÃ¡s raro pero bueno, funciona bien que es lo que importa
 */
 class VentanaPrincipal {
     private:
-        // Constructor por defecto vacío
+        // Constructor por defecto vacï¿½o
         VentanaPrincipal();
 
-        // Única instancia
+        // Ãšnica instancia
         static sf::RenderWindow * ventanaPrincipal;
 
         // Zoom aplicado
         static int zoom;
 
+        // Potencia de vibraciÃ³n
+        static int potenciaVibracion;
+
+        // Contador que, al llegar a cero, indica que se puede actualizar la vibraciÃ³n otra vez
+        static int contadorVibracion;
+
     public:
-        // Devuelve la única instancia
+        // Devuelve la ï¿½nica instancia
         static sf::RenderWindow * unicaInstancia();
 
         // Aumenta el zoom en 100% con respecto al zoom actual (de 100% a 200%, luego 300%...)
         static void aumentarZoom();
 
-        // Disminuye el zoom en 100% con respecto al zoom actual (de 300% a 200%, luego 100% y ya no baja más)
+        // Disminuye el zoom en 100% con respecto al zoom actual (de 300% a 200%, luego 100% y ya no baja mÃ¡s)
         static void disminuirZoom();
+
+        // Dada una potencia de vibraciÃ³n, la pantalla se pone a vibrar hacia arriba y hacia abajo
+        static void vibrar(int potenciaVibracion);
+
+        // Actualiza la ventana si tiene que vibrar
+        static void actualizar();
 
         // NUNCA SE COPIA UN SINGLETON
         VentanaPrincipal(VentanaPrincipal &otra) = delete;

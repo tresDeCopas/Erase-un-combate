@@ -4,6 +4,7 @@
 #include "Utilidades.hpp"
 #include "ContenedorDeEfectos.hpp"
 #include "AnimacionConGravedad.hpp"
+#include "VentanaPrincipal.hpp"
 #include <iostream>
 
 Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones){
@@ -390,7 +391,7 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
 
     // Ahora, se añaden efectos según haya salido la cosa
 
-    // Primero, se va a calcular el punto exacto en el que se debería
+    // Primero, se va a calcular el punto exacto en el que aparecerá el efecto
     
     sf::Vector2f posicionMedia = util::centroDeInterseccion(hitboxElegidaEnemigo.getRectangulo(),hitboxElegidaPropia.getRectangulo());
     
@@ -414,6 +415,9 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
         }
 
     } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+
+        VentanaPrincipal::vibrar(VIBRACION_ATAQUE_MEDIO);
+
         anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("golpeado-medio");
 
         for(int i(0);i < NUM_PARTICULAS_GOLPEADO_MEDIO;++i){

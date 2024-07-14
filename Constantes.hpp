@@ -48,6 +48,13 @@ const std::string VENTANA_NOMBRE = "Érase un combate";
 // Estilo de la ventana principal
 const int VENTANA_ESTILO = sf::Style::Close;
 
+// Vibración de la ventana para un ataque mediano
+const int VIBRACION_ATAQUE_MEDIO = 7;
+
+// Cada cuántos frames se actualiza la vibración de la ventana principal para que el efecto no
+// sea tan violento a los ojos
+const int VIBRACION_RETRASO = 1;
+
 /*
     CONSTANTES PARA LOS CONTROLES
 */
