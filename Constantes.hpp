@@ -74,7 +74,7 @@ const sf::Keyboard::Key TECLA_SALIDA = sf::Keyboard::Key::Escape;
     CONSTANTES PARA EL SONIDO
 */
 
-// Volumen m�ximo del reproductor de m�sica
+// Volumen máximo del reproductor de música
 const float VOLUMEN_MAXIMO_MUSICA = 100.0;
 
 /*
@@ -128,6 +128,9 @@ const int NUM_PARTICULAS_GOLPEADO_MEDIO = 4;
 
 // El número de partículas que salen cuando te pegan con un ataque grande
 const int NUM_PARTICULAS_GOLPEADO_GRANDE = 7;
+
+// Cómo de desplazada está la animación del polvo en el eje X con respecto al centro del personaje
+const int OFFSET_POLVO = 15;
 
 /*
     CONSTANTES PARA LOS PERSONAJES
