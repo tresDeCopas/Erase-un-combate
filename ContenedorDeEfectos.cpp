@@ -27,7 +27,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 {
     Bitacora::unicaInstancia()->escribir("Juan Cuesta: Bien, sigamos... siguiente punto del día: registro de efectos especiales. Emilio, apunta, voy a dictarte los efectos en orden descendente de aparición.");
 
-    // En esta variable se van a poner datos del fichero l�nea a l�nea
+    // En esta variable se van a poner datos del fichero línea a línea
     std::string linea;
 
     // En esta variable se van a meter elementos separados en base a un string dado
@@ -39,19 +39,19 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
     // En esta variable se guarda el tipo de animación del efecto
     std::string tipoAnimacion;
 
-    // En esta variable se guarda el nombre del tipo de bucle usado para la animaci�n actual
+    // En esta variable se guarda el nombre del tipo de bucle usado para la animación actual
     std::string nombreBucle;
 
-    // En esta variable se guarda el n�mero de rect�ngulos de la animaci�n actual
+    // En esta variable se guarda el número de rectángulos de la animación actual
     int numeroRectangulos;
 
-    // En esta variable se guarda el sonido que se reproducir� en cada animaci�n
+    // En esta variable se guarda el sonido que se reproducirá en cada animación
     sf::Sound sonido;
 
     // Abrimos cada fichero del directorio
     for(const auto & entrada : std::filesystem::directory_iterator("ficheros/efectos")){
 
-        // Se abre el fichero con informaci�n del personaje actual
+        // Se abre el fichero con información del personaje actual
         std::ifstream fichero(entrada.path());
 
         // Aprovechando que tenemos la ruta del fichero podemos sacar el nombre del efecto
@@ -82,22 +82,22 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
             std::getline(fichero,linea);
             nombreBucle = util::separarString(linea,':')[1];
 
-            // Se salta una l�nea en blanco y se empiezan a sacar rect�ngulos
+            // Se salta una línea en blanco y se empiezan a sacar rectángulos
             numeroRectangulos = 0;
             std::getline(fichero,linea);
             std::getline(fichero,linea);
 
-            // En esta variable se guarda el mapa que mapea n�meros de rect�ngulo a hitboxes
+            // En esta variable se guarda el mapa que mapea números de rectángulo a hitboxes
             std::map<int,std::list<Hitbox>> hitboxes;
 
             while(util::separarString(linea,':')[0] == "Rectangulo"){
 
-                Bitacora::unicaInstancia()->escribir("Juan Cuesta: rect�ngulo " + std::to_string(numeroRectangulos) + ".");
+                Bitacora::unicaInstancia()->escribir("Juan Cuesta: rectángulo " + std::to_string(numeroRectangulos) + ".");
 
-                // Lista de hitboxes para este rect�ngulo
+                // Lista de hitboxes para este rectángulo
                 std::list<Hitbox> listaHitboxes;
 
-                // Se salta la l�nea que dice "Hitboxes" y empezamos a contar hitboxes
+                // Se salta la línea que dice "Hitboxes" y empezamos a contar hitboxes
                 std::getline(fichero,linea);
                 std::getline(fichero,linea);
 
@@ -127,12 +127,12 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: finalmente, se apuntan los frames.");
 
-            // Ahora sacamos la correspondencia de frames y rect�ngulos
+            // Ahora sacamos la correspondencia de frames y rectángulos
             std::getline(fichero,linea);
 
             int contadorFrame = 0;
 
-            // En esta variable se guarda el mapa que mapea n�meros de frame a n�meros de rect�ngulo
+            // En esta variable se guarda el mapa que mapea números de frame a números de rectángulo
             std::map<int,int> frameARectangulo;
 
             for(std::string rectanguloString : util::separarString(linea,',')){
@@ -144,7 +144,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: número de frames: " + std::to_string(contadorFrame));
 
-            // Nos saltamos dos l�neas, y ahora puede haber informaci�n sobre los sonidos o no
+            // Nos saltamos dos líneas, y ahora puede haber información sobre los sonidos o no
             std::getline(fichero,linea);
             std::getline(fichero,linea);
 
@@ -154,7 +154,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
                 sonido.setBuffer(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener("sonidos/efectos/"+nombreEfecto+".wav"));
 
-                // Avanzamos de l�nea para conseguir la lista de frames
+                // Avanzamos de línea para conseguir la lista de frames
                 std::getline(fichero,linea);
 
                 std::set<int> framesConSonido;
@@ -177,7 +177,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
         } else {
             
-            // Se salta una l�nea en blanco y se saca la hitbox
+            // Se salta una línea en blanco y se saca la hitbox
             std::getline(fichero,linea);
             std::getline(fichero,linea);
 

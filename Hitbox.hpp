@@ -29,7 +29,7 @@ class Hitbox {
         // Constructor
         Hitbox(sf::IntRect rectangulo, int fuerzaAtaque, bool bajo);
 
-        // Devuelve el rect�ngulo
+        // Devuelve el rectángulo
         sf::IntRect getRectangulo();
 
         // Devuelve la fuerza de ataque

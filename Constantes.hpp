@@ -17,14 +17,14 @@
 // Indica si se quiere activar el modo debug (mostrar hitboxes en pantalla y acta vecinal en la consola)
 const bool DEBUG = true;
 
-// Color para las hitboxes que hacen da�o
+// Color para las hitboxes que hacen daño
 const sf::Color HITBOX_ATAQUE_COLOR = sf::Color::Red;
 
-// Color para las hitboxes que no hacen da�o
+// Color para las hitboxes que no hacen daño
 const sf::Color HITBOX_NO_ATAQUE_COLOR = sf::Color::Blue;
 
 /*
-    CONSTANTES PARA LA BIT�CORA
+    CONSTANTES PARA LA BITÁCORA
 */
 
 const std::string BITACORA_RUTA = "ActaVecinal.log";
@@ -59,11 +59,11 @@ const int VIBRACION_RETRASO = 1;
     CONSTANTES PARA LOS CONTROLES
 */
 
-// N�mero total de controles posibles (dos partes del teclado y ocho mandos)
+// Número total de controles posibles (dos partes del teclado y ocho mandos)
 const int NUMERO_CONTROLES = 10;
 
 // El movimiento mínimo que se tiene que hacer con un joystick para considerar la
-// entrada válida (esto evita que con mover el joystick 0.00001 milimetros ya est�
+// entrada válida (esto evita que con mover el joystick 0.00001 milimetros ya está
 // moviéndose el personaje)
 const double UMBRAL_JOYSTICK = 0.3;
 
@@ -142,10 +142,10 @@ const sf::Vector2f PERSONAJE_PLANTILLA_ORIGEN = sf::Vector2f(64, 100);
 // Gravedad del escenario
 const float GRAVEDAD = 0.3;
 
-// Puntos de vida m�ximos de un personaje
+// Puntos de vida máximos de un personaje
 const int MAX_PUNTOS_DE_VIDA = 100;
 
-// Velocidad m�xima en el eje X a la que se puede mover un personaje
+// Velocidad máxima en el eje X a la que se puede mover un personaje
 const float VELOCIDAD_ANDAR_MAX = 2.5;
 
 // Aumento de velocidad cada frame al andar
@@ -154,7 +154,7 @@ const float VELOCIDAD_ANDAR_AUMENTO = 0.3;
 // Velocidad que se consigue en el eje Y al saltar
 const float VELOCIDAD_SALTO = -7;
 
-// Posici�n en el eje Y del suelo
+// Posición en el eje Y del suelo
 const float ALTURA_SUELO = VENTANA_ALTURA - 10;
 
 // Impulso inicial al recibir un golpe pequeño
@@ -173,7 +173,7 @@ const int MAX_ATAQUE_MEDIO = 6;
     CONSTANTES AUXILIARES PARA COSAS DE C++
 */
 
-// Si dos floats se diferencian en menos que este n�mero, se consideran iguales
+// Si dos floats se diferencian en menos que este número, se consideran iguales
 const float UMBRAL_FLOAT = 0.0001;
 
 #endif // __CONSTANTES_CPP__

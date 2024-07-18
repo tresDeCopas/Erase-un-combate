@@ -27,12 +27,12 @@ GestorDeControles::GestorDeControles()
     teclaAControlYAccion[sf::Keyboard::L] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::DERECHA);
     teclaAControlYAccion[sf::Keyboard::Space] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ATACAR);
 
-    // Al principio los controles no est�n asociados a nadie
+    // Al principio los controles no están asociados a nadie
     for(int i=0;i<NUMERO_CONTROLES;i++){
         controlAJugador[static_cast<Control>(i)] = Jugador::NADIE;
     }
 
-    // Bueno s�, hay dos que s� est�n asociados al principio
+    // Bueno sí, hay dos que sí están asociados al principio
     controlAJugador[Control::TECLADO_IZQUIERDA] = Jugador::JUGADOR1;
     controlAJugador[Control::TECLADO_DERECHA] = Jugador::JUGADOR2;
 }
@@ -47,16 +47,16 @@ bool GestorDeControles::conectarMando(Jugador j, Control c){
     if(c == Control::TECLADO_DERECHA || c == Control::TECLADO_IZQUIERDA)
         return false;
 
-    // Si ya est� pillado, tambi�n
+    // Si ya está pillado, también
     if(!estaLibre(c)) return false;
 
-    // Buscamos el control que sea que est� usando el jugador y lo deshabilitamos
-    // (Gracias a las maravillas de C y C++ puedo evitar usar llaves aqu�)
+    // Buscamos el control que sea que está usando el jugador y lo deshabilitamos
+    // (Gracias a las maravillas de C y C++ puedo evitar usar llaves aquí)
     for(int i=0;i<NUMERO_CONTROLES;i++)
         if(controlAJugador[static_cast<Control>(i)] == j)
             controlAJugador[static_cast<Control>(i)] = Jugador::NADIE;
 
-    // Por �ltimo, asignamos el control y ya est�
+    // Por último, asignamos el control y ya está
     controlAJugador[c] = j;
 
     return true;
@@ -64,14 +64,14 @@ bool GestorDeControles::conectarMando(Jugador j, Control c){
 
 std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
 {
-    // Este es el par que va a ser devuelto (empieza vac�o)
+    // Este es el par que va a ser devuelto (empieza vacío)
     std::pair<Jugador,Accion> pair(Jugador::NADIE,Accion::NADA);
 
     if(evento.type == sf::Event::JoystickButtonPressed || evento.type == sf::Event::JoystickButtonReleased){
-        // Alguien ha pulsado un bot�n de mando (el bot�n da igual, todos
+        // Alguien ha pulsado un botón de mando (el botón da igual, todos
         // hacen lo mismo). Se le suma 2 al numerito del control porque los dos
         // primeros controles son la parte izquierda del teclado y la parte derecha,
-        // por lo que el control 3 es el mando 0 y as� sucesivamente
+        // por lo que el control 3 es el mando 0 y así sucesivamente
         Control control = static_cast<Control>(evento.joystickButton.joystickId+2);
 
         // Si el control es de alguien, se actualiza el par
@@ -88,7 +88,7 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
         // se hacen cosas
         pair.first = controlAJugador[control];
         if(pair.first != Jugador::NADIE){
-            // Dependiendo del eje, se decide hacia d�nde se mueve
+            // Dependiendo del eje, se decide hacia dónde se mueve
             switch(evento.joystickMove.axis){
                 // PovX, X y R son los ejes X de tres posibles entradas
                 // PovX es la cruceta, X es el joystick izquierdo y R el joystick derecho
@@ -118,20 +118,20 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
     } else if (evento.type == sf::Event::KeyPressed || evento.type == sf::Event::KeyReleased){
         // Alguien ha pulsado una tecla
 
-        // Si es la tecla de salida tiene soluci�n f�cil
+        // Si es la tecla de salida tiene solución fácil
         if(evento.key.code == TECLA_SALIDA)
             pair.second = Accion::ESCAPE;
         else {
             // Si es otra tecla, hay que ver si es una de las que nos interesa
             if(teclaAControlYAccion.count(evento.key.code)){
-                // Si es una tecla que tenemos registrada, se comprueba su control y su acci�n
+                // Si es una tecla que tenemos registrada, se comprueba su control y su acción
                 Control c = teclaAControlYAccion[evento.key.code].first;
                 Accion a = teclaAControlYAccion[evento.key.code].second;
 
-                // Se asigna el personaje y la acci�n
+                // Se asigna el personaje y la acción
                 pair.first = controlAJugador[c];
                 pair.second = a;
-                // Si el personaje es NADIE es porque nadie tiene ese control, as�
+                // Si el personaje es NADIE es porque nadie tiene ese control, así
                 // que todo lo que hemos hecho ha sido perder el tiempo
                 if(pair.first == Jugador::NADIE){
                     pair.second = Accion::NADA;
@@ -140,6 +140,6 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
         }
     }
 
-    // Despu�s de este pifostio devolvemos el par
+    // Después de este pifostio devolvemos el par
     return pair;
 }

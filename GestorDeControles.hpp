@@ -9,7 +9,7 @@
 
 /*
     Clase que se encarga de la correspondencia entre jugadores y controles,
-    adem·s de indicar quÈ significan las teclas y botones que se pulsan
+    ademÔøΩs de indicar quÔøΩ significan las teclas y botones que se pulsan
 */
 class GestorDeControles
 {
@@ -19,21 +19,23 @@ class GestorDeControles
 
     private:
 
-        // Mapa que guarda, para cada control, el jugador al que est· asignado
+        // Mapa que guarda, para cada control, el jugador al que estÔøΩ asignado
         std::map<Control, Jugador> controlAJugador;
 
-        // Mapa que guarda, para cada tecla v·lida (excepto la tecla de salir), la parte del teclado y la acciÛn asociada
+        // Mapa que guarda, para cada tecla vÔøΩlida (excepto la tecla de salir), la parte del teclado y la acciÔøΩn asociada
         std::map<sf::Keyboard::Key,std::pair<Control,Accion>> teclaAControlYAccion;
 
-        // FunciÛn que indica si un control est· libre
+        // FunciÔøΩn que indica si un control estÔøΩ libre
         bool estaLibre(Control c);
 
     public:
 
-        // Dado un evento, devuelve el jugador y la acciÛn que est· haciendo
+        // Dado un evento, devuelve el jugador y la acciÔøΩn que estÔøΩ haciendo
         std::pair<Jugador,Accion> comprobarEvento(sf::Event evento);
 
         // Permite establecer un mando para que lo use un jugador
+        // TODO ES UN PORCULO QUE TENGA QUE DECIRTE QU√â CONTROL USAR DESDE FUERA,
+        // MEJOR TE DOY EL EVENTO Y YA LO DESMENUZAS TU CON TIEMPO QUE SABES M√ÅS DEL TEMA
         bool conectarMando(Jugador j, Control c);
 
         // NUNCA SE COPIA UN SINGLETON
@@ -42,7 +44,7 @@ class GestorDeControles
         // NUNCA SE ASIGNA UN SINGLETON
         void operator=(const GestorDeControles &) = delete;
 
-        // Devuelve la ˙nica instancia
+        // Devuelve la √∫nica instancia
         static GestorDeControles * unicaInstancia();
 };
 

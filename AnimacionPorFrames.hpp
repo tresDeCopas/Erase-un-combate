@@ -10,41 +10,41 @@
 
 /*
     Esta clase define animaciones para personajes y ataques formadas por varios frames
-    Cada animaci�n puede tener asociado cualquier n�mero de hitboxes
+    Cada animación puede tener asociado cualquier número de hitboxes
 */
 class AnimacionPorFrames : public Animacion
 {
 private:
-    // Tipo de repetici�n en bucle
+    // Tipo de repetición en bucle
     TipoBucle tipoBucle;
 
-    // Si tipoBucle es PING_PONG, indica si la animaci�n va hacia delante o hacia atr�s
+    // Si tipoBucle es PING_PONG, indica si la animación va hacia delante o hacia atrás
     bool pingPongHaciaDelante;
 
-    // Si tipoBucle no es SIN_BUCLE, indica cu�ntas veces se repetir� la animaci�n (0 es infinito)
+    // Si tipoBucle no es SIN_BUCLE, indica cuántas veces se repetirá la animación (0 es infinito)
     int numRepeticionesTotal;
 
-    // Si numRepeticionesTotal no es 0, indica cu�ntas veces se ha repetido la animaci�n de momento
+    // Si numRepeticionesTotal no es 0, indica cuántas veces se ha repetido la animación de momento
     int numRepeticionesActual;
 
-    // Correspondencia entre rect�ngulo y hitboxes
+    // Correspondencia entre rectángulo y hitboxes
     std::map<int, std::list<Hitbox>> hitboxes;
 
-    // Correspondencia entre frame y rect�ngulo (por ejemplo, frame 0 rect�ngulo 0, o frame 5 rect�ngulo 2)
+    // Correspondencia entre frame y rectángulo (por ejemplo, frame 0 rectángulo 0, o frame 5 rectángulo 2)
     std::map<int, int> rectanguloCorrespondiente;
 
-    // Indica qu� frames deben hacer sonar el sonido de la animaci�n
+    // Indica qué frames deben hacer sonar el sonido de la animación
     std::set<int> framesConSonido;
 
     // Indica si el sonido se debe repetir cada vez que vuelva a salir el frame o si una vez se
     // termine el bucle no hay que repetirlo
     bool repetirSonido;
 
-    // Si repetirSonido est� a false, indica si el sonido ya se ha reproducido durante todo un bucle,
-    // por lo que habr�a que resetear la animaci�n para que volviera a sonar
+    // Si repetirSonido está a false, indica si el sonido ya se ha reproducido durante todo un bucle,
+    // por lo que habría que resetear la animación para que volviera a sonar
     bool sonidoYaReproducido;
 
-    // N�mero de frame actual
+    // Número de frame actual
     int frameActual;
 
     // Indica si es el primer frame, para no ir al siguiente (si no, nunca se mostraría el primer frame al actualizarlo inmediatamente)
@@ -63,22 +63,22 @@ public:
     // Le da la vuelta al sprite
     virtual void voltear();
 
-    // Devuelve qu� rect�ngulo se est� mostrando actualmente
+    // Devuelve qué rectángulo se está mostrando actualmente
     int getNumeroRectangulo();
 
     // Devuelve qué frame se está mostrando actualmente
     int getNumeroFrame();
 
-    // Cambia el tipo de bucle para la animaci�n
+    // Cambia el tipo de bucle para la animación
     void setTipoBucle(TipoBucle tipoBucle);
 
-    // Devuelve si ha terminado la animaci�n (si el tipo de bucle es "SIN_BUCLE")
+    // Devuelve si ha terminado la animación (si el tipo de bucle es "SIN_BUCLE")
     bool haTerminado();
 
-    // Resetea la animaci�n al primer frame y el primer rect�ngulo
+    // Resetea la animación al primer frame y el primer rectángulo
     virtual void resetear();
 
-    // Devuelve un clon de la animaci�n
+    // Devuelve un clon de la animación
     virtual std::shared_ptr<Animacion> clonar();
 
     // Devuelve una lista con las hitboxes del frame actual

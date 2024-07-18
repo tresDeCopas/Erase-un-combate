@@ -9,13 +9,13 @@
 #include <vector>
 
 /*
-    Este namespace contiene funciones �tiles
+    Este namespace contiene funciones útiles
 */
 
 namespace util{
 
-    // Dado un string de entrada y un car�cter separador, corta el string original en substrings y
-    // los devuelve en forma de vector (sin incluir el car�cter separador)
+    // Dado un string de entrada y un carácter separador, corta el string original en substrings y
+    // los devuelve en forma de vector (sin incluir el carácter separador)
     std::vector<std::string> separarString(std::string string, char separador);
 
     // Dado un string, devuelve el tipo de bucle correspondiente
