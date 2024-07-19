@@ -33,6 +33,7 @@ enum class EstadoPersonaje {
     GOLPEADO_BAJO,      // Ha sufrido un ataque bajo
     SALTANDO_SUBIENDO,  // Está en el aire subiendo después de saltar
     SALTANDO_BAJANDO,   // Está en el aire bajando después de saltar y alcanzar la máxima altura
+    TOCANDO_SUELO,      // Acaba de caer bien después de saltar y se está colocando para no caerse
     ANDANDO_ACERCANDOSE,// Está andando hacia el enemigo
     ANDANDO_ALEJANDOSE, // Está andando alejándose del enemigo
     BLOQUEANDO,         // Está bloqueando un ataque

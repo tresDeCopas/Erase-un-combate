@@ -266,5 +266,26 @@ Frames:
 
 Sonido:no repetir
 8
+--------------------------------------------------------------------------------
+Estado:tocando-suelo
+Bucle:sin bucle
 
+Rectangulo:0
+Hitboxes:
+51,38,27,62,0
+
+Rectangulo:1
+Hitboxes:
+51,37,27,63,0
+
+Rectangulo:2
+Hitboxes:
+51,32,27,68,0
+
+Frames:
+0,0,0,0,0,1,1,1,1,1,2,2,2,2,2
+
+Sonido:no repetir
+0
+--------------------------------------------------------------------------------
 ####

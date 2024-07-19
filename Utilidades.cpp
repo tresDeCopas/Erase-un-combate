@@ -55,6 +55,8 @@ namespace util{
             return EstadoPersonaje::SALTANDO_SUBIENDO;
         if(string == "saltando-bajando")
             return EstadoPersonaje::SALTANDO_BAJANDO;
+        if(string == "tocando-suelo")
+            return EstadoPersonaje::TOCANDO_SUELO;
         if(string == "andando-acercandose")
             return EstadoPersonaje::ANDANDO_ACERCANDOSE;
         if(string == "andando-alejandose")
