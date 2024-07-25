@@ -26,7 +26,15 @@ void Combate::comenzar(){
 
     // El bucle principal realiza acciones en un orden muy específico para evitar problemas
 
+    sf::Clock reloj;
+
     while(true){
+
+        if(reloj.getElapsedTime().asSeconds() < 1.0/VENTANA_FPS){
+            continue;
+        } else {
+            reloj.restart();
+        }
 
         // PRIMER PASO: RECIBIR ENTRADA DEL TECLADO O DE LOS MANDOS
         // En este paso se actualizan los valores booleanos de los personajes, que
