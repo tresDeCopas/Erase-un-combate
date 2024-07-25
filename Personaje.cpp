@@ -313,12 +313,33 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     
     case EstadoPersonaje::GOLPEADO_PEQUE:
     case EstadoPersonaje::GOLPEADO_MEDIO:
-        pararMovimiento();
-        if(animaciones[estado]->haTerminado()){
-            cambiarEstado(EstadoPersonaje::QUIETO);
+
+        if(getPosicion().y < ALTURA_SUELO) {
+            // Le ha pillado en el aire
+            velY+=GRAVEDAD;
+
+            if(animaciones[estado]->haTerminado()){
+                cambiarEstado(velY < 0 ? EstadoPersonaje::SALTANDO_SUBIENDO : EstadoPersonaje::SALTANDO_BAJANDO);
+            }
+
+        } else if (velY != 0){
+            // Ha caído
+            velY = 0;
+            animaciones[estado]->setPosicion(animaciones[estado]->getPosicion().x,ALTURA_SUELO);
+            levantarPolvo(efectosInsertados);
+
+            cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
+        } else {
+            // Le ha pillado en el suelo
+            pararMovimiento();
+
+            if(animaciones[estado]->haTerminado()){
+                cambiarEstado(EstadoPersonaje::QUIETO);
+            }
         }
 
         break;
+
     case EstadoPersonaje::BLOQUEANDO:
         pararMovimiento();
         if(accionesRealizadas[Accion::ATACAR]){
@@ -442,6 +463,7 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
 
     // Si sí que hubo golpe, depende ya de cómo le pille al personaje
     switch(estado){
+        // En el suelo sin bloquear
         case EstadoPersonaje::GOLPEADO_PEQUE:
         case EstadoPersonaje::QUIETO:
         case EstadoPersonaje::ANDANDO_ACERCANDOSE:
@@ -461,6 +483,7 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
             }
             break;
         
+        // En el suelo bloqueando
         case EstadoPersonaje::BLOQUEANDO:
         case EstadoPersonaje::ANDANDO_ALEJANDOSE:
 
@@ -484,6 +507,20 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
                 }
             }
 
+            break;
+        
+        // En el aire
+        case EstadoPersonaje::SALTANDO_SUBIENDO:
+        case EstadoPersonaje::SALTANDO_BAJANDO:
+        case EstadoPersonaje::ATAQUE_AEREO:
+
+            if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
+                cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
+            } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+            }
             break;
     }
 
