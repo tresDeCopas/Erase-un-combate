@@ -29,6 +29,10 @@ class Personaje : public sf::Drawable {
         // Verdadero si el personaje está mirando hacia la derecha (el enemigo está a la derecha)
         bool mirandoDerecha;
 
+        // Va aumentando si te mueves estando tumbado y cuando llega a MAX_CONTADOR_TUMBADO
+        // tu personaje se levanta y el contador vuelve a cero
+        int contadorTumbado;
+
         // Jugador al que está asociado el personaje
         Jugador jugador;
 

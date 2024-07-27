@@ -154,20 +154,30 @@ const float VELOCIDAD_ANDAR_AUMENTO = 0.3;
 // Velocidad que se consigue en el eje Y al saltar
 const float VELOCIDAD_SALTO = -7;
 
+// Cuando un personaje GOLPEADO_BAJANDO choca el suelo con una velocidad menor a esta, pasa
+// a estar TIRADO
+const float VELOCIDAD_PASAR_A_TIRADO = 3.2;
+
 // Posición en el eje Y del suelo
 const float ALTURA_SUELO = VENTANA_ALTURA - 10;
 
-// Impulso inicial al recibir un golpe pequeño
+// Impulso inicial en el eje X al recibir un golpe pequeño
 const float IMPULSO_GOLPE_PEQUE = 1;
 
-// Impulso inicial al recibir un golpe mediano
+// Impulso inicial en el eje X al recibir un golpe mediano
 const float IMPULSO_GOLPE_MEDIO = 5;
+
+// Impulso inicial en el eje Y al recibir un golpe bajo mediano
+const float IMPULSO_GOLPE_BAJO_MEDIO = -5;
 
 // Máximo daño que puede hacer un ataque pequeño
 const int MAX_ATAQUE_PEQUE = 3;
 
 // Máximo daño que puede hacer un ataque medio
 const int MAX_ATAQUE_MEDIO = 6;
+
+// Valor que tiene que alcanzar contadorTumbado para que se levante un personaje
+const int MAX_CONTADOR_TUMBADO = VENTANA_FPS*3;
 
 /*
     CONSTANTES AUXILIARES PARA COSAS DE C++

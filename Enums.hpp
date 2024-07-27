@@ -29,17 +29,18 @@ enum class EstadoPersonaje {
     ATAQUE_AEREO,       // Está atacando en el aire
     GOLPEADO_PEQUE,     // Ha sufrido un ataque pequeño
     GOLPEADO_MEDIO,     // Ha sufrido un ataque medio
-    GOLPEADO_GRANDE,    // Ha sufrido un ataque grande
-    GOLPEADO_BAJO,      // Ha sufrido un ataque bajo
+    GOLPEADO_BAJANDO,   // Ha sufrido un ataque que lo ha levantado por los aires
+    GOLPEADO_SUBIENDO,  // Ha sufrido un ataque que lo ha levantado y ahora está cayendo
     SALTANDO_SUBIENDO,  // Está en el aire subiendo después de saltar
     SALTANDO_BAJANDO,   // Está en el aire bajando después de saltar y alcanzar la máxima altura
-    TOCANDO_SUELO,      // Acaba de caer bien después de saltar y se está colocando para no caerse
+    TOCANDO_SUELO,      // Acaba de caer bien después de saltar y se está colocando
     ANDANDO_ACERCANDOSE,// Está andando hacia el enemigo
     ANDANDO_ALEJANDOSE, // Está andando alejándose del enemigo
     BLOQUEANDO,         // Está bloqueando un ataque
     PREPARANDO_SUPER,   // Está preparándose para lanzar el super ataque
     ATAQUE_SUPER,       // Está haciendo el super ataque
-    LEVANTANDOSE,       // Se está levantando del suelo
+    TUMBADO,            // Está en el suelo tumbado después de que un ataque lo mandara volando
+    LEVANTANDOSE,       // Se está levantando del suelo después de estar tumbado
     CELEBRANDO          // Está celebrando su victoria
 };
 

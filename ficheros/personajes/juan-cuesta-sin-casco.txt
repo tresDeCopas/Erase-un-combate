@@ -319,4 +319,53 @@ Frames:
 
 Sonido:no repetir
 11
+--------------------------------------------------------------------------------
+Estado:golpeado-subiendo
+Bucle:normal
+
+Rectangulo:0
+Hitboxes:
+
+Frames:
+0
+
+Sonido:no repetir
+0
+--------------------------------------------------------------------------------
+Estado:golpeado-bajando
+Bucle:normal
+
+Rectangulo:0
+Hitboxes:
+
+Frames:
+0
+--------------------------------------------------------------------------------
+Estado:tumbado
+Bucle:normal
+
+Rectangulo:0
+Hitboxes:
+
+Frames:
+0
+--------------------------------------------------------------------------------
+Estado:levantandose
+Bucle:sin bucle
+
+Rectangulo:0
+Hitboxes:
+
+Rectangulo:1
+Hitboxes:
+
+Rectangulo:2
+Hitboxes:
+
+Rectangulo:3
+Hitboxes:
+
+Frames:
+0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3
+--------------------------------------------------------------------------------
 ####
