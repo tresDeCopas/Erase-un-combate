@@ -177,7 +177,7 @@ const int MAX_ATAQUE_PEQUE = 3;
 const int MAX_ATAQUE_MEDIO = 6;
 
 // Valor que tiene que alcanzar contadorTumbado para que se levante un personaje
-const int MAX_CONTADOR_TUMBADO = VENTANA_FPS*3;
+const int MAX_CONTADOR_TUMBADO = VENTANA_FPS;
 
 /*
     CONSTANTES AUXILIARES PARA COSAS DE C++
