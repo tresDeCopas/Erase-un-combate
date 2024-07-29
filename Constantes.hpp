@@ -15,7 +15,7 @@
 */
 
 // Indica si se quiere activar el modo debug (mostrar hitboxes en pantalla y acta vecinal en la consola)
-const bool DEBUG = false;
+const bool DEBUG = true;
 
 // Color para las hitboxes que hacen daño
 const sf::Color HITBOX_ATAQUE_COLOR = sf::Color::Red;
@@ -82,7 +82,7 @@ const float VOLUMEN_MAXIMO_MUSICA = 100.0;
 */
 
 // Secuencia de caracteres que delimita los distintos elementos de un fichero
-const std::string SECUENCIA_DELIMITADORA_FICHERO = "----";
+const std::string SECUENCIA_DELIMITADORA_FICHERO = "----------------------------------------";
 
 // Secuencia de caracteres que indica el fin de un fichero
 const std::string SECUENCIA_FIN_FICHERO = "####";

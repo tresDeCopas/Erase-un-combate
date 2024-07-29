@@ -3,22 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente) {
-
-    sprite.setTexture(textura);
-    sprite.setTextureRect(sf::IntRect(0, 0, textura.getSize().x/numRectangulos, textura.getSize().y));
-    sprite.setOrigin(origenX,origenY);
-    sprite.setPosition(posicionX,posicionY);
-
-    this->tipoBucle = tipoBucle;
-    this->numRepeticionesTotal = numRepeticionesTotal;
-    this->hitboxes = hitboxes;
-    this->rectanguloCorrespondiente = rectanguloCorrespondiente;
-
-    resetear();
-}
-
-AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente, sf::Sound sonido, std::set<int> framesConSonido, bool repetirSonido) {
+AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente, std::set<int> framesConSonido, std::map<int,sf::Vector2f> framesConMovimiento, std::map<int,IndicacionesSobreAnimacion> framesConAnimaciones, sf::Sound sonido, bool repetirSonido) {
 
     sprite.setTexture(textura);
     sprite.setTextureRect(sf::IntRect(0, 0, textura.getSize().x/numRectangulos, textura.getSize().y));
@@ -31,6 +16,8 @@ AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX
     this->rectanguloCorrespondiente = rectanguloCorrespondiente;
     this->sonido = sonido;
     this->framesConSonido = framesConSonido;
+    this->framesConMovimiento = framesConMovimiento;
+    this->framesConAnimaciones = framesConAnimaciones;
     this->repetirSonido = repetirSonido;
 
     sonidoYaReproducido = false;

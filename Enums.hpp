@@ -60,9 +60,4 @@ enum class Control{
     MANDO4, MANDO5, MANDO6, MANDO7
 };
 
-/*
-    ENUMERADOS DE IDENTIFICADORES
-*/
-
-
 #endif // __ENUMS_HPP__
