@@ -195,6 +195,8 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                 elementosSeparados = util::separarString(linea,',');
 
                 framesConMovimiento[std::stoi(elementosSeparados[0])] = sf::Vector2f(std::stof(elementosSeparados[1]),std::stof(elementosSeparados[2]));
+                
+                std::getline(fichero,linea);
             }
 
             // Saltamos una línea para poder extraer las animaciones
@@ -214,6 +216,8 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                 if(elementosSeparados.size() == 6){
                     indicaciones.velocidadInicial = sf::Vector2f(std::stof(elementosSeparados[4]), std::stof(elementosSeparados[5]));
                 }
+
+                std::getline(fichero,linea);
             }
 
             // Finalmente, saltamos una línea y debería haber información sobre el siguiente estado,
@@ -230,8 +234,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: se terminó de cargar la animación para el estado " + nombreEstado + ".\n");
         }
 
-        Personaje p(animaciones);
-        personajes.insert(std::pair<std::string,Personaje>(nombrePersonaje,p));
+        personajes.insert(std::pair<std::string,Personaje>(nombrePersonaje,Personaje(animaciones)));
 
         Bitacora::unicaInstancia()->escribir("Juan Cuesta: concluye la inserción del personaje " + nombrePersonaje + ".\n");
     }

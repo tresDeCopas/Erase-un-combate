@@ -2,7 +2,6 @@
 #define __ANIMACION_CON_GRAVEDAD_HPP__
 
 #include "Animacion.hpp"
-#include "AnimacionPorFrames.hpp"
 
 /*
     Esta clase representa animaciones que caen con gravedad y rebotan con las paredes
@@ -35,7 +34,7 @@ public:
     AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, sf::Sound sonido);
 
     // Actualiza la animación
-    void actualizar();
+    void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones, sf::Vector2f &movimiento);
 
     // Resetea la animación al estado inicial
     void resetear();
