@@ -485,6 +485,12 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
         break;
+    
+    case EstadoPersonaje::CELEBRANDO:
+
+        pararMovimiento();
+
+        break;
     }
 
     // Se comprueba si el enemigo está a la derecha o a la izquierda y se voltea el
@@ -551,6 +557,22 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
     // Si la animación del estado actual no tiene hitboxes en este momento, no hace falta comprobar nada
     if(hitboxes.size() == 0) return;
 
+    // Si el personaje está en un estado en el que no puede ser golpeado, no hace falta comprobar nada
+    switch(estado){
+        case EstadoPersonaje::GOLPEADO_MEDIO:
+        case EstadoPersonaje::GOLPEADO_BAJANDO:
+        case EstadoPersonaje::GOLPEADO_SUBIENDO:
+        case EstadoPersonaje::PREPARANDO_SUPER:
+        case EstadoPersonaje::TUMBADO:
+        case EstadoPersonaje::LEVANTANDOSE:
+        case EstadoPersonaje::CELEBRANDO:
+            return;
+            break;
+        
+        default:
+            break;
+    }
+
     // Se eliminan las hitboxes con daño
     auto it = hitboxes.begin();
     
@@ -592,6 +614,18 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
 
     // Si sí que hubo golpe, depende ya de cómo le pille al personaje
     switch(estado){
+
+        // En situaciones en las que no se puede golpear otra vez (si el personaje está en
+        // alguno de estos estados, se debería haber detenido la ejecución de esta función antes)
+        case EstadoPersonaje::GOLPEADO_MEDIO:
+        case EstadoPersonaje::GOLPEADO_BAJANDO:
+        case EstadoPersonaje::GOLPEADO_SUBIENDO:
+        case EstadoPersonaje::PREPARANDO_SUPER:
+        case EstadoPersonaje::TUMBADO:
+        case EstadoPersonaje::LEVANTANDOSE:
+        case EstadoPersonaje::CELEBRANDO:
+            break;
+
         // En el suelo sin bloquear o en el aire (todo te pega)
         case EstadoPersonaje::GOLPEADO_PEQUE:
         case EstadoPersonaje::QUIETO:
@@ -664,6 +698,23 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
                 } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
                     velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
                     cambiarEstado(EstadoPersonaje::BLOQUEANDO);
+                }
+            }
+            break;
+        
+        // Realizando el ataque súper (sufre daño pero no lo sabe)
+        case EstadoPersonaje::ATAQUE_SUPER:
+            if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
+                cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
+            } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                if(hitboxElegidaEnemigo.esAtaqueBajo()){
+                    velX/=2;
+                    velY = IMPULSO_GOLPE_BAJO_MEDIO;
+                    cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+                } else {
+                    cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
                 }
             }
             break;
