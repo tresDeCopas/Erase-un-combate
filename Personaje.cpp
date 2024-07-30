@@ -703,20 +703,12 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
             }
             break;
         
-        // Realizando el ataque súper (sufre daño pero no lo sabe)
+        // Realizando el ataque súper (sufre daño pero no se mueve ni cambia de estado)
         case EstadoPersonaje::ATAQUE_SUPER:
             if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
-                velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
-                cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
+                // Se le baja la vida igualmente
             } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
-                velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
-                if(hitboxElegidaEnemigo.esAtaqueBajo()){
-                    velX/=2;
-                    velY = IMPULSO_GOLPE_BAJO_MEDIO;
-                    cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
-                } else {
-                    cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
-                }
+                // Se le baja la vida igualmente
             }
             break;
     }
