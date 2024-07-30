@@ -21,6 +21,11 @@ struct IndicacionesSobreAnimacion {
 
     // Velocidad inicial de la animación (si es una animación con gravedad)
     sf::Vector2f velocidadInicial;
+
+    // Por lo general las animaciones se muestran para un personaje que está mirando a
+    // la derecha, pero si un personaje está mirando a la izquierda es necesario voltear
+    // la animación, lo que se deberá hacer al generarle en base a estas indicaciones
+    bool necesitaVoltearse;
     
 };
 

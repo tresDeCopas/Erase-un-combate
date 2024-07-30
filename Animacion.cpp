@@ -1,10 +1,5 @@
 #include "Animacion.hpp"
 
-void Animacion::voltear(){
-    // Al escalar el eje X por -1 se le da la vuelta muy guay todo
-    sprite.scale(-1,1);
-}
-
 void Animacion::setPosicion(float x, float y){
     sprite.setPosition(x,y);
 }

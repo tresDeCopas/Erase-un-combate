@@ -124,6 +124,25 @@ bool AnimacionConGravedad::haTerminado(){
     return contadorParpadeo > MAX_CONTADOR_PARPADEO;
 }
 
+void AnimacionConGravedad::voltear(){
+    // Al escalar el eje X por -1 se le da la vuelta muy guay todo pero no es suficiente
+    sprite.scale(-1,1);
+
+    // También hay que voltear la hitbox
+    int puntoCentral = sprite.getTextureRect().width/2;
+
+    int derecha = hitbox.getRectangulo().left+hitbox.getRectangulo().width;
+
+    int nuevaIzquierda = derecha - (derecha-puntoCentral)*2;
+
+    Hitbox nuevaHitbox(sf::IntRect(nuevaIzquierda,hitbox.getRectangulo().top,hitbox.getRectangulo().width,hitbox.getRectangulo().height),hitbox.getFuerzaAtaque(),hitbox.esAtaqueBajo());
+
+    hitbox = nuevaHitbox;
+
+    // También hay que voltear la velocidad
+    velocidad.x = -velocidad.x;
+}
+
 void AnimacionConGravedad::setVelocidad(sf::Vector2f velocidad){
     this->velocidad = velocidad;
 }

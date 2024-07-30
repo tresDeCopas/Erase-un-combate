@@ -58,6 +58,7 @@ void AnimacionPorFrames::actualizar(std::list<std::shared_ptr<Animacion>> &nueva
 
     // Se actualizan las nuevas animaciones si es necesario
     if(framesConAnimaciones.count(frameActual)){
+
         std::shared_ptr<Animacion> anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto(framesConAnimaciones[frameActual].rutaAnimacion);
 
         sf::Vector2f posicionAnimacion(getPosicionEsqSupIzq());
@@ -65,9 +66,25 @@ void AnimacionPorFrames::actualizar(std::list<std::shared_ptr<Animacion>> &nueva
         posicionAnimacion.x+=framesConAnimaciones[frameActual].posicionInicial.x;
         posicionAnimacion.y+=framesConAnimaciones[frameActual].posicionInicial.y;
 
+        anim->setPosicion(posicionAnimacion);
+
         if(std::string(typeid(*anim).name()) == "AnimacionConGravedad"){
             ((AnimacionConGravedad*)(anim.get()))->setVelocidad(framesConAnimaciones[frameActual].velocidadInicial);
         }
+
+        if(framesConAnimaciones.at(frameActual).necesitaVoltearse){
+            // En este caso hay que usar la posición actual del sprite, al contrario
+            // que las hitboxes, que usan una posición relativa al sprite que luego se
+            // actualiza. Aquí, la posición es relativa a la ventana, por lo que hay que
+            // tener en cuenta dónde está ahora mismo el sprite en la ventana
+            int puntoCentral = sprite.getPosition().x;
+            posicionAnimacion.x = posicionAnimacion.x - (posicionAnimacion.x-puntoCentral)*2;
+            anim->setPosicion(posicionAnimacion);
+
+            anim->voltear();
+        }
+
+        nuevasAnimaciones.push_back(anim);
     }
 
     sprite.setTextureRect(sf::IntRect(rectanguloCorrespondiente[frameActual]*sprite.getTextureRect().width,0,sprite.getTextureRect().width,sprite.getTextureRect().height));
@@ -96,6 +113,16 @@ void AnimacionPorFrames::voltear(){
         }
 
         hitboxes[entero] = nuevaLista;
+    }
+
+    // También hay que voltear los movimientos
+    for(auto &par : framesConMovimiento){
+        par.second.x = -par.second.x;
+    }
+
+    // También hay que voltear las animaciones adicionales
+    for(auto &par : framesConAnimaciones){
+        par.second.necesitaVoltearse = !par.second.necesitaVoltearse;
     }
 }
 

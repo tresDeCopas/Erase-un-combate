@@ -210,12 +210,16 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
                 IndicacionesSobreAnimacion indicaciones;
 
-                indicaciones.rutaAnimacion = "sprites/efectos/" + elementosSeparados[1];
+                indicaciones.necesitaVoltearse = false;
+
+                indicaciones.rutaAnimacion = elementosSeparados[1];
                 indicaciones.posicionInicial = sf::Vector2f(std::stof(elementosSeparados[2]), std::stof(elementosSeparados[3]));
 
                 if(elementosSeparados.size() == 6){
                     indicaciones.velocidadInicial = sf::Vector2f(std::stof(elementosSeparados[4]), std::stof(elementosSeparados[5]));
                 }
+
+                framesConAnimaciones[std::stoi(elementosSeparados[0])] = indicaciones;
 
                 std::getline(fichero,linea);
             }

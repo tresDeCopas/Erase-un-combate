@@ -65,7 +65,7 @@ namespace util{
             return EstadoPersonaje::BLOQUEANDO;
         if(string == "preparando-super")
             return EstadoPersonaje::PREPARANDO_SUPER;
-        if(string == "atacando-super")
+        if(string == "ataque-super")
             return EstadoPersonaje::ATAQUE_SUPER;
         if(string == "tumbado")
             return EstadoPersonaje::TUMBADO;

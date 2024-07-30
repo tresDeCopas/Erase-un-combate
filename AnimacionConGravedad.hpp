@@ -45,6 +45,9 @@ public:
     // Determina si una animación ha terminado
     bool haTerminado();
 
+    // Le da la vuelta al sprite, a la hitbox y a la velocidad
+    void voltear();
+
     // Establece la velocidad de movimiento de la animación
     void setVelocidad(sf::Vector2f velocidad);
 
