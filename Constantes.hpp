@@ -51,6 +51,9 @@ const int VENTANA_ESTILO = sf::Style::Close;
 // Vibración de la ventana para un ataque mediano
 const int VIBRACION_ATAQUE_MEDIO = 7;
 
+// Vibración de la ventana para un ataque súper
+const int VIBRACION_ATAQUE_SUPER = 30;
+
 // Cada cuántos frames se actualiza la vibración de la ventana principal para que el efecto no
 // sea tan violento a los ojos
 const int VIBRACION_RETRASO = 1;
@@ -117,7 +120,7 @@ const int TIPO_PEQUE_CUANTAS_PARTICULAS = 3;
 // Cuántas partículas distintas hay de tipo medio
 const int TIPO_MEDIO_CUANTAS_PARTICULAS = 3;
 
-// Cuántas partículas distintas hay de tipo pequeño
+// Cuántas partículas distintas hay de tipo grande
 const int TIPO_GRANDE_CUANTAS_PARTICULAS = 3;
 
 // El número de partículas que salen cuando te pegan con un ataque pequeño
@@ -166,6 +169,10 @@ const float IMPULSO_GOLPE_PEQUE = 1;
 
 // Impulso inicial en el eje X al recibir un golpe mediano
 const float IMPULSO_GOLPE_MEDIO = 5;
+
+// Impulso inicial en los ejes X e Y al recibir un golpe grande
+const float IMPULSO_X_GOLPE_GRANDE = 7;
+const float IMPULSO_Y_GOLPE_GRANDE = -10;
 
 // Impulso inicial en el eje Y al recibir un golpe bajo mediano
 const float IMPULSO_GOLPE_BAJO_MEDIO = -5;

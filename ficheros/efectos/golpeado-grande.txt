@@ -3,7 +3,6 @@ Bucle:sin-bucle
 
 Rectangulo:0
 Hitboxes:
-70,5,70,1,15
 
 Rectangulo:1
 Hitboxes:
@@ -20,5 +19,17 @@ Hitboxes:
 Rectangulo:5
 Hitboxes:
 
+Rectangulo:6
+Hitboxes:
+
+Rectangulo:7
+Hitboxes:
+
+Rectangulo:8
+Hitboxes:
+
+Rectangulo:9
+Hitboxes:
+
 Frames:
-0,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5
+0,0,1,1,2,2,3,3,3,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,8,8,8,8,8,9,9,9,9,9
