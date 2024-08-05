@@ -9,12 +9,13 @@
 #include "Bitacora.hpp"
 #include <iostream>
 
-Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones){
+Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones, std::string nombre){
     puntosDeVida = MAX_PUNTOS_DE_VIDA;
     velY = 0;
     velX = 0;
     contadorTumbado = 0;
     contadorBlanco = 0;
+    this->nombre = nombre;
     this->animaciones = animaciones;
     estado = EstadoPersonaje::QUIETO;
     mirandoDerecha = true;
@@ -23,7 +24,6 @@ Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animac
         Bitacora::unicaInstancia()->escribir("ERROR: no se pudo cargar el shader");
         exit(EXIT_FAILURE);
     }
-
 }
 
 void Personaje::realizarAccion(Accion accion){
