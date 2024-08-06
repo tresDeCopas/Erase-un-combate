@@ -148,6 +148,13 @@ const float GRAVEDAD = 0.3;
 // Puntos de vida máximos de un personaje
 const int MAX_PUNTOS_DE_VIDA = 100;
 
+// Valor máximo del medidor de súper de un personaje
+const int MAX_MEDIDOR_SUPER = 50;
+
+// Retraso entre movimientos de píxel y píxel del medidor de vida atrasado
+// de un personaje, para evitar que vaya muy rápido
+const int MAX_RETRASO_MEDIDOR_VIDA_ATRASADO = 3;
+
 // Velocidad máxima en el eje X a la que se puede mover un personaje
 const float VELOCIDAD_ANDAR_MAX = 2.5;
 
@@ -192,8 +199,38 @@ const int MAX_CONTADOR_TUMBADO = VENTANA_FPS;
 
 // Posición de la GUI del personaje izquierdo (esquina superior izquierda (la
 // posición del personaje derecho es igual pero en espejo))
-const int POSICION_X_GUI_IZQUIERDA = 4;
-const int POSICION_Y_GUI_IZQUIERDA = 4;
+const sf::Vector2f POSICION_GUI_IZQUIERDA(4,4);
+
+// Posición de las barras de vida de la GUI izquierda (real y atrasada) (relativa a la esquina superior
+// izquierda del sprite de la GUI)
+const sf::Vector2f POSICION_BARRA_VIDA_IZQUIERDA(40,3);
+
+// Tamaño de la barra de vida
+const sf::Vector2f TAMANO_BARRA_VIDA(70,8);
+
+// Posición de la barra de súper de la GUI izquierda  (relativa a la esquina superior
+// izquierda del sprite de la GUI)
+const sf::Vector2f POSICION_BARRA_SUPER_IZQUIERDA(40,19);
+
+// Tamaño de la barra de súper
+const sf::Vector2f TAMANO_BARRA_SUPER(50,6);
+
+// Posición del "portrait" del personaje de la GUI izquierda  (relativa a la esquina superior
+// izquierda del sprite de la GUI)
+const sf::Vector2f POSICION_PORTRAIT_IZQUIERDA(3,3);
+
+// Posición del nombre del personaje de la GUI izquierda  (relativa a la esquina superior
+// izquierda del sprite de la GUI)
+const sf::Vector2f POSICION_NOMBRE_IZQUIERDA(40,28);
+
+// Color de la barra de vida en tiempo real
+const sf::Color COLOR_BARRA_VIDA_REAL(0,255,0);
+
+// Color de la barra de vida atrasada
+const sf::Color COLOR_BARRA_VIDA_ATRASADA(255,0,0);
+
+// Color de la barra de súper
+const sf::Color COLOR_BARRA_SUPER(0,0,255);
 
 /*
     CONSTANTES AUXILIARES PARA COSAS DE C++

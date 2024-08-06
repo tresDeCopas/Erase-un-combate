@@ -24,6 +24,9 @@ class Personaje : public sf::Drawable {
         // Cantidad actual de puntos de vida
         int puntosDeVida;
 
+        // Cantidad actual del medidor de súper
+        int medidorSuper;
+
         // Nombre del personaje
         std::string nombre;
 

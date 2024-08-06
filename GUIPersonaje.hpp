@@ -15,9 +15,36 @@ class GUIPersonaje : public sf::Drawable {
         // El personaje del que esta GUI muestra información
         Personaje& personaje;
 
+        // Rectángulo que representa el medidor de vida en tiempo real (este
+        // medidor muestra en todo momento la cantidad exacta de puntos de vida
+        // del personaje)
+        sf::RectangleShape rectanguloVidaReal;
+
+        // Rectángulo que representa el medidor de vida atrasado (este rectángulo aparece
+        // detrás del rectángulo en tiempo real y permite ver mejor la diferencia de puntos
+        // de vida entre los que había antes y después de un golpe)
+        sf::RectangleShape rectanguloVidaAtrasada;
+
+        // Rectángulo que representa el medidor del ataque súper
+        sf::RectangleShape rectanguloSuper;
+
+        // Sprite para el nombre del personaje (mejor así en vez de hacer que sea un texto
+        // porque se pueden dibujar cosillas chulas)
+        sf::Sprite spriteNombre;
+
+        // Sprite para el "portrait" del personaje (una foto que aparece en la esquina)
+        sf::Sprite spritePortrait;
+
+        // Cantidad de puntos de vida que está mostrando actualmente el medidor
+        // de vida atrasado
+        int contadorVidaAtrasado;
+
+        // Este retraso permite que el rectángulo de vida atrasado se mueva lentamente en vez de un
+        // píxel por frame, lo cual es demasiado rápido para 60 FPS y 100 puntos de vida totales
+        int retrasoContadorVidaAtrasado;
+
         // El sprite principal de la GUI (base y frente (la base es el fondo y el
-        // frente son los medidores transparentes que hay en las barras de
-        // vida y de súper))
+        // frente son las marcas transparentes que hay en las barras de vida y súper))
         sf::Sprite spritePrincipalBase;
         sf::Sprite spritePrincipalFrente;
     
@@ -26,7 +53,9 @@ class GUIPersonaje : public sf::Drawable {
         // Construye la GUI dada una referencia a un personaje
         GUIPersonaje(Personaje &personaje);
 
-        // Actualiza la GUI en base a los datos del personaje
+        // Actualiza la GUI en base a los datos del personaje (aprovechando que GUIPersonaje
+        // es clase amiga (friend class) de Personaje, puede acceder a sus partes privadas
+        // sin preguntar ni nada, por lo que no hace falta pasar argumentos)
         void actualizar();
 
         // Dibuja la GUI en pantalla

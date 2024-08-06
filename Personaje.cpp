@@ -11,6 +11,7 @@
 
 Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones, std::string nombre){
     puntosDeVida = MAX_PUNTOS_DE_VIDA;
+    medidorSuper = 0;
     velY = 0;
     velX = 0;
     contadorTumbado = 0;
@@ -789,6 +790,18 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
             efectosInsertados.push_back(particula);
         }
 
+    }
+
+    // Finalmente, se quitan puntos de vida según se vea
+    if(estado == EstadoPersonaje::BLOQUEANDO){
+        // Al bloquear, los ataques pequeños pasan a no hacer nada de daño, mientras que
+        // los ataques medios hacen la mitad de daño (se supone que los ataques súper son
+        // inesquivables, por lo que no hay que tenerlos en cuenta)
+        if(hitboxElegidaEnemigo.getFuerzaAtaque() > MAX_ATAQUE_PEQUE){
+            puntosDeVida-=(hitboxElegidaEnemigo.getFuerzaAtaque()/2);
+        }
+    } else {
+        puntosDeVida-=hitboxElegidaEnemigo.getFuerzaAtaque();
     }
 
     anim->setPosicion(posicionMedia);
