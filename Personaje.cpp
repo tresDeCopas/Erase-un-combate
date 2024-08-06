@@ -387,6 +387,9 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     case EstadoPersonaje::TUMBADO:
         {
             velX *= 0.9;
+
+            // Los personajes derrotados no se pueden levantar
+            if(puntosDeVida == 0) break;
             
             // El contador siempre sube para que la gente no se quede tirada
             contadorTumbado++;
@@ -430,7 +433,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
                 contadorTumbado = 0;
                 cambiarEstado(EstadoPersonaje::LEVANTANDOSE);
             } else if (movido){
-                velX+=((rand()%2 ? -0.5 : 0.5) * util::realAleatorio());
+                velX+=((velX > 0 ? -0.5 : 0.5) * util::realAleatorio());
             }
         }
         break;
@@ -802,6 +805,17 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
         }
     } else {
         puntosDeVida-=hitboxElegidaEnemigo.getFuerzaAtaque();
+    }
+
+    // Los personajes derrotados se tiran al suelo
+    if(puntosDeVida <= 0) {
+        puntosDeVida = 0;
+        if(estado != EstadoPersonaje::GOLPEADO_SUBIENDO){
+            velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+            velX/=2;
+            velY = IMPULSO_GOLPE_BAJO_MEDIO;
+            cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+        }
     }
 
     anim->setPosicion(posicionMedia);
