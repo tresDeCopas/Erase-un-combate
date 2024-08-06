@@ -15,6 +15,10 @@
 */
 class Personaje : public sf::Drawable {
 
+    // La clase Personaje es completamente ajena a la existencia de la clase GUIPersonaje,
+    // pero la segunda pueda acceder con total libertad a los miembros privados de la primera
+    friend class GUIPersonaje;
+
     private:
 
         // Cantidad actual de puntos de vida

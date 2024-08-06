@@ -187,6 +187,15 @@ const int MAX_ATAQUE_MEDIO = 6;
 const int MAX_CONTADOR_TUMBADO = VENTANA_FPS;
 
 /*
+    CONSTANTES PARA LA GUI DE PERSONAJE
+*/
+
+// Posición de la GUI del personaje izquierdo (esquina superior izquierda (la
+// posición del personaje derecho es igual pero en espejo))
+const int POSICION_X_GUI_IZQUIERDA = 4;
+const int POSICION_Y_GUI_IZQUIERDA = 4;
+
+/*
     CONSTANTES AUXILIARES PARA COSAS DE C++
 */
 

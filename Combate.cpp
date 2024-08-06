@@ -9,7 +9,8 @@
 // personajes usando el constructor vacío para nada (porque se queja el g++ más que nada)
 Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, std::string nombreEscenario) :
     personajeJugador1(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ1)),
-    personajeJugador2(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ2)){
+    personajeJugador2(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ2)),
+    GUIJugador1(personajeJugador1){
 
     personajeJugador1.setPosicion(VENTANA_ANCHURA/3,ALTURA_SUELO);
     personajeJugador2.setPosicion(2*VENTANA_ANCHURA/3,ALTURA_SUELO);
@@ -130,6 +131,9 @@ void Combate::comenzar(){
                 }
             }
 
+            GUIJugador1.actualizar();
+            // GUIJugador2.actualizar();
+
             VentanaPrincipal::actualizar();
 
             // TERCER PASO: COMPROBAR COLISIONES.
@@ -159,6 +163,9 @@ void Combate::comenzar(){
                 ventana->draw(**iter);
             }
 
+            ventana->draw(GUIJugador1);
+            // ventana->draw(GUIJugador2);
+            
             ventana->display();
         }
     }
