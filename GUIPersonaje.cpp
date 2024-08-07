@@ -45,8 +45,11 @@ GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaj
         posicionBarraSuper.x = VENTANA_ANCHURA-posicionBarraSuper.x-rectanguloSuper.getSize().x;
         rectanguloSuper.setPosition(posicionBarraSuper);
 
+        // Al tener que darle la vuelta el origen pasa a ser la esquina superior derecha en
+        // vez de la esquina superior izquierda así que hay que cambiar un poco esto
         sf::Vector2f posicionPortrait(POSICION_GUI_IZQUIERDA+POSICION_PORTRAIT_IZQUIERDA);
-        posicionPortrait.x = VENTANA_ANCHURA-posicionPortrait.x-spritePortrait.getTextureRect().width;
+        posicionPortrait.x = VENTANA_ANCHURA-posicionPortrait.x;
+        spritePortrait.setScale(-1,1);
         spritePortrait.setPosition(posicionPortrait);
 
         sf::Vector2f posicionNombre(POSICION_GUI_IZQUIERDA+POSICION_NOMBRE_IZQUIERDA);
@@ -64,26 +67,37 @@ GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaj
 }
 
 void GUIPersonaje::actualizar(){
-    if(parteIzquierda){
-        if(retrasoContadorVidaAtrasado == 0){
-            if(personaje.puntosDeVida > contadorVidaAtrasado){
-                contadorVidaAtrasado++;
-                retrasoContadorVidaAtrasado = MAX_RETRASO_MEDIDOR_VIDA_ATRASADO;
-            } else if(personaje.puntosDeVida < contadorVidaAtrasado){
-                contadorVidaAtrasado--;
-                retrasoContadorVidaAtrasado = MAX_RETRASO_MEDIDOR_VIDA_ATRASADO;
-            }
-            
-        } else {
-            retrasoContadorVidaAtrasado--;
-        }
 
-        rectanguloVidaReal.setSize(sf::Vector2f(((float)personaje.puntosDeVida/MAX_PUNTOS_DE_VIDA)*TAMANO_BARRA_VIDA.x,rectanguloVidaReal.getSize().y));
-        rectanguloVidaAtrasada.setSize(sf::Vector2f(((float)contadorVidaAtrasado/MAX_PUNTOS_DE_VIDA)*TAMANO_BARRA_VIDA.x,rectanguloVidaAtrasada.getSize().y));
+    if(retrasoContadorVidaAtrasado == 0){
+        if(personaje.puntosDeVida > contadorVidaAtrasado){
+            contadorVidaAtrasado++;
+            retrasoContadorVidaAtrasado = MAX_RETRASO_MEDIDOR_VIDA_ATRASADO;
+        } else if(personaje.puntosDeVida < contadorVidaAtrasado){
+            contadorVidaAtrasado--;
+            retrasoContadorVidaAtrasado = MAX_RETRASO_MEDIDOR_VIDA_ATRASADO;
+        }
         
-        rectanguloSuper.setSize(sf::Vector2f(((float)personaje.medidorSuper/MAX_MEDIDOR_SUPER)*TAMANO_BARRA_SUPER.x,rectanguloSuper.getSize().y));
     } else {
+        retrasoContadorVidaAtrasado--;
+    }
+
+    rectanguloVidaReal.setSize(sf::Vector2f(((float)personaje.puntosDeVida/MAX_PUNTOS_DE_VIDA)*TAMANO_BARRA_VIDA.x,rectanguloVidaReal.getSize().y));
+    rectanguloVidaAtrasada.setSize(sf::Vector2f(((float)contadorVidaAtrasado/MAX_PUNTOS_DE_VIDA)*TAMANO_BARRA_VIDA.x,rectanguloVidaAtrasada.getSize().y));
         
+    rectanguloSuper.setSize(sf::Vector2f(((float)personaje.medidorSuper/MAX_MEDIDOR_SUPER)*TAMANO_BARRA_SUPER.x,rectanguloSuper.getSize().y));
+
+    if(!parteIzquierda){
+        sf::Vector2f posicionBarraVidaReal(POSICION_GUI_IZQUIERDA+POSICION_BARRA_VIDA_IZQUIERDA);
+        posicionBarraVidaReal.x = VENTANA_ANCHURA-posicionBarraVidaReal.x-rectanguloVidaReal.getSize().x;
+        rectanguloVidaReal.setPosition(posicionBarraVidaReal);
+
+        sf::Vector2f posicionBarraVidaAtrasada(POSICION_GUI_IZQUIERDA+POSICION_BARRA_VIDA_IZQUIERDA);
+        posicionBarraVidaAtrasada.x = VENTANA_ANCHURA-posicionBarraVidaAtrasada.x-rectanguloVidaAtrasada.getSize().x;
+        rectanguloVidaAtrasada.setPosition(posicionBarraVidaAtrasada);
+
+        sf::Vector2f posicionBarraSuper(POSICION_GUI_IZQUIERDA+POSICION_BARRA_SUPER_IZQUIERDA);
+        posicionBarraSuper.x = VENTANA_ANCHURA-posicionBarraSuper.x-rectanguloSuper.getSize().x;
+        rectanguloSuper.setPosition(posicionBarraSuper);
     }
 }
 

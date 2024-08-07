@@ -3,7 +3,7 @@ Bucle:sin-bucle
 
 Rectangulo:0
 Hitboxes:
-70,5,70,1,15
+70,5,70,1,20
 
 Rectangulo:1
 Hitboxes:

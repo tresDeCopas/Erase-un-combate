@@ -41,7 +41,7 @@ void Combate::comenzar(){
 
                 personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
 
-                for(const auto &efecto : nuevosEfectos){
+                for(const std::shared_ptr<Animacion> &efecto : nuevosEfectos){
                     efectos.push_back(efecto);
                 }
             }
@@ -51,12 +51,14 @@ void Combate::comenzar(){
 
                 personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectos);
 
-                for(const auto &efecto : nuevosEfectos){
+                for(const std::shared_ptr<Animacion> &efecto : nuevosEfectos){
                     efectos.push_back(efecto);
                 }
             }
 
             VentanaPrincipal::actualizar();
+            GUIJugador1.actualizar();
+            GUIJugador2.actualizar();
 
             ventana->clear(sf::Color(100,100,100));
 
@@ -67,9 +69,12 @@ void Combate::comenzar(){
             if(personajeJugador2.getEstado() != EstadoPersonaje::PREPARANDO_SUPER)
                 ventana->draw(personajeJugador2);
             
-            for(auto iter = efectos.begin(); iter != efectos.end(); iter++){
+            for(std::list<std::shared_ptr<Animacion>>::iterator iter = efectos.begin(); iter != efectos.end(); iter++){
                 ventana->draw(**iter);
             }
+
+            ventana->draw(GUIJugador1);
+            ventana->draw(GUIJugador2);
 
             // Se dibuja un rectángulo oscuro encima
             sf::RectangleShape rectanguloOscuro(sf::Vector2f(VENTANA_ANCHURA,VENTANA_ALTURA));
