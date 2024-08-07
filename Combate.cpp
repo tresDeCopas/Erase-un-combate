@@ -10,7 +10,8 @@
 Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, std::string nombreEscenario) :
     personajeJugador1(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ1)),
     personajeJugador2(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ2)),
-    GUIJugador1(personajeJugador1){
+    GUIJugador1(personajeJugador1,true),
+    GUIJugador2(personajeJugador2,false){
 
     personajeJugador1.setPosicion(VENTANA_ANCHURA/3,ALTURA_SUELO);
     personajeJugador2.setPosicion(2*VENTANA_ANCHURA/3,ALTURA_SUELO);
@@ -132,7 +133,7 @@ void Combate::comenzar(){
             }
 
             GUIJugador1.actualizar();
-            // GUIJugador2.actualizar();
+            GUIJugador2.actualizar();
 
             VentanaPrincipal::actualizar();
 
@@ -164,7 +165,7 @@ void Combate::comenzar(){
             }
 
             ventana->draw(GUIJugador1);
-            // ventana->draw(GUIJugador2);
+            ventana->draw(GUIJugador2);
             
             ventana->display();
         }

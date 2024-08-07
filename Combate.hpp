@@ -24,6 +24,9 @@ class Combate{
         // GUI para el personaje asignado al jugador 1
         GUIPersonaje GUIJugador1;
 
+        // GUI para el personaje asignado al jugador 2
+        GUIPersonaje GUIJugador2;
+
         // Escenario para el combate
         //Escenario escenario;
 
