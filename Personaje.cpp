@@ -181,9 +181,14 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
                 cambiarEstado(EstadoPersonaje::ANDANDO_ALEJANDOSE);
         }
         else if (accionesRealizadas[Accion::ATACAR]){
-            contadorBlanco = 255;
-            cambiarEstado(EstadoPersonaje::PREPARANDO_SUPER);
-            //cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
+            
+            if(medidorSuper == MAX_MEDIDOR_SUPER){
+                contadorBlanco = 255;
+                medidorSuper = 0;
+                cambiarEstado(EstadoPersonaje::PREPARANDO_SUPER);
+            } else {
+                cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
+            }
         }
 
         break;
@@ -803,8 +808,12 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
         if(hitboxElegidaEnemigo.getFuerzaAtaque() > MAX_ATAQUE_PEQUE){
             puntosDeVida-=(hitboxElegidaEnemigo.getFuerzaAtaque()/2);
         }
+
+        // Los ataques bloqueados aumentan el medidor de súper al doble
+        medidorSuper+=(hitboxElegidaEnemigo.getFuerzaAtaque()*2);
     } else {
         puntosDeVida-=hitboxElegidaEnemigo.getFuerzaAtaque();
+        medidorSuper+=hitboxElegidaEnemigo.getFuerzaAtaque();
     }
 
     // Los personajes derrotados se tiran al suelo
@@ -816,6 +825,11 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
             velY = IMPULSO_GOLPE_BAJO_MEDIO;
             cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
         }
+    }
+
+    // El medidor de super no puede sobrepasar el límite
+    if(medidorSuper > MAX_MEDIDOR_SUPER){
+        medidorSuper = MAX_MEDIDOR_SUPER;
     }
 
     anim->setPosicion(posicionMedia);
