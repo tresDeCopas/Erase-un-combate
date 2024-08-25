@@ -103,18 +103,14 @@ void Combate::comenzar(){
                 } else {
                     std::pair<Jugador,Accion> par = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
 
-                    if(par.first == Jugador::JUGADOR1){
-                        if(evento.type == sf::Event::KeyPressed || evento.type == sf::Event::JoystickButtonPressed){
-                            personajeJugador1.realizarAccion(par.second);
-                        } else if(evento.type == sf::Event::KeyReleased || evento.type == sf::Event::JoystickButtonReleased){
-                            personajeJugador1.detenerAccion(par.second);
-                        }
-                    } else if(par.first == Jugador::JUGADOR2){
-                        if(evento.type == sf::Event::KeyPressed ||
-                        evento.type == sf::Event::JoystickButtonPressed) personajeJugador2.realizarAccion(par.second);
-                        else if(evento.type == sf::Event::KeyReleased ||
-                                evento.type == sf::Event::JoystickButtonReleased) personajeJugador2.detenerAccion(par.second);
+                    Personaje& personajeElegido = par.first == Jugador::JUGADOR1 ? personajeJugador1 : personajeJugador2;
+
+                    if(evento.type == sf::Event::KeyPressed || evento.type == sf::Event::JoystickButtonPressed || (evento.type == sf::Event::JoystickMoved && std::abs(evento.joystickMove.position) > UMBRAL_JOYSTICK)){
+                        personajeElegido.realizarAccion(par.second);
+                    } else if(evento.type == sf::Event::KeyReleased || evento.type == sf::Event::JoystickButtonReleased || (evento.type == sf::Event::JoystickMoved && std::abs(evento.joystickMove.position) < UMBRAL_JOYSTICK)){
+                        personajeElegido.detenerAccion(par.second);
                     }
+
                 }
             }
 

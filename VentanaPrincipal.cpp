@@ -32,6 +32,16 @@ void VentanaPrincipal::disminuirZoom(){
     ventanaPrincipal->setSize(sf::Vector2u(VENTANA_ANCHURA * zoom,VENTANA_ALTURA * zoom));
 }
 
+void VentanaPrincipal::setZoom(int zoom){
+    if(zoom < 1) return;
+    VentanaPrincipal::zoom = zoom;
+    ventanaPrincipal->setSize(sf::Vector2u(VENTANA_ANCHURA * zoom,VENTANA_ALTURA * zoom));
+}
+
+int VentanaPrincipal::getZoom(){
+    return zoom;
+}
+
 void VentanaPrincipal::actualizar(){
     if(potenciaVibracion == 0) return;
 
