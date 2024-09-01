@@ -508,4 +508,35 @@ Movimiento:
 Efectos:
 0,disparo-juan-cuesta,118,56
 ----------------------------------------
+Estado:celebrando
+Bucle:sin bucle
+
+Rectangulo:0
+Hitboxes:
+
+Rectangulo:1
+Hitboxes:
+
+Rectangulo:2
+Hitboxes:
+
+Rectangulo:3
+Hitboxes:
+
+Rectangulo:4
+Hitboxes:
+
+Rectangulo:5
+Hitboxes:
+
+Frames:
+0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3,3,2,2,2,2,2,2,2,1,1,1,1,1,1,1,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5
+
+Sonido:no repetir
+0
+
+Movimiento:
+
+Efectos:
+----------------------------------------
 ####

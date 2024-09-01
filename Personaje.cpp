@@ -498,7 +498,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
     
     case EstadoPersonaje::CELEBRANDO:
-
         pararMovimiento();
 
         break;
