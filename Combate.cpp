@@ -2,6 +2,7 @@
 #include "VentanaPrincipal.hpp"
 #include "GestorDeControles.hpp"
 #include "ContenedorDePersonajes.hpp"
+#include "ReproductorDeMusica.hpp"
 #include <iostream>
 #include <list>
 
@@ -30,6 +31,9 @@ void Combate::comenzar(){
 
     // En esta lista hay efectos como objetos voladores o efectos de golpe
     std::list<std::shared_ptr<Animacion>> efectos;
+
+    // Se reproduce una canción de combate
+    ReproductorDeMusica::unicaInstancia()->reproducirCancionCombate();
 
     // El bucle principal realiza acciones en un orden muy específico para evitar problemas
 
@@ -187,6 +191,10 @@ void Combate::comenzar(){
         }
     }
 
+    // Se termina el bucle del personaje al ser uno de los luchadores derribado. Se detiene
+    // la reproducción de la canción de combate
+    ReproductorDeMusica::unicaInstancia()->detener();
+
     // Se resetean todas las acciones para que los personajes se estén quietos
     personajeJugador1.detenerAccion(Accion::ARRIBA);
     personajeJugador1.detenerAccion(Accion::ABAJO);
@@ -206,9 +214,9 @@ void Combate::comenzar(){
     // Este contador disminuye en 1 cada frame y cuando llega a 0 se le indica al ganador que celebre
     int contadorCelebracion = MAX_CONTADOR_CELEBRACION;
 
-    // El bucle termina cuando al personaje ganador se le haya dicho que celebre, su animación de celebrar ya haya terminado, y el rectángulo
-    // que cubre el combate sea completamente opaco
-    while(!(ganador.getEstado() == EstadoPersonaje::CELEBRANDO && ganador.getAnimaciones().at(ganador.getEstado())->haTerminado() && rectanguloOscuro.getFillColor().a == 255)){
+    // El bucle termina cuando el rectángulo que cubre la pantalla se oscurezca por completo (esto ocurre después de que el personaje ganador
+    // haya celebrado su victoria y se haya terminado de reproducir la canción de fin de ronda)
+    while(rectanguloOscuro.getFillColor().a != 255){
 
         // PRIMER PASO: solo se recibe entrada si se cierra la ventana
 
@@ -251,12 +259,13 @@ void Combate::comenzar(){
         if(contadorCelebracion > 0){
             contadorCelebracion--;
         } 
-        // Si ya ha llegado a cero, se le dice al personaje que celebre
+        // Si ya ha llegado a cero, se le dice al personaje que celebre y se reproduce la canción de fin de ronda
         else if (ganador.getEstado() != EstadoPersonaje::CELEBRANDO){
             ganador.cambiarEstado(EstadoPersonaje::CELEBRANDO);
+            ReproductorDeMusica::unicaInstancia()->reproducirCancionFinRonda();
         }
         // Si ya se le ha dicho que celebre, se oscurece el rectángulo si ha terminado de celebrar
-        else if(ganador.getAnimaciones().at(EstadoPersonaje::CELEBRANDO)->haTerminado()) {
+        else if(ganador.getAnimaciones().at(EstadoPersonaje::CELEBRANDO)->haTerminado() && !ReproductorDeMusica::unicaInstancia()->estaReproduciendo()) {
             sf::Color nuevoColor(rectanguloOscuro.getFillColor());
             nuevoColor.a+=5;
             rectanguloOscuro.setFillColor(nuevoColor);

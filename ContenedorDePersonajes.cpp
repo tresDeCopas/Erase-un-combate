@@ -55,7 +55,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
     int numeroRectangulos;
 
     // Abrimos cada fichero del directorio
-    for(const auto & entrada : std::filesystem::directory_iterator("ficheros/personajes")){
+    for(const std::filesystem::directory_entry & entrada : std::filesystem::directory_iterator("ficheros/personajes")){
 
         // Se abre el fichero con información del personaje actual
         std::ifstream fichero(entrada.path());
