@@ -2,6 +2,7 @@
 #include "Constantes.hpp"
 #include "VentanaPrincipal.hpp"
 #include "ContenedorDeRecursos.hpp"
+#include "ReproductorDeMusica.hpp"
 #include <iostream>
 
 // La instancia es nula al principio
@@ -25,6 +26,10 @@ SelectorJugadorParaMando::SelectorJugadorParaMando(){
 }
 
 Jugador SelectorJugadorParaMando::decidirJugador(Control c){
+
+    // Se guarda el volumen original y se baja el volumen de la música a la mitad
+    float volumenOriginal = ReproductorDeMusica::unicaInstancia()->getVolumen();
+    ReproductorDeMusica::unicaInstancia()->setVolumen(volumenOriginal/2);
 
     // Se saca el tamaño de la ventana y se crea la textura con ese tamaño
     sf::Vector2u tamanoVentana = VentanaPrincipal::unicaInstancia()->getSize();
@@ -81,6 +86,9 @@ Jugador SelectorJugadorParaMando::decidirJugador(Control c){
     }
 
     sonidoDesaparecer.play();
+
+    // Se reestablece el volumen original
+    ReproductorDeMusica::unicaInstancia()->setVolumen(volumenOriginal);
 
     return jugadorSeleccionado;
 }
