@@ -25,7 +25,7 @@ class ReproductorDeMusica
         // Música que se está reproduciendo actualmente
         sf::Music musicaActual;
 
-        // Conjunto con todas las canciones de combate que hay
+        // Todas las canciones de combate que hay
         std::vector<std::string> cancionesCombate;
 
         // Canción para el menú principal y el menú de selección de personajes

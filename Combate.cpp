@@ -235,6 +235,10 @@ void Combate::comenzar(){
         personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
         personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectos);
 
+        for(auto iter = nuevosEfectos.begin(); iter != nuevosEfectos.end();iter++){
+            efectos.push_back(*iter);
+        }
+
         for(auto iter = efectos.begin(); iter != efectos.end();){
             if((*iter)->haTerminado()){
                 iter = efectos.erase(iter);

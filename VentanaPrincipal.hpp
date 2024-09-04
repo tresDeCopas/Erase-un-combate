@@ -18,6 +18,9 @@ class VentanaPrincipal {
         // Zoom aplicado
         static int zoom;
 
+        // Indica si está permitido que la ventana vibre
+        static bool vibracionActivada;
+
         // Potencia de vibración
         static int potenciaVibracion;
 
