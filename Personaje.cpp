@@ -559,7 +559,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     }
 }
 
-void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &animaciones, std::list<std::shared_ptr<Animacion>> &efectosInsertados){
+void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> &animaciones, std::list<std::shared_ptr<Animacion>> &efectosInsertados){
 
     // Se sacan las hitboxes de la animación del estado actual
     std::list<Hitbox> hitboxes = this->animaciones[estado]->getHitboxes();
@@ -602,6 +602,10 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
     // por lo que nos hemos chocado en el enemigo y no podemos seguir andando
     bool colisionConEnemigo = false;
 
+    // Este booleano indica que la hurtbox del enemigo está por encima del suelo, por lo que el enemigo estaba
+    // saltando al colisionar
+    bool colisionVoladora = false;
+
     for(std::shared_ptr<Animacion> anim : animaciones){
         for(Hitbox hEnemigo : anim->getHitboxes()){
             for(Hitbox hPropia : hitboxes){
@@ -621,16 +625,51 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
                     hitboxElegidaPropia = Hitbox(rectPropio,hPropia.getFuerzaAtaque(),hPropia.esAtaqueBajo());
                 } else if (hayInterseccion && hEnemigo.getFuerzaAtaque() == 0){
                     colisionConEnemigo = true;
+                    colisionVoladora = (rectEnemigo.top + rectEnemigo.height) < ALTURA_SUELO;
                 }
             }
         }
     }
 
     // Si nos hemos chocado con el cuerpo del enemigo, deshacemos el movimiento en el eje x si nos
-    // estamos moviendo hacia el enemigo (si no, está bien alejarnos de él)
-    if(colisionConEnemigo && ((mirandoDerecha && velX>0) || (!mirandoDerecha && velX<0))){
-        setPosicion(getPosicion().x-velX,getPosicion().y);
-        velX = 0;
+    // estamos moviendo hacia el enemigo (si no, está bien alejarnos de él (y si saltamos, podemos saltarle
+    // por encima))
+    if(colisionConEnemigo){
+        
+        // Nos alejamos un poco del enemigo (si estamos agachados somos más difíciles de mover, y si
+        // estamos haciendo el súper ataque no no no nos moverán)
+        switch(estado){
+            case EstadoPersonaje::AGACHADO:
+                this->animaciones[estado]->mover(mirandoDerecha ? -0.25 : 0.25, 0);
+                break;
+            case EstadoPersonaje::ATAQUE_SUPER:
+                break;
+            default:
+                this->animaciones[estado]->mover(mirandoDerecha ? -0.5 : 0.5, 0);
+                break;
+        }
+
+        // Además, si nos estamos moviendo hacia el enemigo, la velocidad en el eje X se anula
+        switch(estado){
+            case EstadoPersonaje::SALTANDO_SUBIENDO:
+            case EstadoPersonaje::SALTANDO_BAJANDO:
+                // Si estamos saltando y el enemigo también (su hurtbox elegida está por encima
+                // del suelo), y además estamos saltando hacia él, es como que nos chocamos y nos
+                // dejamos de mover
+                if(((mirandoDerecha && velX>0) || (!mirandoDerecha && velX<0)) && colisionVoladora){
+                    velX = 0;
+                }
+                break;
+            case EstadoPersonaje::ATAQUE_SUPER:
+                // Si estamos haciendo el súper ataque de aquí no nos mueve ni Dios
+                break;
+            default:
+                // En cualquier otro caso, dejamos de movernos
+                if(((mirandoDerecha && velX>0) || (!mirandoDerecha && velX<0))){
+                    velX = 0;
+                }
+                break;
+        }
     }
 
     // Si no hubo golpe, no hay nada más que hacer

@@ -134,8 +134,13 @@ void Combate::comenzar(){
 
             std::list<std::shared_ptr<Animacion>> nuevosEfectos;
 
-            personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
-            personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectos);
+            if(primerJugadorParaActualizar == Jugador::JUGADOR1){
+                personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
+                personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectos);
+            } else {
+                personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectos);
+                personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
+            }
 
             for(auto iter = efectos.begin(); iter != efectos.end();){
                 if((*iter)->haTerminado()){
@@ -156,15 +161,29 @@ void Combate::comenzar(){
 
             // TERCER PASO: COMPROBAR COLISIONES.
 
-            efectos.push_back(personajeJugador2.getAnimaciones()[personajeJugador2.getEstado()]);
+            if(primerJugadorParaActualizar == Jugador::JUGADOR1){
+                efectos.push_back(personajeJugador2.getAnimaciones()[personajeJugador2.getEstado()]);
 
-            personajeJugador1.comprobarColisiones(efectos,nuevosEfectos);
+                personajeJugador1.comprobarColisiones(efectos,nuevosEfectos);
 
-            efectos.pop_back();
-            efectos.push_back(personajeJugador1.getAnimaciones()[personajeJugador1.getEstado()]);
-            personajeJugador2.comprobarColisiones(efectos,nuevosEfectos);
+                efectos.pop_back();
 
-            efectos.pop_back();
+                efectos.push_back(personajeJugador1.getAnimaciones()[personajeJugador1.getEstado()]);
+                personajeJugador2.comprobarColisiones(efectos,nuevosEfectos);
+
+                efectos.pop_back();
+            } else {
+                efectos.push_back(personajeJugador1.getAnimaciones()[personajeJugador1.getEstado()]);
+                personajeJugador2.comprobarColisiones(efectos,nuevosEfectos);
+
+                efectos.pop_back();
+
+                efectos.push_back(personajeJugador2.getAnimaciones()[personajeJugador2.getEstado()]);
+
+                personajeJugador1.comprobarColisiones(efectos,nuevosEfectos);
+
+                efectos.pop_back();
+            }
 
             for(auto iter = nuevosEfectos.begin(); iter != nuevosEfectos.end();iter++){
                 efectos.push_back(*iter);
@@ -188,6 +207,14 @@ void Combate::comenzar(){
             ventana->draw(rectanguloOscuro);
             
             ventana->display();
+
+            // Ahora que ha terminado el frame le damos la vuelta al jugador que será
+            // actualizado primero en el siguiente frame
+            if(primerJugadorParaActualizar == Jugador::JUGADOR1){
+                primerJugadorParaActualizar = Jugador::JUGADOR2;
+            } else {
+                primerJugadorParaActualizar = Jugador::JUGADOR1;
+            }
         }
     }
 

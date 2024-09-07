@@ -6,14 +6,14 @@ Hitbox::Hitbox(sf::IntRect rectangulo, int fuerzaAtaque, bool bajo){
     this->bajo = bajo;
 }
 
-sf::IntRect Hitbox::getRectangulo(){
+sf::IntRect Hitbox::getRectangulo() const{
     return rectangulo;
 }
 
-int Hitbox::getFuerzaAtaque(){
+int Hitbox::getFuerzaAtaque() const{
     return fuerzaAtaque;
 }
 
-bool Hitbox::esAtaqueBajo(){
+bool Hitbox::esAtaqueBajo() const{
     return bajo;
 }

@@ -190,6 +190,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
             std::getline(fichero,linea);
 
             Hitbox hitbox(sf::IntRect(-1,-1,-1,-1),0,false);
+            bool hitboxValida = false;
 
             auto vectorAux = util::separarString(linea,':');
 
@@ -207,6 +208,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
                     // Se crea la hitbox en base a muchas cosas
                     hitbox = Hitbox(sf::IntRect(enteros[0],enteros[1],enteros[2],enteros[3]),enteros[4],false);
+                    hitboxValida = true;
                 }
 
             } else {
@@ -217,7 +219,9 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
             sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
 
-            anim = std::shared_ptr<Animacion>(new AnimacionConGravedad(textura,hitbox,sf::Vector2f(0,0),sf::Vector2f(0,0),0));
+            // Esto es feísimo y tendría que mirármelo (usar)
+            anim = std::shared_ptr<Animacion>(new AnimacionConGravedad(textura,sf::Vector2f(0,0),sf::Vector2f(0,0),0));
+            if(hitboxValida) ((AnimacionConGravedad*)anim.get())->setHitbox(hitbox);
 
         }
 

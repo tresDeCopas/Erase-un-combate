@@ -1,6 +1,7 @@
 #ifndef __ANIMACION_CON_GRAVEDAD_HPP__
 #define __ANIMACION_CON_GRAVEDAD_HPP__
 
+#include <optional>
 #include "Animacion.hpp"
 
 /*
@@ -11,7 +12,7 @@ class AnimacionConGravedad : public Animacion
 private:
     // Hitbox del objeto (como va a girar es bueno que tenga solo una,
     // y que sea lo más cuadrada y centrada posible)
-    Hitbox hitbox;
+    std::optional<Hitbox> hitbox;
 
     // Velocidad del objeto volador
     sf::Vector2f velocidad;
@@ -28,10 +29,10 @@ private:
 
 public:
     // Constructor que crea una animación con gravedad en base a una textura para el sprite, una posición inicial y una velocidad
-    AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro);
+    AnimacionConGravedad(sf::Texture &textura, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro);
 
     // Constructor igual al anterior pero también le mete sonido
-    AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, sf::Sound sonido);
+    AnimacionConGravedad(sf::Texture &textura, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, sf::Sound sonido);
 
     // Actualiza la animación
     void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones, sf::Vector2f &movimiento);
@@ -53,6 +54,9 @@ public:
 
     // Establece la velocidad de giro de la animación
     void setVelocidadGiro(const double &velocidadGiro);
+
+    // Establece la hitbox
+    void setHitbox(Hitbox hitbox);
 
     // Devuelve un clon de la animación
     std::shared_ptr<Animacion> clonar();
