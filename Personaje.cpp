@@ -597,6 +597,11 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
     Hitbox hitboxElegidaEnemigo = Hitbox(sf::IntRect(0,0,0,0),0,false);
     Hitbox hitboxElegidaPropia = Hitbox(sf::IntRect(0,0,0,0),0,false);
 
+    // Este booleano indica que una hurtbox del enemigo (una hitbox sin daño de ataque, es decir,
+    // una hitbox que representa el cuerpo del enemigo) ha golpeado una hitbox sin daño de nuestro personaje,
+    // por lo que nos hemos chocado en el enemigo y no podemos seguir andando
+    bool colisionConEnemigo = false;
+
     for(std::shared_ptr<Animacion> anim : animaciones){
         for(Hitbox hEnemigo : anim->getHitboxes()){
             for(Hitbox hPropia : hitboxes){
@@ -609,15 +614,26 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
                 rectPropio.left += this->animaciones[estado]->getPosicionEsqSupIzq().x;
                 rectPropio.top += this->animaciones[estado]->getPosicionEsqSupIzq().y;
 
-                if(rectEnemigo.intersects(rectPropio) && hEnemigo.getFuerzaAtaque() > hitboxElegidaEnemigo.getFuerzaAtaque()){
+                bool hayInterseccion = rectEnemigo.intersects(rectPropio);
+
+                if(hayInterseccion && hEnemigo.getFuerzaAtaque() > hitboxElegidaEnemigo.getFuerzaAtaque()){
                     hitboxElegidaEnemigo = Hitbox(rectEnemigo,hEnemigo.getFuerzaAtaque(),hEnemigo.esAtaqueBajo());
                     hitboxElegidaPropia = Hitbox(rectPropio,hPropia.getFuerzaAtaque(),hPropia.esAtaqueBajo());
+                } else if (hayInterseccion && hEnemigo.getFuerzaAtaque() == 0){
+                    colisionConEnemigo = true;
                 }
             }
         }
     }
 
-    // Si no hubo golpe, no hay nada que hacer
+    // Si nos hemos chocado con el cuerpo del enemigo, deshacemos el movimiento en el eje x si nos
+    // estamos moviendo hacia el enemigo (si no, está bien alejarnos de él)
+    if(colisionConEnemigo && ((mirandoDerecha && velX>0) || (!mirandoDerecha && velX<0))){
+        setPosicion(getPosicion().x-velX,getPosicion().y);
+        velX = 0;
+    }
+
+    // Si no hubo golpe, no hay nada más que hacer
     if(hitboxElegidaEnemigo.getFuerzaAtaque() == 0){
         return;
     }
