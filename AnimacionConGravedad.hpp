@@ -28,11 +28,8 @@ private:
     int contadorParpadeo;
 
 public:
-    // Constructor que crea una animación con gravedad en base a una textura para el sprite, una posición inicial y una velocidad
-    AnimacionConGravedad(sf::Texture &textura, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro);
-
-    // Constructor igual al anterior pero también le mete sonido
-    AnimacionConGravedad(sf::Texture &textura, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, sf::Sound sonido);
+    // Constructor que crea una animación con gravedad y todas sus pescas
+    AnimacionConGravedad(sf::Texture &textura, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, std::string rutaSonido);
 
     // Actualiza la animación
     void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones, sf::Vector2f &movimiento);

@@ -160,7 +160,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
             std::shared_ptr<Animacion> anim;
 
-            sf::Sound sonido;
+            std::string rutaSonido;
 
             bool repetirSonido = false;
             
@@ -174,7 +174,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
                 repetirSonido = util::separarString(linea,':')[1] == "repetir";
 
-                sonido.setBuffer(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener("sonidos/personajes/"+nombrePersonaje+"/"+nombreEstado+".wav"));
+                rutaSonido = "sonidos/personajes/"+nombrePersonaje+"/"+nombreEstado+".wav";
 
                 // Avanzamos de línea para conseguir la lista de frames
                 std::getline(fichero,linea);
@@ -231,7 +231,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
             anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
                                                   ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
                                                   util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,framesConSonido,framesConMovimiento,
-                                                  framesConAnimaciones,sonido,repetirSonido));
+                                                  framesConAnimaciones,rutaSonido,repetirSonido));
 
             animaciones.insert(std::pair<EstadoPersonaje,std::shared_ptr<Animacion>>(util::stringAEstadoPersonaje(nombreEstado),anim));
 

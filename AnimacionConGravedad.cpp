@@ -1,7 +1,7 @@
 #include "AnimacionConGravedad.hpp"
 #include "Constantes.hpp"
 
-AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro)
+AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, std::string rutaSonido)
 {
     sprite.setTexture(textura);
 
@@ -17,26 +17,7 @@ AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, sf::Vector2f po
 
     sprite.setPosition(posicion);
 
-    resetear();
-}
-
-AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, sf::Sound sonido)
-{
-    sprite.setTexture(textura);
-
-    // El rectángulo será el de la izquierda en un principio
-    sf::IntRect rectangulo = sprite.getTextureRect();
-    rectangulo.width /= 2;
-    sprite.setTextureRect(rectangulo);
-
-    this->velocidad = velocidad;
-    this->velocidadGiro = velocidadGiro;
-
-    sprite.setOrigin(rectangulo.width / 2, rectangulo.height / 2);
-
-    sprite.setPosition(posicion);
-
-    this->sonido = sonido;
+    this->rutaSonido = rutaSonido;
 
     resetear();
 }
