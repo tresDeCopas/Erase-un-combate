@@ -2,6 +2,7 @@
 #include "VentanaPrincipal.hpp"
 #include "GestorDeControles.hpp"
 #include "ContenedorDePersonajes.hpp"
+#include "ContenedorDeEfectos.hpp"
 #include "ReproductorDeMusica.hpp"
 #include <iostream>
 #include <list>
@@ -11,8 +12,9 @@
 Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, std::string nombreEscenario) :
     personajeJugador1(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ1)),
     personajeJugador2(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ2)),
-    GUIJugador1(personajeJugador1,true),
-    GUIJugador2(personajeJugador2,false){
+    GUIJugador1(personajeJugador1,true), GUIJugador2(personajeJugador2,false),
+    cartelTodoListo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-todo-listo")),
+    cartelAPelear(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-a-pelear")){
 
     rectanguloOscuro.setPosition(0,0);
     rectanguloOscuro.setSize(sf::Vector2f(VENTANA_ANCHURA,VENTANA_ALTURA));
@@ -22,6 +24,9 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
     personajeJugador1.setPosicion(VENTANA_ANCHURA/3,ALTURA_SUELO);
     personajeJugador2.setPosicion(2*VENTANA_ANCHURA/3,ALTURA_SUELO);
     //escenario = ContenedorDeEscenarios::unicaInstancia()->obtener(idEscenario);
+
+    cartelTodoListo->setPosicion(POSICION_CARTELES);
+    cartelAPelear->setPosicion(POSICION_CARTELES);
 }
 
 void Combate::comenzar(){
@@ -42,7 +47,9 @@ void Combate::comenzar(){
         // Se aclara el rectángulo que cubre el combate
         if(rectanguloOscuro.getFillColor().a > 0){
             sf::Color nuevoColor(rectanguloOscuro.getFillColor());
-            nuevoColor.a-=5;
+            // Se le baja 10 a la transparencia hasta que sea totalmente transparente
+            // (con cuidado para que el contador no se dé la vuelta)
+            nuevoColor.a = nuevoColor.a < 10 ? 0 : nuevoColor.a-10;
             rectanguloOscuro.setFillColor(nuevoColor);
         }
         
@@ -109,7 +116,16 @@ void Combate::comenzar(){
 
             // PRIMER PASO: RECIBIR ENTRADA DEL TECLADO O DE LOS MANDOS
             // En este paso se actualizan los valores booleanos de los personajes, que
-            // indican si una acción está siendo realizada o no
+            // indican si una acción está siendo realizada o no. Se comprueba si se han terminado
+            // de mostrar los dos carteles del principio del combate y entonces se puede comenzar a
+            // jugar (en realidad el segundo cartel, el de "¡A pelear!" deja de bloquear el movimiento
+            // de los personajes cuando se agranda a su máximo tamaño)
+
+            if(!cartelTodoListo->haTerminado()){
+                cartelTodoListo->actualizar(efectos);
+            } else if(!cartelAPelear->haTerminado()){
+                cartelAPelear->actualizar(efectos);
+            }
 
             sf::Event evento;
             while(ventana->pollEvent(evento)){
@@ -121,10 +137,12 @@ void Combate::comenzar(){
 
                     Personaje& personajeElegido = par.first == Jugador::JUGADOR1 ? personajeJugador1 : personajeJugador2;
 
-                    if(evento.type == sf::Event::KeyPressed || evento.type == sf::Event::JoystickButtonPressed || (evento.type == sf::Event::JoystickMoved && std::abs(evento.joystickMove.position) > UMBRAL_JOYSTICK)){
-                        personajeElegido.realizarAccion(par.second);
-                    } else if(evento.type == sf::Event::KeyReleased || evento.type == sf::Event::JoystickButtonReleased || (evento.type == sf::Event::JoystickMoved && std::abs(evento.joystickMove.position) < UMBRAL_JOYSTICK)){
-                        personajeElegido.detenerAccion(par.second);
+                    if((dynamic_cast<AnimacionAgrandable*>(cartelAPelear.get()))->haTerminadoDeAgrandarse()){
+                        if(evento.type == sf::Event::KeyPressed || evento.type == sf::Event::JoystickButtonPressed || (evento.type == sf::Event::JoystickMoved && std::abs(evento.joystickMove.position) > UMBRAL_JOYSTICK)){
+                            personajeElegido.realizarAccion(par.second);
+                        } else if(evento.type == sf::Event::KeyReleased || evento.type == sf::Event::JoystickButtonReleased || (evento.type == sf::Event::JoystickMoved && std::abs(evento.joystickMove.position) < UMBRAL_JOYSTICK)){
+                            personajeElegido.detenerAccion(par.second);
+                        }
                     }
 
                 }
@@ -146,10 +164,7 @@ void Combate::comenzar(){
                 if((*iter)->haTerminado()){
                     iter = efectos.erase(iter);
                 } else {
-                    // No hace falta actualizar el movimiento de los efectos así que esto se queda
-                    // aquí de momento hasta que no se me ocurra algo mejor
-                    sf::Vector2f movimiento;
-                    (*iter)->actualizar(nuevosEfectos,movimiento);
+                    (*iter)->actualizar(nuevosEfectos);
                     iter++;
                 }
             }
@@ -162,23 +177,23 @@ void Combate::comenzar(){
             // TERCER PASO: COMPROBAR COLISIONES.
 
             if(primerJugadorParaActualizar == Jugador::JUGADOR1){
-                efectos.push_back(personajeJugador2.getAnimaciones()[personajeJugador2.getEstado()]);
+                efectos.push_back(personajeJugador2.getAnimacionSegunEstado(personajeJugador2.getEstado()));
 
                 personajeJugador1.comprobarColisiones(efectos,nuevosEfectos);
 
                 efectos.pop_back();
 
-                efectos.push_back(personajeJugador1.getAnimaciones()[personajeJugador1.getEstado()]);
+                efectos.push_back(personajeJugador1.getAnimacionSegunEstado(personajeJugador1.getEstado()));
                 personajeJugador2.comprobarColisiones(efectos,nuevosEfectos);
 
                 efectos.pop_back();
             } else {
-                efectos.push_back(personajeJugador1.getAnimaciones()[personajeJugador1.getEstado()]);
+                efectos.push_back(personajeJugador1.getAnimacionSegunEstado(personajeJugador1.getEstado()));
                 personajeJugador2.comprobarColisiones(efectos,nuevosEfectos);
 
                 efectos.pop_back();
 
-                efectos.push_back(personajeJugador2.getAnimaciones()[personajeJugador2.getEstado()]);
+                efectos.push_back(personajeJugador2.getAnimacionSegunEstado(personajeJugador2.getEstado()));
 
                 personajeJugador1.comprobarColisiones(efectos,nuevosEfectos);
 
@@ -202,6 +217,12 @@ void Combate::comenzar(){
 
             ventana->draw(GUIJugador1);
             ventana->draw(GUIJugador2);
+
+            if(!cartelTodoListo->haTerminado()){
+                ventana->draw(*cartelTodoListo);
+            } else if (!cartelAPelear->haTerminado()){
+                ventana->draw(*cartelAPelear);
+            }
 
             // Lo último que se dibuja es el rectángulo que cubre el combate
             ventana->draw(rectanguloOscuro);
@@ -270,10 +291,7 @@ void Combate::comenzar(){
             if((*iter)->haTerminado()){
                 iter = efectos.erase(iter);
             } else {
-                // No hace falta actualizar el movimiento de los efectos así que esto se queda
-                // aquí de momento hasta que no se me ocurra algo mejor
-                sf::Vector2f movimiento;
-                (*iter)->actualizar(nuevosEfectos,movimiento);
+                (*iter)->actualizar(nuevosEfectos);
                 iter++;
             }
         }
@@ -296,7 +314,7 @@ void Combate::comenzar(){
             ReproductorDeMusica::unicaInstancia()->reproducirCancionFinRonda();
         }
         // Si ya se le ha dicho que celebre, se oscurece el rectángulo si ha terminado de celebrar
-        else if(ganador.getAnimaciones().at(EstadoPersonaje::CELEBRANDO)->haTerminado() && !ReproductorDeMusica::unicaInstancia()->estaReproduciendo()) {
+        else if(ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() && !ReproductorDeMusica::unicaInstancia()->estaReproduciendo()) {
             sf::Color nuevoColor(rectanguloOscuro.getFillColor());
             nuevoColor.a+=5;
             rectanguloOscuro.setFillColor(nuevoColor);

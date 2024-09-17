@@ -1,0 +1,3 @@
+Tipo:agrandable
+
+FramesEspera:60

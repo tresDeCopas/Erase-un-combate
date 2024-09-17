@@ -3,6 +3,7 @@
 #include "Bitacora.hpp"
 #include "AnimacionPorFrames.hpp"
 #include "AnimacionConGravedad.hpp"
+#include "AnimacionAgrandable.hpp"
 #include "Utilidades.hpp"
 #include <SFML/Audio.hpp>
 #include <fstream>
@@ -62,6 +63,11 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
         // Aprovechando que tenemos la ruta del fichero podemos sacar el nombre del efecto
         nombreEfecto = entrada.path().stem().string();
+
+        // En esta variable se guarda una referencia a la textura de este efecto
+        sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
+
+
 
         if(!fichero.is_open()){
             Bitacora::unicaInstancia()->escribir("Emilio: ... pero señor Juan, es para hoy.");
@@ -172,14 +178,12 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
                 }
             }
 
-            sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
-
             anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
                                             util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,std::set<int>(),std::map<int,sf::Vector2f>(),
                                             std::map<int,IndicacionesSobreAnimacion>(),rutaSonido,repetirSonido));
             
 
-        } else {
+        } else if(tipoAnimacion == "gravedad"){
             
             // Se salta una línea en blanco y se saca la hitbox
             std::getline(fichero,linea);
@@ -208,17 +212,37 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
                 }
 
             } else {
-                Bitacora::unicaInstancia()->escribir("Juan Cuesta: Oye Emilio... esto de que el fichero efectos/" + nombreEfecto + ".txt tenga una línea de hitbox que no comienza por \"Hitbox\"... ¿Tú lo ves normal?");
+                Bitacora::unicaInstancia()->escribir("Juan Cuesta: Oye Emilio... esto de que el fichero " + entrada.path().string() + " tenga una línea de hitbox que no comienza por \"Hitbox\"... ¿Tú lo ves normal?");
                 Bitacora::unicaInstancia()->escribir("Emilio: Bueno, normal... es que después de vivir con mi padre ya no hay nada que me sorprenda.");
                 Bitacora::unicaInstancia()->escribir("Juan Cuesta: Pues no, no es normal. Qué follón... se suspende la junta.");
+                exit(EXIT_FAILURE);
             }
 
-            sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
-
-            // Esto es feísimo y tendría que mirármelo (usar)
+            // Esto es feísimo y tendría que mirármelo
             anim = std::shared_ptr<Animacion>(new AnimacionConGravedad(textura,sf::Vector2f(0,0),sf::Vector2f(0,0),0,rutaSonido));
             if(hitboxValida) ((AnimacionConGravedad*)anim.get())->setHitbox(hitbox);
 
+        } else if (tipoAnimacion == "agrandable"){
+            // Se salta una línea en blanco y se saca el número de frames de espera
+            std::getline(fichero,linea);
+            std::getline(fichero,linea);
+
+            rutaSonido = "sonidos/efectos/"+nombreEfecto+".wav";
+
+            int framesEspera;
+
+            auto vectorAux = util::separarString(linea,':');
+
+            if(vectorAux[0] == "FramesEspera"){
+                framesEspera = std::stoi(vectorAux[1]);
+            } else {
+                Bitacora::unicaInstancia()->escribir("Emilio: mire señor Juan, mire lo que me he encontrado.");
+                Bitacora::unicaInstancia()->escribir("Juan Cuesta: pero si ahí debería poner \"FramesEspera\"... ¿qué clase de chapuza es esta?");
+                Bitacora::unicaInstancia()->escribir("Emilio: anda que... quien sea que hiciera el fichero " + entrada.path().string() + " se ha quedado a gusto.");
+                exit(EXIT_FAILURE);
+            }
+            
+            anim = std::shared_ptr<Animacion>(new AnimacionAgrandable(framesEspera,textura,rutaSonido));
         }
 
         animaciones.insert(std::pair<std::string,std::shared_ptr<Animacion>>(nombreEfecto,anim));

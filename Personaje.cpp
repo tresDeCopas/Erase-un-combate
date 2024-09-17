@@ -9,7 +9,7 @@
 #include "Bitacora.hpp"
 #include <iostream>
 
-Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones, std::string nombre){
+Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> animaciones, std::string nombre){
     puntosDeVida = MAX_PUNTOS_DE_VIDA;
     medidorSuper = 0;
     velY = 0;
@@ -40,15 +40,15 @@ int Personaje::getPuntosDeVida(){
 }
 
 void Personaje::setPosicion(float x, float y){
-    animaciones[estado]->setPosicion(x,y);
+    animaciones.at(estado)->setPosicion(x,y);
 }
 
 void Personaje::setPosicion(sf::Vector2f posicion){
-    animaciones[estado]->setPosicion(posicion);
+    animaciones.at(estado)->setPosicion(posicion);
 }
 
 sf::Vector2f Personaje::getPosicion(){
-    return animaciones[estado]->getPosicion();
+    return animaciones.at(estado)->getPosicion();
 }
 
 EstadoPersonaje Personaje::getEstado(){
@@ -59,11 +59,11 @@ void Personaje::setJugador(Jugador jugador){
     this->jugador = jugador;
 }
 
-std::map<EstadoPersonaje,std::shared_ptr<Animacion>> Personaje::getAnimaciones(){
-    return animaciones;
+std::shared_ptr<AnimacionPorFrames> Personaje::getAnimacionSegunEstado(EstadoPersonaje estado){
+    return animaciones.at(estado);
 }
 
-void Personaje::setAnimaciones(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones){
+void Personaje::setAnimaciones(const std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> &animaciones){
     this->animaciones = animaciones;
 }
 
@@ -75,10 +75,10 @@ void Personaje::cambiarEstado(EstadoPersonaje estadoNuevo){
 }
 
 void Personaje::draw(sf::RenderTarget& target, sf::RenderStates states) const{
-    target.draw(*(animaciones.at(estado)),states);
+    target.draw(*animaciones.at(estado),states);
     if(contadorBlanco > 0) {
         states.shader = shader.get();
-        target.draw(*(animaciones.at(estado)),states);
+        target.draw(*animaciones.at(estado),states);
     }
 }
 
@@ -135,7 +135,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     switch(estado){
     case EstadoPersonaje::TOCANDO_SUELO:
         pararMovimiento();
-        if(animaciones[estado]->haTerminado())
+        if(animaciones.at(estado)->haTerminado())
             cambiarEstado(EstadoPersonaje::QUIETO);
         
         // No se pone break porque el estado TOCANDO_SUELO es como si fuera el estado QUIETO
@@ -272,8 +272,8 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         if(accionesRealizadas[Accion::DERECHA]) moverseDerecha();
         else if (accionesRealizadas[Accion::IZQUIERDA]) moverseIzquierda();
 
-        if(animaciones[estado]->getPosicion().y > ALTURA_SUELO){
-            animaciones[estado]->setPosicion(animaciones[estado]->getPosicion().x,ALTURA_SUELO);
+        if(animaciones.at(estado)->getPosicion().y > ALTURA_SUELO){
+            animaciones.at(estado)->setPosicion(animaciones.at(estado)->getPosicion().x,ALTURA_SUELO);
             velY = 0;
             levantarPolvo(efectosInsertados);
 
@@ -287,13 +287,13 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         if(accionesRealizadas[Accion::DERECHA]) moverseDerecha();
         else if (accionesRealizadas[Accion::IZQUIERDA]) moverseIzquierda();
 
-        if(animaciones[estado]->getPosicion().y > ALTURA_SUELO){
-            animaciones[estado]->setPosicion(animaciones[estado]->getPosicion().x,ALTURA_SUELO);
+        if(animaciones.at(estado)->getPosicion().y > ALTURA_SUELO){
+            animaciones.at(estado)->setPosicion(animaciones.at(estado)->getPosicion().x,ALTURA_SUELO);
             velY = 0;
             levantarPolvo(efectosInsertados);
 
             cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
-        } else if (animaciones[estado]->haTerminado()){
+        } else if (animaciones.at(estado)->haTerminado()){
             if(velY < 0)
                 cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
             else
@@ -305,7 +305,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
         pararMovimiento();
 
-        if(animaciones[estado]->haTerminado()){
+        if(animaciones.at(estado)->haTerminado()){
             if(accionesRealizadas[Accion::ATACAR])
                 cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_2);
             else
@@ -316,7 +316,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
         pararMovimiento();
 
-        if(animaciones[estado]->haTerminado()){
+        if(animaciones.at(estado)->haTerminado()){
             if(accionesRealizadas[Accion::ATACAR])
                 cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_3);
             else
@@ -327,7 +327,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
         pararMovimiento();
 
-        if(animaciones[estado]->haTerminado()){
+        if(animaciones.at(estado)->haTerminado()){
             cambiarEstado(EstadoPersonaje::QUIETO);
             accionesRealizadas[Accion::ATACAR] = false;
         }
@@ -340,14 +340,14 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             // Le ha pillado en el aire
             velY+=GRAVEDAD;
 
-            if(animaciones[estado]->haTerminado()){
+            if(animaciones.at(estado)->haTerminado()){
                 cambiarEstado(velY < 0 ? EstadoPersonaje::SALTANDO_SUBIENDO : EstadoPersonaje::SALTANDO_BAJANDO);
             }
 
         } else if (velY != 0){
             // Ha caído
             velY = 0;
-            animaciones[estado]->setPosicion(animaciones[estado]->getPosicion().x,ALTURA_SUELO);
+            animaciones.at(estado)->setPosicion(animaciones.at(estado)->getPosicion().x,ALTURA_SUELO);
             levantarPolvo(efectosInsertados);
 
             cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
@@ -355,7 +355,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             // Le ha pillado en el suelo
             pararMovimiento();
 
-            if(animaciones[estado]->haTerminado()){
+            if(animaciones.at(estado)->haTerminado()){
                 cambiarEstado(EstadoPersonaje::QUIETO);
             }
         }
@@ -372,8 +372,8 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     case EstadoPersonaje::GOLPEADO_BAJANDO:
         velY+=GRAVEDAD;
 
-        if(animaciones[estado]->getPosicion().y > ALTURA_SUELO){
-            animaciones[estado]->setPosicion(animaciones[estado]->getPosicion().x,ALTURA_SUELO);
+        if(animaciones.at(estado)->getPosicion().y > ALTURA_SUELO){
+            animaciones.at(estado)->setPosicion(animaciones.at(estado)->getPosicion().x,ALTURA_SUELO);
             levantarPolvo(efectosInsertados);
             velX *= 0.5;
 
@@ -447,7 +447,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     case EstadoPersonaje::LEVANTANDOSE:
         pararMovimiento();
         
-        if(animaciones[estado]->haTerminado())
+        if(animaciones.at(estado)->haTerminado())
             cambiarEstado(EstadoPersonaje::QUIETO);
 
         break;
@@ -456,7 +456,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         pararMovimiento();
         if(accionesRealizadas[Accion::ATACAR]){
             cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
-        } else if(animaciones[estado]->haTerminado()){
+        } else if(animaciones.at(estado)->haTerminado()){
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
         break;
@@ -475,7 +475,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     case EstadoPersonaje::ATAQUE_AGACHADO:
         pararMovimiento();
         
-        if(animaciones[estado]->haTerminado()){
+        if(animaciones.at(estado)->haTerminado()){
             cambiarEstado(EstadoPersonaje::AGACHADO);
         }
         break;
@@ -483,7 +483,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     case EstadoPersonaje::PREPARANDO_SUPER:
         pararMovimiento();
 
-        if(animaciones[estado]->haTerminado()){
+        if(animaciones.at(estado)->haTerminado()){
             cambiarEstado(EstadoPersonaje::ATAQUE_SUPER);
         }
         break;
@@ -491,7 +491,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     case EstadoPersonaje::ATAQUE_SUPER:
         pararMovimiento();
 
-        if(animaciones[estado]->haTerminado()){
+        if(animaciones.at(estado)->haTerminado()){
             contadorBlanco = 255;
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
@@ -522,31 +522,35 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             break;
         
         default:
-            if((animaciones[estado]->getPosicion().x < posicionEnemigo.x && !mirandoDerecha) ||
-                (animaciones[estado]->getPosicion().x > posicionEnemigo.x && mirandoDerecha)){
+            if((animaciones.at(estado)->getPosicion().x < posicionEnemigo.x && !mirandoDerecha) ||
+                (animaciones.at(estado)->getPosicion().x > posicionEnemigo.x && mirandoDerecha)){
                     mirandoDerecha = !mirandoDerecha;
-                    for(auto const &[estado, anim] : animaciones){
+                    for(auto &[estado, anim] : animaciones){
                         anim->voltear();
                     }
                 }
             break;
     }
 
+    // Se actualiza la animación por frames del estado
+    animaciones.at(estado)->actualizar(efectosInsertados);
+
+    // Se consulta el movimiento de la animación por frames
     sf::Vector2f movimiento;
-    animaciones[estado]->actualizar(efectosInsertados,movimiento);
+    movimiento = animaciones.at(estado)->getMovimientoFrameActual();
     velX+=movimiento.x;
     velY+=movimiento.y;
-
+    
     // Una vez se hace todo, se aumenta la velocidad según se vea
-    animaciones[estado]->mover(velX,velY);
+    animaciones.at(estado)->mover(velX,velY);
 
     // Si el personaje se sale por la derecha, no dejar que pase
-    if(animaciones[estado]->getPosicion().x > VENTANA_ANCHURA-1){
-        animaciones[estado]->setPosicion(VENTANA_ANCHURA-1,animaciones[estado]->getPosicion().y);
+    if(animaciones.at(estado)->getPosicion().x > VENTANA_ANCHURA-1){
+        animaciones.at(estado)->setPosicion(VENTANA_ANCHURA-1,animaciones.at(estado)->getPosicion().y);
         if(estado == EstadoPersonaje::GOLPEADO_BAJANDO || estado == EstadoPersonaje::GOLPEADO_SUBIENDO || estado == EstadoPersonaje::TUMBADO) velX *= -1;
         else velX = 0;
-    } else if (animaciones[estado]->getPosicion().x < 0){
-        animaciones[estado]->setPosicion(0,animaciones[estado]->getPosicion().y);
+    } else if (animaciones.at(estado)->getPosicion().x < 0){
+        animaciones.at(estado)->setPosicion(0,animaciones.at(estado)->getPosicion().y);
         if(estado == EstadoPersonaje::GOLPEADO_BAJANDO || estado == EstadoPersonaje::GOLPEADO_SUBIENDO || estado == EstadoPersonaje::TUMBADO) velX *= -1;
         else velX = 0;
     }
@@ -562,7 +566,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> &animaciones, std::list<std::shared_ptr<Animacion>> &efectosInsertados){
 
     // Se sacan las hitboxes de la animación del estado actual
-    std::list<Hitbox> hitboxes = this->animaciones[estado]->getHitboxes();
+    std::list<Hitbox> hitboxes = this->animaciones.at(estado)->getHitboxes();
 
     // Si la animación del estado actual no tiene hitboxes en este momento, no hace falta comprobar nada
     if(hitboxes.size() == 0) return;
@@ -615,8 +619,8 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
                 rectEnemigo.top += anim->getPosicionEsqSupIzq().y;
 
                 sf::IntRect rectPropio = hPropia.getRectangulo();
-                rectPropio.left += this->animaciones[estado]->getPosicionEsqSupIzq().x;
-                rectPropio.top += this->animaciones[estado]->getPosicionEsqSupIzq().y;
+                rectPropio.left += this->animaciones.at(estado)->getPosicionEsqSupIzq().x;
+                rectPropio.top += this->animaciones.at(estado)->getPosicionEsqSupIzq().y;
 
                 bool hayInterseccion = rectEnemigo.intersects(rectPropio);
 
@@ -640,12 +644,12 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
         // estamos haciendo el súper ataque no no no nos moverán)
         switch(estado){
             case EstadoPersonaje::AGACHADO:
-                this->animaciones[estado]->mover(mirandoDerecha ? -0.25 : 0.25, 0);
+                this->animaciones.at(estado)->mover(mirandoDerecha ? -0.25 : 0.25, 0);
                 break;
             case EstadoPersonaje::ATAQUE_SUPER:
                 break;
             default:
-                this->animaciones[estado]->mover(mirandoDerecha ? -0.5 : 0.5, 0);
+                this->animaciones.at(estado)->mover(mirandoDerecha ? -0.5 : 0.5, 0);
                 break;
         }
 

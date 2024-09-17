@@ -56,8 +56,9 @@ class Personaje : public sf::Drawable {
         // Shader que hace que el personaje se ponga blanco al preparar el ataque súper
         std::shared_ptr<sf::Shader> shader;
 
-        // Animación del personaje según el estado
-        std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones;
+        // Animación del personaje según el estado (siempre son animaciones por frames pero es bueno
+        // usar punteros compartidos con las animaciones)
+        std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> animaciones;
 
         // Indica qué acciones están siendo realizadas
         std::map<Accion,bool> accionesRealizadas;
@@ -77,7 +78,7 @@ class Personaje : public sf::Drawable {
     public:
 
         // Construye el personaje
-        Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones, std::string nombre);
+        Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> animaciones, std::string nombre);
 
         // Indica que se está pulsando un botón
         void realizarAccion(Accion accion);
@@ -108,11 +109,11 @@ class Personaje : public sf::Drawable {
         // Establece el jugador asociado
         void setJugador(Jugador jugador);
 
-        // Devuelve el mapa de animaciones
-        std::map<EstadoPersonaje,std::shared_ptr<Animacion>> getAnimaciones();
+        // Devuelve la animación de un estado
+        std::shared_ptr<AnimacionPorFrames> getAnimacionSegunEstado(EstadoPersonaje estado);
 
         // Establece el mapa de animaciones
-        void setAnimaciones(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones);
+        void setAnimaciones(const std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> &animaciones);
 
         // Cambia el estado
         void cambiarEstado(EstadoPersonaje estadoNuevo);

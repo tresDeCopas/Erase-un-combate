@@ -29,7 +29,7 @@ AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX
     resetear();
 }
 
-void AnimacionPorFrames::actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones, sf::Vector2f &movimiento) {
+void AnimacionPorFrames::actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones) {
 
     if(tipoBucle == TipoBucle::NORMAL){
         if(!primerFrame) frameActual++;
@@ -55,9 +55,6 @@ void AnimacionPorFrames::actualizar(std::list<std::shared_ptr<Animacion>> &nueva
     if(!sonidoYaReproducido && framesConSonido.count(frameActual)){
         ReproductorDeSonidos::unicaInstancia()->reproducir(rutaSonido);
     }
-
-    // Se actualiza el movimiento si es necesario
-    if(framesConMovimiento.count(frameActual)) movimiento = framesConMovimiento[frameActual];
 
     // Se actualizan las nuevas animaciones si es necesario
     if(framesConAnimaciones.count(frameActual)){
@@ -139,6 +136,10 @@ int AnimacionPorFrames::getNumeroFrame(){
 
 void AnimacionPorFrames::setTipoBucle(TipoBucle tipoBucle){
     this->tipoBucle = tipoBucle;
+}
+
+sf::Vector2f AnimacionPorFrames::getMovimientoFrameActual(){
+    return framesConMovimiento[frameActual];
 }
 
 bool AnimacionPorFrames::haTerminado(){
