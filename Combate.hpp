@@ -53,6 +53,11 @@ class Combate{
         // Cartel que aparece al terminar una ronda en el que pone "¡Gana el jugador 2!"
         std::shared_ptr<Animacion> cartelGanaJugador2;
 
+    private:
+        // Devuelve todo a la normalidad para la siguiente ronda (excepto el contador
+        // de rondas ganadas de cada GUI de personaje)
+        void resetear();
+
     public:
 
         // Construye el combate en base a los nombres de los personajes

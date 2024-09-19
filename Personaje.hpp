@@ -96,6 +96,12 @@ class Personaje : public sf::Drawable {
         // Devuelve los puntos de vida actuales
         int getPuntosDeVida();
 
+        // Establece la cantidad de puntos de vida
+        void setPuntosDeVida(int puntosDeVida);
+
+        // Establece la carga del medidor de super
+        void setMedidorSuper(int medidorSuper);
+
         // Establece la posición del personaje
         void setPosicion(float x, float y);
         void setPosicion(sf::Vector2f posicion);
