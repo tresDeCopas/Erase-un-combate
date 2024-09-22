@@ -32,6 +32,9 @@ class Escenario {
         // la posición de los personajes y los efectos para que se muevan con el fondo)
         void actualizar(Personaje& personaje1, Personaje& personaje2, std::list<std::shared_ptr<Animacion>>& efectos);
 
+        // Coloca el escenario en el centro
+        void resetear();
+
         // Dibuja el fondo del escenario
         void dibujarFondo(sf::RenderTarget& target, sf::RenderStates states) const;
 
