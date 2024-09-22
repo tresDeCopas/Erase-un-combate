@@ -109,6 +109,10 @@ class Personaje : public sf::Drawable {
         // Devuelve la posición del personaje
         sf::Vector2f getPosicion();
 
+        // Mueve al personaje según lo indicado (en realidad mueve la animación del estado
+        // actual pero el resultado es el mismo)
+        void mover(float offsetX, float offsetY);
+
         // Devuelve el estado actual del personaje
         EstadoPersonaje getEstado();
 

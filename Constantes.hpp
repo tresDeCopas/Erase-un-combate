@@ -207,6 +207,14 @@ const int MAX_CONTADOR_TUMBADO = VENTANA_FPS;
 const int MAX_CONTADOR_CELEBRACION = VENTANA_FPS*3;
 
 /*
+    CONSTANTES PARA EL ESCENARIO
+*/
+
+// Si un personaje está a esta distancia o menos de un borde, el escenario se moverá para alejar a ese
+// personaje del borde (siempre y cuando el otro personaje no esté también en el umbral)
+const int ESCENARIO_UMBRAL_MOVIMIENTO = 20;
+
+/*
     CONSTANTES PARA LA GUI DE PERSONAJE
 */
 
