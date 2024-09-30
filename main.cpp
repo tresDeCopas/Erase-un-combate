@@ -11,7 +11,7 @@ int main(){
 
     ContenedorDeEfectos::unicaInstancia()->cargarTodosLosEfectos();
 
-    Combate combate("juan-cuesta-sin-casco", "juan-cuesta-con-casco", "fachada");
+    Combate combate("juan-cuesta-sin-casco", "andres-guerra", "fachada");
 
     combate.comenzar();
 }
