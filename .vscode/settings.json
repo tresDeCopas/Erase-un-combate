@@ -126,5 +126,6 @@
       "binaryPath": "c:\\Users\\angel\\OneDrive - UNIVERSIDAD DE MURCIA\\Mis programas\\Érase un combate\\EraseUnCombate.exe",
       "binaryArgs": []
     }
-  ]
+  ],
+  "makefile.configureOnOpen": false
 }
