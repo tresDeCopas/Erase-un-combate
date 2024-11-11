@@ -40,11 +40,11 @@ void ReproductorDeMusica::reproducir(std::string cancion, bool bucle)
 {
     if(!musicaActual.openFromFile(cancion)){
         Bitacora::unicaInstancia()->escribir("Juan Cuesta: Emilio, vamos a animar un poco el ambiente, reproduce la canción " + cancion);
-        Bitacora::unicaInstancia()->escribir("Emilio: Ah no, esa se la llev� mi padre y ya no la he vuelto a ver");
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Pero... �para qu� le das a tu padre un bien com�n de esta, nuestra comunidad?");
+        Bitacora::unicaInstancia()->escribir("Emilio: Ah no, esa se la llevó mi padre y ya no la he vuelto a ver");
+        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Pero... ¿para qué le das a tu padre un bien común de esta, nuestra comunidad?");
         Bitacora::unicaInstancia()->escribir("Emilio: Es que se puso muy pesado, y con tal de que me dejara un rato en paz...");
         Bitacora::unicaInstancia()->escribir("Juan Cuesta: Voy a encontrar a Mariano inmediatamente. Se suspende la junta.");
-        Bitacora::unicaInstancia()->escribir("Emilio: Pero no se enfade con �l, se�or Juan. No es maldad, es que est� demente ya.");
+        Bitacora::unicaInstancia()->escribir("Emilio: Pero no se enfade con él, señor Juan. No es maldad, es que está demente ya.");
         exit(EXIT_FAILURE);
     }
 
