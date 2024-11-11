@@ -16,9 +16,9 @@ GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaj
     contadorVidaAtrasado = MAX_PUNTOS_DE_VIDA;
     retrasoContadorVidaAtrasado = 0;
 
-    spritePortrait.setTexture(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+personaje.nombre+"/portrait.png"));
+    spritePortrait.setTexture(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/personajes/"+personaje.nombre+"/portrait.png"));
 
-    spriteNombre.setTexture(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+personaje.nombre+"/nombre.png"));
+    spriteNombre.setTexture(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/personajes/"+personaje.nombre+"/nombre.png"));
 
     if(parteIzquierda){
         rectanguloVidaReal.setPosition(POSICION_GUI_IZQUIERDA+POSICION_BARRA_VIDA_IZQUIERDA);

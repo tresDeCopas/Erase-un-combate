@@ -217,7 +217,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
             std::getline(fichero,linea);
 
             std::shared_ptr<AnimacionPorFrames> anim(new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
-                                                     ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
+                                                     ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/personajes/"+nombrePersonaje+"/"+nombreEstado+".png"),
                                                      util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,framesConSonido,framesConMovimiento,
                                                      framesConAnimaciones,rutaSonido,repetirSonido));
 
