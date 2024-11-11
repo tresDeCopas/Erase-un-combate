@@ -2,7 +2,9 @@
 #include "Constantes.hpp"
 #include "ContenedorDeRecursos.hpp"
 
-GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaje(personaje), parteIzquierda(parteIzquierda), vibracion(0), contadorVibracion(CONTADOR_VIBRACION_MAX){
+GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : 
+    personaje(personaje), parteIzquierda(parteIzquierda), vibracion(0),
+    contadorVibracion(CONTADOR_VIBRACION_MAX), rondasGanadas(0){
     
     rectanguloVidaReal.setSize(TAMANO_BARRA_VIDA);
     rectanguloVidaReal.setFillColor(COLOR_BARRA_VIDA_REAL);
@@ -121,6 +123,16 @@ void GUIPersonaje::actualizar(){
         posicionBarraSuper.x = VENTANA_ANCHURA-posicionBarraSuper.x-rectanguloSuper.getSize().x;
         rectanguloSuper.setPosition(posicionBarraSuper);
     }
+}
+
+void GUIPersonaje::ganarRonda(){
+    rondasGanadas++;
+    if(parteIzquierda) spritePrincipalBase.setTexture(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/gui/base-izquierda-"+std::to_string(rondasGanadas)+".png"));
+    else spritePrincipalBase.setTexture(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/gui/base-derecha-"+std::to_string(rondasGanadas)+".png"));
+}
+
+int GUIPersonaje::getRondasGanadas(){
+    return rondasGanadas;
 }
 
 void GUIPersonaje::draw(sf::RenderTarget& target, sf::RenderStates states) const{

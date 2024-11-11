@@ -64,7 +64,7 @@ void Combate::comenzar(){
 
     // Este bucle contiene varias rondas dentro y podría ser más bonito y compacto pero prefiero
     // repetir código porque virgen santisima que por culo sería compactarlo todo
-    while(true){
+    while(GUIJugador1.getRondasGanadas() != 2 && GUIJugador2.getRondasGanadas() != 2){
         
         // Se reproduce una canción de combate
         ReproductorDeMusica::unicaInstancia()->reproducirCancionCombate();
@@ -355,6 +355,8 @@ void Combate::comenzar(){
             else if (ganador.getEstado() != EstadoPersonaje::CELEBRANDO){
                 ganador.cambiarEstado(EstadoPersonaje::CELEBRANDO);
                 ReproductorDeMusica::unicaInstancia()->reproducirCancionFinRonda();
+                if(personajeJugador1.getPuntosDeVida() > 0) GUIJugador1.ganarRonda();
+                else GUIJugador2.ganarRonda();
             }
             // Si ya se le ha dicho que celebre, se oscurece el rectángulo si ha terminado de celebrar
             else if(ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() && !ReproductorDeMusica::unicaInstancia()->estaReproduciendo()) {
