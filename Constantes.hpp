@@ -253,6 +253,9 @@ const sf::Color COLOR_BARRA_VIDA_ATRASADA(255,0,0);
 // Color de la barra de súper
 const sf::Color COLOR_BARRA_SUPER(0,0,255);
 
+// Cada cuántos frames se actualiza la vibración
+const int CONTADOR_VIBRACION_MAX = 2;
+
 /*
     CONSTANTES AUXILIARES PARA COSAS DE C++
 */
