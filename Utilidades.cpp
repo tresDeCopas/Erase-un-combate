@@ -63,6 +63,8 @@ namespace util{
             return EstadoPersonaje::ANDANDO_ALEJANDOSE;
         if(string == "bloqueando")
             return EstadoPersonaje::BLOQUEANDO;
+        if(string == "esquive-super")
+            return EstadoPersonaje::ESQUIVE_SUPER;
         if(string == "preparando-super")
             return EstadoPersonaje::PREPARANDO_SUPER;
         if(string == "ataque-super")

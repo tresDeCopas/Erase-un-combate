@@ -206,6 +206,10 @@ const int MAX_CONTADOR_TUMBADO = VENTANA_FPS;
 // Valor inicial del contador de celebración. Al llegar a 0, el personaje que acaba de ganar celebra
 const int MAX_CONTADOR_CELEBRACION = VENTANA_FPS*3;
 
+// Máximo de frames que tienen que pasar desde que se empiece a caminar al revés del rival para poder
+// hacerle parry a un ataque súper
+const int MAX_CONTADOR_ESQUIVE_SUPER = 4;
+
 /*
     CONSTANTES PARA EL ESCENARIO
 */

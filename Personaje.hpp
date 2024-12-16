@@ -47,6 +47,9 @@ class Personaje : public sf::Drawable {
         // siendo su máximo 255 (completamente blanco) y su mínimo 0 (normal)
         int contadorBlanco;
 
+        // Cuenta cuántos frames lleva el personaje andando alejándose del enemigo
+        int contadorEsquiveSuper;
+
         // Jugador al que está asociado el personaje
         Jugador jugador;
 
