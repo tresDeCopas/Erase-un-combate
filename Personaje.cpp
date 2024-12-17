@@ -473,7 +473,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
 
     case EstadoPersonaje::BLOQUEANDO:
-        if(animaciones.at(estado)->getPosicion().y == ALTURA_SUELO) {
+        if(velY == 0 && animaciones.at(estado)->getPosicion().y == ALTURA_SUELO) {
             pararMovimiento();
             if(accionesRealizadas[Accion::ATACAR]){
                 cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
