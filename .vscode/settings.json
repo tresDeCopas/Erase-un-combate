@@ -118,7 +118,10 @@
     "typeinfo": "cpp",
     "variant": "cpp",
     "*.tpp": "cpp",
-    "set": "cpp"
+    "set": "cpp",
+    "chrono": "cpp",
+    "cstdarg": "cpp",
+    "unordered_set": "cpp"
   },
   "makefile.launchConfigurations": [
     {

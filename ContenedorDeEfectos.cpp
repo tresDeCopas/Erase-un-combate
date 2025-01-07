@@ -67,8 +67,6 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
         // En esta variable se guarda una referencia a la textura de este efecto
         sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
 
-
-
         if(!fichero.is_open()){
             Bitacora::unicaInstancia()->escribir("Emilio: ... pero señor Juan, es para hoy.");
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: Creo... creo que he extraviado el fichero ficheros/efectos.txt...");
@@ -124,7 +122,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
                     }
 
                     // Se crea la hitbox en base a muchas cosas
-                    Hitbox h(sf::IntRect(enteros[0],enteros[1],enteros[2],enteros[3]),enteros[4],false);
+                    Hitbox h(sf::IntRect({enteros[0],enteros[1]},{enteros[2],enteros[3]}),enteros[4],false);
 
                     listaHitboxes.push_back(h);
 
@@ -189,7 +187,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
             std::getline(fichero,linea);
             std::getline(fichero,linea);
 
-            Hitbox hitbox(sf::IntRect(-1,-1,-1,-1),0,false);
+            Hitbox hitbox(sf::IntRect({-1,-1},{-1,-1}),0,false);
             bool hitboxValida = false;
 
             auto vectorAux = util::separarString(linea,':');
@@ -207,7 +205,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
                     }
 
                     // Se crea la hitbox en base a muchas cosas
-                    hitbox = Hitbox(sf::IntRect(enteros[0],enteros[1],enteros[2],enteros[3]),enteros[4],false);
+                    hitbox = Hitbox(sf::IntRect({enteros[0],enteros[1]},{enteros[2],enteros[3]}),enteros[4],false);
                     hitboxValida = true;
                 }
 

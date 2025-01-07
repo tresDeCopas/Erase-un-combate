@@ -3,8 +3,13 @@
 #include "ContenedorDeRecursos.hpp"
 
 GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : 
-    personaje(personaje), parteIzquierda(parteIzquierda), vibracion(0),
-    contadorVibracion(CONTADOR_VIBRACION_MAX), rondasGanadas(0){
+    personaje(personaje), parteIzquierda(parteIzquierda),
+    spriteNombre(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/personajes/"+personaje.nombre+"/nombre.png")),
+    spritePortrait(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/personajes/"+personaje.nombre+"/portrait.png")),
+    vibracion(0), contadorVibracion(CONTADOR_VIBRACION_MAX),
+    spritePrincipalBase(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/gui/base-izquierda-0.png")),
+    spritePrincipalFrente(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/gui/frente-izquierda.png")),
+    rondasGanadas(0){
     
     rectanguloVidaReal.setSize(TAMANO_BARRA_VIDA);
     rectanguloVidaReal.setFillColor(COLOR_BARRA_VIDA_REAL);
@@ -51,18 +56,18 @@ GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) :
         // vez de la esquina superior izquierda así que hay que cambiar un poco esto
         sf::Vector2f posicionPortrait(POSICION_GUI_IZQUIERDA+POSICION_PORTRAIT_IZQUIERDA);
         posicionPortrait.x = VENTANA_ANCHURA-posicionPortrait.x;
-        spritePortrait.setScale(-1,1);
+        spritePortrait.setScale({-1.f,1.f});
         spritePortrait.setPosition(posicionPortrait);
 
         sf::Vector2f posicionNombre(POSICION_GUI_IZQUIERDA+POSICION_NOMBRE_IZQUIERDA);
-        posicionNombre.x = VENTANA_ANCHURA-posicionNombre.x-spriteNombre.getTextureRect().width;
+        posicionNombre.x = VENTANA_ANCHURA-posicionNombre.x-spriteNombre.getTextureRect().size.x;
         spriteNombre.setPosition(posicionNombre);
 
         spritePrincipalBase.setTexture(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/gui/base-derecha-0.png"));
         spritePrincipalFrente.setTexture(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/gui/frente-derecha.png"));
         
         sf::Vector2f posicionGUI(POSICION_GUI_IZQUIERDA);
-        posicionGUI.x = VENTANA_ANCHURA-posicionGUI.x-spritePrincipalBase.getTextureRect().width;
+        posicionGUI.x = VENTANA_ANCHURA-posicionGUI.x-spritePrincipalBase.getTextureRect().size.x;
         spritePrincipalBase.setPosition(posicionGUI);
         spritePrincipalFrente.setPosition(posicionGUI);
     }
@@ -146,7 +151,7 @@ void GUIPersonaje::restablecerVida(){
 
 void GUIPersonaje::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     sf::Transform mover;
-    mover.translate(0,vibracion);
+    mover.translate({0.f,(float)vibracion});
     states.transform*=mover;
     
     target.draw(spritePrincipalBase,states);

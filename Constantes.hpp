@@ -72,7 +72,7 @@ const int NUMERO_CONTROLES = 10;
 const double UMBRAL_JOYSTICK = 50;
 
 // Tecla para salir del juego
-const sf::Keyboard::Key TECLA_SALIDA = sf::Keyboard::Key::Escape;
+const sf::Keyboard::Scancode TECLA_SALIDA = sf::Keyboard::Scancode::Escape;
 
 /*
     CONSTANTES PARA EL SONIDO Y LA MÚSICA

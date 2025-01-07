@@ -10,7 +10,7 @@ bool VentanaPrincipal::vibracionActivada = true;
 sf::RenderWindow * VentanaPrincipal::unicaInstancia()
 {
     if(ventanaPrincipal==nullptr){
-        ventanaPrincipal = new sf::RenderWindow(sf::VideoMode(VENTANA_ANCHURA, VENTANA_ALTURA), VENTANA_NOMBRE, VENTANA_ESTILO);
+        ventanaPrincipal = new sf::RenderWindow(sf::VideoMode({VENTANA_ANCHURA, VENTANA_ALTURA}), VENTANA_NOMBRE, VENTANA_ESTILO);
         ventanaPrincipal->setFramerateLimit(VENTANA_FPS);
         // Se desactiva lo de que si mantienes pulsada una tecla se vuelve a pulsar muchas veces
         // porque que pereza
@@ -53,7 +53,7 @@ void VentanaPrincipal::actualizar(){
         return;
     }
 
-    ventanaPrincipal->setPosition(sf::Vector2i(ventanaPrincipal->getPosition().x,ventanaPrincipal->getPosition().y+potenciaVibracion));
+    ventanaPrincipal->setPosition({ventanaPrincipal->getPosition().x,ventanaPrincipal->getPosition().y+potenciaVibracion});
 
     if(potenciaVibracion < 0) potenciaVibracion++;
 

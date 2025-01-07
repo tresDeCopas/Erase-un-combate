@@ -19,7 +19,7 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
     cartelTodoListo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-todo-listo")),
     cartelAPelear(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-a-pelear")){
 
-    rectanguloOscuro.setPosition(0,0);
+    rectanguloOscuro.setPosition({0,0});
     rectanguloOscuro.setSize(sf::Vector2f(VENTANA_ANCHURA,VENTANA_ALTURA));
     rectanguloOscuro.setOutlineThickness(0);
     rectanguloOscuro.setFillColor(sf::Color::Black);
@@ -137,7 +137,7 @@ void Combate::comenzar(){
 
                 // Se dibuja un rectángulo oscuro encima
                 sf::RectangleShape rectanguloOscuro(sf::Vector2f(VENTANA_ANCHURA,VENTANA_ALTURA));
-                rectanguloOscuro.setPosition(0,0);
+                rectanguloOscuro.setPosition({0,0});
                 rectanguloOscuro.setFillColor(sf::Color(0,0,0,100));
                 ventana->draw(rectanguloOscuro);
 
@@ -168,9 +168,8 @@ void Combate::comenzar(){
                     cartelAPelear->actualizar(efectos);
                 }
 
-                sf::Event evento;
-                while(ventana->pollEvent(evento)){
-                    if(evento.type == sf::Event::Closed){
+                while(const std::optional evento = ventana->pollEvent()){
+                    if(evento->is<sf::Event::Closed>()){
                         ventana->close();
                         exit(EXIT_SUCCESS);
                     } else {
@@ -179,9 +178,9 @@ void Combate::comenzar(){
                         Personaje& personajeElegido = par.first == Jugador::JUGADOR1 ? personajeJugador1 : personajeJugador2;
 
                         if((dynamic_cast<AnimacionAgrandable*>(cartelAPelear.get()))->haTerminadoDeAgrandarse()){
-                            if(evento.type == sf::Event::KeyPressed || evento.type == sf::Event::JoystickButtonPressed || (evento.type == sf::Event::JoystickMoved && std::abs(evento.joystickMove.position) > UMBRAL_JOYSTICK)){
+                            if(evento->is<sf::Event::KeyPressed>() || evento->is<sf::Event::JoystickButtonPressed>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) > UMBRAL_JOYSTICK)){
                                 personajeElegido.realizarAccion(par.second);
-                            } else if(evento.type == sf::Event::KeyReleased || evento.type == sf::Event::JoystickButtonReleased || (evento.type == sf::Event::JoystickMoved && std::abs(evento.joystickMove.position) < UMBRAL_JOYSTICK)){
+                            } else if(evento->is<sf::Event::KeyReleased>() || evento->is<sf::Event::JoystickButtonReleased>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK)){
                                 personajeElegido.detenerAccion(par.second);
                             }
                         }
@@ -313,9 +312,8 @@ void Combate::comenzar(){
 
             // PRIMER PASO: solo se recibe entrada si se cierra la ventana
 
-            sf::Event evento;
-            while(ventana->pollEvent(evento)){
-                if(evento.type == sf::Event::Closed){
+            while(const std::optional evento = ventana->pollEvent()){
+                if(evento->is<sf::Event::Closed>()){
                     ventana->close();
                     exit(EXIT_SUCCESS);
                 }

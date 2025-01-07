@@ -20,12 +20,13 @@ void ReproductorDeSonidos::reproducir(std::string sonido)
 {
     // Primero se crea el sonido si no existe
     if(!sonidos.count(sonido)){
-        sonidos[sonido].setBuffer(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener(sonido));
-    } 
+        sf::Sound nuevoSonido(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener(sonido));
+        sonidos.insert(std::pair<std::string,sf::Sound>(sonido,nuevoSonido));
+    }
 
     // Se reproduce el sonido requerido
-    sonidos[sonido].setVolume(volumenActual);
-    sonidos[sonido].play();
+    sonidos.at(sonido).setVolume(volumenActual);
+    sonidos.at(sonido).play();
 }
 
 float ReproductorDeSonidos::getVolumen()

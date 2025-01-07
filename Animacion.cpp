@@ -1,7 +1,12 @@
 #include "Animacion.hpp"
+#include "Constantes.hpp"
+
+Animacion::Animacion(sf::Texture &textura) : sprite(textura) {
+
+}
 
 void Animacion::setPosicion(float x, float y){
-    sprite.setPosition(x,y);
+    sprite.setPosition({x,y});
 }
 
 void Animacion::setPosicion(sf::Vector2f posicion){
@@ -9,7 +14,7 @@ void Animacion::setPosicion(sf::Vector2f posicion){
 }
 
 void Animacion::setRotacion(double angulo){
-    sprite.setRotation(angulo);
+    sprite.setRotation(sf::degrees(angulo));
 }
 
 void Animacion::setColor(sf::Color color){
@@ -25,7 +30,7 @@ sf::Vector2f Animacion::getPosicionEsqSupIzq() const{
 }
 
 void Animacion::mover(float x, float y){
-    sprite.move(x,y);
+    sprite.move({x,y});
 }
 
 void Animacion::mover(sf::Vector2f diferencia){

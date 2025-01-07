@@ -5,7 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "c:/Users/Ángel/OneDrive - UNIVERSIDAD DE MURCIA/Mis programas/Érase un combate/**",
-                "C:\\SFML-2.6.1\\include"
+                "C:\\SFML-3.0.0\\include"
             ],
             "defines": [
                 "_DEBUG",
@@ -30,7 +30,7 @@
             "name": "includePath",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/SFML-2.6.1/include"
+                "C:/SFML-3.0.0/include"
             ],
             "defines": [
                 "_DEBUG",

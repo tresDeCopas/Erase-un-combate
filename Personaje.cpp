@@ -642,8 +642,8 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
 
     // Se encuentra una colisión entre una hitbox del personaje (hurtbox como la llama la chaviza)
     // y una hitbox del enemigo (la que colisione con más daño)
-    Hitbox hitboxElegidaEnemigo = Hitbox(sf::IntRect(0,0,0,0),0,false);
-    Hitbox hitboxElegidaPropia = Hitbox(sf::IntRect(0,0,0,0),0,false);
+    Hitbox hitboxElegidaEnemigo = Hitbox(sf::IntRect({0,0},{0,0}),0,false);
+    Hitbox hitboxElegidaPropia = Hitbox(sf::IntRect({0,0},{0,0}),0,false);
 
     // Este booleano indica que una hurtbox del enemigo (una hitbox sin daño de ataque, es decir,
     // una hitbox que representa el cuerpo del enemigo) ha golpeado una hitbox sin daño de nuestro personaje,
@@ -659,21 +659,21 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
             for(Hitbox hPropia : hitboxes){
                 
                 sf::IntRect rectEnemigo = hEnemigo.getRectangulo();
-                rectEnemigo.left += anim->getPosicionEsqSupIzq().x;
-                rectEnemigo.top += anim->getPosicionEsqSupIzq().y;
+                rectEnemigo.position.x += anim->getPosicionEsqSupIzq().x;
+                rectEnemigo.position.y += anim->getPosicionEsqSupIzq().y;
 
                 sf::IntRect rectPropio = hPropia.getRectangulo();
-                rectPropio.left += this->animaciones.at(estado)->getPosicionEsqSupIzq().x;
-                rectPropio.top += this->animaciones.at(estado)->getPosicionEsqSupIzq().y;
+                rectPropio.position.x += this->animaciones.at(estado)->getPosicionEsqSupIzq().x;
+                rectPropio.position.y += this->animaciones.at(estado)->getPosicionEsqSupIzq().y;
 
-                bool hayInterseccion = rectEnemigo.intersects(rectPropio);
+                bool hayInterseccion = rectEnemigo.findIntersection(rectPropio).has_value();
 
                 if(hayInterseccion && hEnemigo.getFuerzaAtaque() > hitboxElegidaEnemigo.getFuerzaAtaque()){
                     hitboxElegidaEnemigo = Hitbox(rectEnemigo,hEnemigo.getFuerzaAtaque(),hEnemigo.esAtaqueBajo());
                     hitboxElegidaPropia = Hitbox(rectPropio,hPropia.getFuerzaAtaque(),hPropia.esAtaqueBajo());
                 } else if (hayInterseccion && hEnemigo.getFuerzaAtaque() == 0){
                     colisionConEnemigo = true;
-                    colisionVoladora = (rectEnemigo.top + rectEnemigo.height) < ALTURA_SUELO;
+                    colisionVoladora = (rectEnemigo.position.y + rectEnemigo.size.y) < ALTURA_SUELO;
                 }
             }
         }

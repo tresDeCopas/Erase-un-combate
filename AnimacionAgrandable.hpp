@@ -15,7 +15,7 @@ class AnimacionAgrandable : public Animacion {
     private:
         // Indica, del 0 al 1, cómo de agrandado está el objeto con respecto a su
         // tamaño original
-        double escalaActual;
+        float escalaActual;
 
         // Indica si el sprite se está agrandando (si está a false puede que se esté disminuyendo
         // o puede que esté manteniéndose en su máximo tamaño, depende de si contadorMaxTamano es menor

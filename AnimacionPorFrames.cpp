@@ -7,12 +7,12 @@
 #include <iostream>
 #include <typeinfo>
 
-AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente, std::set<int> framesConSonido, std::map<int,sf::Vector2f> framesConMovimiento, std::map<int,IndicacionesSobreAnimacion> framesConAnimaciones, std::string rutaSonido, bool repetirSonido) {
+AnimacionPorFrames::AnimacionPorFrames(float posicionX, float posicionY, float origenX, float origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente, std::set<int> framesConSonido, std::map<int,sf::Vector2f> framesConMovimiento, std::map<int,IndicacionesSobreAnimacion> framesConAnimaciones, std::string rutaSonido, bool repetirSonido) :
+    Animacion(textura) {
 
-    sprite.setTexture(textura);
-    sprite.setTextureRect(sf::IntRect(0, 0, textura.getSize().x/numRectangulos, textura.getSize().y));
-    sprite.setOrigin(origenX,origenY);
-    sprite.setPosition(posicionX,posicionY);
+    sprite.setTextureRect(sf::IntRect({0,0}, {(int)(textura.getSize().x/numRectangulos), (int)textura.getSize().y}));
+    sprite.setOrigin({origenX,origenY});
+    sprite.setPosition({posicionX,posicionY});
 
     this->tipoBucle = tipoBucle;
     this->numRepeticionesTotal = numRepeticionesTotal;
@@ -87,12 +87,12 @@ void AnimacionPorFrames::actualizar(std::list<std::shared_ptr<Animacion>> &nueva
         nuevasAnimaciones.push_back(anim);
     }
 
-    sprite.setTextureRect(sf::IntRect(rectanguloCorrespondiente[frameActual]*sprite.getTextureRect().width,0,sprite.getTextureRect().width,sprite.getTextureRect().height));
+    sprite.setTextureRect(sf::IntRect({rectanguloCorrespondiente[frameActual]*sprite.getTextureRect().size.x,0}, {sprite.getTextureRect().size.x,sprite.getTextureRect().size.y}));
 }
 
 void AnimacionPorFrames::voltear(){
     // Al escalar el eje X por -1 se le da la vuelta muy guay todo pero no es suficiente
-    sprite.scale(-1,1);
+    sprite.scale({-1,1});
 
     // También hay que voltear las hitboxes
     for(auto const &[entero, listaHitboxes] : hitboxes){
@@ -101,13 +101,13 @@ void AnimacionPorFrames::voltear(){
         for(Hitbox hitbox : listaHitboxes){
 
             // Esto se explicaría mejor con un dibujito pero bueno
-            int puntoCentral = sprite.getTextureRect().width/2;
+            int puntoCentral = sprite.getTextureRect().size.x/2;
 
-            int derecha = hitbox.getRectangulo().left+hitbox.getRectangulo().width;
+            int derecha = hitbox.getRectangulo().position.x+hitbox.getRectangulo().size.x;
 
             int nuevaIzquierda = derecha - (derecha-puntoCentral)*2;
 
-            Hitbox nuevaHitbox(sf::IntRect(nuevaIzquierda,hitbox.getRectangulo().top,hitbox.getRectangulo().width,hitbox.getRectangulo().height),hitbox.getFuerzaAtaque(),hitbox.esAtaqueBajo());
+            Hitbox nuevaHitbox(sf::IntRect({nuevaIzquierda,hitbox.getRectangulo().position.y},{hitbox.getRectangulo().size.x,hitbox.getRectangulo().size.y}),hitbox.getFuerzaAtaque(),hitbox.esAtaqueBajo());
 
             nuevaLista.push_back(nuevaHitbox);
         }
@@ -179,8 +179,8 @@ void AnimacionPorFrames::draw(sf::RenderTarget& target, sf::RenderStates states)
 
     if(DEBUG){
         for(Hitbox h : hitboxes.at(rectanguloCorrespondiente.at(frameActual))){
-            sf::RectangleShape rectanguloHitbox(sf::Vector2f(h.getRectangulo().width,h.getRectangulo().height));
-            rectanguloHitbox.setPosition(h.getRectangulo().left,h.getRectangulo().top);
+            sf::RectangleShape rectanguloHitbox(sf::Vector2f(h.getRectangulo().size.x,h.getRectangulo().size.y));
+            rectanguloHitbox.setPosition({(float)h.getRectangulo().position.x,(float)h.getRectangulo().position.y});
             rectanguloHitbox.move(getPosicionEsqSupIzq());
             rectanguloHitbox.setFillColor(sf::Color::Transparent);
             rectanguloHitbox.setOutlineThickness(1);

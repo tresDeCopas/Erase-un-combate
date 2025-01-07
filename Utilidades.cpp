@@ -81,11 +81,11 @@ namespace util{
 
     sf::Vector2f centroDeInterseccion(sf::IntRect r1, sf::IntRect r2){
         
-        int izquierda = std::max(r1.left, r2.left);
-        int arriba = std::max(r1.top, r2.top);
+        int izquierda = std::max(r1.position.x, r2.position.x);
+        int arriba = std::max(r1.position.y, r2.position.y);
 
-        int derecha = std::min(r1.left+r1.width, r2.left+r2.width);
-        int abajo = std::min(r1.top+r1.height, r2.top+r2.height);
+        int derecha = std::min(r1.position.x+r1.size.x, r2.position.x+r2.size.x);
+        int abajo = std::min(r1.position.y+r1.size.y, r2.position.y+r2.size.y);
 
         return sf::Vector2f(izquierda + (derecha - izquierda)/2, arriba + (abajo-arriba)/2);
     }
