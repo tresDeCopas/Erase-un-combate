@@ -2,7 +2,7 @@ NOMBREPROYECTO=EraseUnCombate
 
 $(NOMBREPROYECTO):
 ifeq ($(OS),Windows_NT)
-	g++ -Wall -pipe -O3 *.cpp -g -o $(NOMBREPROYECTO).exe -I C:\SFML-3.0.0\include -L C:\SFML-3.0.0\lib -lsfml-system -lsfml-graphics -lsfml-window -lsfml-audio
+	g++ -Wall -pipe -O3 *.cpp -g -o $(NOMBREPROYECTO).exe -I C:/SFML-3.0.0/include -L C:/SFML-3.0.0/lib -lsfml-system -lsfml-graphics -lsfml-window -lsfml-audio
 else
 	g++ -Wall -pipe -O3 *.cpp -g -o $(NOMBREPROYECTO).out -lsfml-system -lsfml-graphics -lsfml-window -lsfml-audio
 endif
