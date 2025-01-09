@@ -59,7 +59,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: Qué follon... se suspende la junta.");
             exit(EXIT_FAILURE);
         } else {
-            Bitacora::unicaInstancia()->escribir("Emilio: Listo señor Juan.");
+            //Bitacora::unicaInstancia()->escribir("Emilio: Listo señor Juan.");
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: registrando personaje " + nombrePersonaje + ".");
         }
 
@@ -89,7 +89,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
             while(util::separarString(linea,':')[0] == "Rectangulo"){
 
-                Bitacora::unicaInstancia()->escribir("Juan Cuesta: rectángulo " + std::to_string(numeroRectangulos) + ".");
+                //Bitacora::unicaInstancia()->escribir("Juan Cuesta: rectángulo " + std::to_string(numeroRectangulos) + ".");
 
                 // Lista de hitboxes para este rectángulo
                 std::list<Hitbox> listaHitboxes;
@@ -125,7 +125,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
             if(nombreEstado == "ataque-agachado")
                 Bitacora::unicaInstancia()->escribir("Juan Cuesta: las hitboxes con daño de este estado serán de ataque bajo");
 
-            Bitacora::unicaInstancia()->escribir("Juan Cuesta: finalmente, se apuntan los frames.");
+            //Bitacora::unicaInstancia()->escribir("Juan Cuesta: finalmente, se apuntan los frames.");
 
             // Ahora sacamos la correspondencia de frames y rectángulos
             std::getline(fichero,linea);
@@ -142,7 +142,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                 contadorFrame++;
             }
 
-            Bitacora::unicaInstancia()->escribir("Juan Cuesta: número de frames: " + std::to_string(contadorFrame));
+            //Bitacora::unicaInstancia()->escribir("Juan Cuesta: número de frames: " + std::to_string(contadorFrame));
 
             // Nos saltamos dos líneas, y ahora leemos información sobre los sonidos
             std::getline(fichero,linea);
