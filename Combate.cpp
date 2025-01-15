@@ -67,7 +67,7 @@ void Combate::comenzar(){
     std::list<std::shared_ptr<Animacion>> efectos;
 
     // Este bucle contiene varias rondas dentro y podría ser más bonito y compacto pero prefiero
-    // repetir código porque virgen santisima que por culo sería compactarlo todo
+    // repetir código porque virgen santisima qué por culo sería compactarlo todo
     while(GUIJugador1.getRondasGanadas() != 2 && GUIJugador2.getRondasGanadas() != 2){
         
         // Se reproduce una canción de combate
@@ -76,9 +76,16 @@ void Combate::comenzar(){
         // Se resetean los carteles, los personajes y el escenario
         resetear();
 
+        // Se prepara un reloj para asegurar que se consiguen 60 frames por segundo
+        sf::Clock reloj;
+
         // El bucle de cada ronda realiza acciones en un orden muy específico para evitar problemas
 
         while(personajeJugador1.getPuntosDeVida() > 0 && personajeJugador2.getPuntosDeVida() > 0){
+
+            // Se comprueba que ha pasado suficiente tiempo como para dibujar un frame
+            while(reloj.getElapsedTime().asSeconds() < 1.f/NUMERO_FPS);
+            reloj.restart();
 
             // Se aclara el rectángulo que cubre el combate
             if(rectanguloOscuro.getFillColor().a > 0){
@@ -310,8 +317,11 @@ void Combate::comenzar(){
         // haya celebrado su victoria y se haya terminado de reproducir la canción de fin de ronda)
         while(rectanguloOscuro.getFillColor().a != 255){
 
-            // PRIMER PASO: solo se recibe entrada si se cierra la ventana
+            // Se comprueba que ha pasado suficiente tiempo como para dibujar un frame
+            while(reloj.getElapsedTime().asSeconds() < 1.f/NUMERO_FPS);
+            reloj.restart();
 
+            // PRIMER PASO: solo se recibe entrada si se cierra la ventana
             while(const std::optional evento = ventana->pollEvent()){
                 if(evento->is<sf::Event::Closed>()){
                     ventana->close();

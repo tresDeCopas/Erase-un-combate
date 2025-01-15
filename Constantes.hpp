@@ -39,8 +39,8 @@ const int MAXIMA_LONGITUD_TEXTURA = 1024;
 const int VENTANA_ANCHURA = 300;
 const int VENTANA_ALTURA = 200;
 
-// FPS máximos de la ventana principal
-const int VENTANA_FPS = 60;
+// Numero de frames por segundo
+const int NUMERO_FPS = 60;
 
 // Nombre de la ventana principal
 const std::string VENTANA_NOMBRE = "Érase un combate";
@@ -201,10 +201,10 @@ const int MAX_ATAQUE_PEQUE = 3;
 const int MAX_ATAQUE_MEDIO = 6;
 
 // Valor que tiene que alcanzar contadorTumbado para que se levante un personaje
-const int MAX_CONTADOR_TUMBADO = VENTANA_FPS;
+const int MAX_CONTADOR_TUMBADO = NUMERO_FPS;
 
 // Valor inicial del contador de celebración. Al llegar a 0, el personaje que acaba de ganar celebra
-const int MAX_CONTADOR_CELEBRACION = VENTANA_FPS*3;
+const int MAX_CONTADOR_CELEBRACION = NUMERO_FPS*2;
 
 // Máximo de frames que tienen que pasar desde que se empiece a caminar al revés del rival para poder
 // hacerle parry a un ataque súper
