@@ -50,7 +50,7 @@ class GUIPersonaje : public sf::Drawable {
         int vibracion;
 
         // Contador para que no vibre demasiado rápido
-        int contadorVibracion;
+        float contadorVibracion;
 
         // El sprite principal de la GUI (base y frente (la base es el fondo y el
         // frente son las marcas transparentes que hay en las barras de vida y súper))

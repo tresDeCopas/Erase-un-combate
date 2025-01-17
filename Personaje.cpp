@@ -7,6 +7,7 @@
 #include "AnimacionConGravedad.hpp"
 #include "VentanaPrincipal.hpp"
 #include "Bitacora.hpp"
+#include "TiempoDelta.hpp"
 #include <iostream>
 
 Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> animaciones, std::string nombre){
@@ -97,16 +98,16 @@ void Personaje::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 
 void Personaje::moverseIzquierda(){
     // La velocidad disminuye un poco pero sin pasarse
-    velX-=VELOCIDAD_ANDAR_AUMENTO;
-    if(velX <= -VELOCIDAD_ANDAR_MAX)
-        velX = -VELOCIDAD_ANDAR_MAX;
+    velX-=VELOCIDAD_ANDAR_AUMENTO*TiempoDelta::unicaInstancia()->getFraccionDelta();
+    if(velX <= -VELOCIDAD_ANDAR_MAX*TiempoDelta::unicaInstancia()->getFraccionDelta())
+        velX = -VELOCIDAD_ANDAR_MAX*TiempoDelta::unicaInstancia()->getFraccionDelta();
 }
 
 void Personaje::moverseDerecha(){
     // La velocidad aumenta un poco pero sin pasarse
-    velX+=VELOCIDAD_ANDAR_AUMENTO;
-    if(velX >= VELOCIDAD_ANDAR_MAX)
-        velX = VELOCIDAD_ANDAR_MAX;
+    velX+=VELOCIDAD_ANDAR_AUMENTO*TiempoDelta::unicaInstancia()->getFraccionDelta();
+    if(velX >= VELOCIDAD_ANDAR_MAX*TiempoDelta::unicaInstancia()->getFraccionDelta())
+        velX = VELOCIDAD_ANDAR_MAX*TiempoDelta::unicaInstancia()->getFraccionDelta();
 }
 
 void Personaje::pararMovimiento(){
@@ -117,9 +118,9 @@ void Personaje::pararMovimiento(){
     // Si la velocidad es positiva se baja, si no se sube
     bool positivo = velX > 0;
     if(positivo){
-        velX-=VELOCIDAD_ANDAR_AUMENTO;
+        velX-=VELOCIDAD_ANDAR_AUMENTO*TiempoDelta::unicaInstancia()->getFraccionDelta();
     } else {
-        velX+=VELOCIDAD_ANDAR_AUMENTO;
+        velX+=VELOCIDAD_ANDAR_AUMENTO*TiempoDelta::unicaInstancia()->getFraccionDelta();
     }
 
     // Si la velocidad se ha pasado de 0, se pone a 0 y el personaje ya se para del todo
@@ -150,9 +151,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         pararMovimiento();
         if(animaciones.at(estado)->haTerminado())
             cambiarEstado(EstadoPersonaje::QUIETO);
-        
-        // No se pone break porque el estado TOCANDO_SUELO es como si fuera el estado QUIETO
-        // pero con un poco más de paripé para hacerlo más realista todo
+
         break;
 
     case EstadoPersonaje::QUIETO:
@@ -172,9 +171,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         }
         else if (accionesRealizadas[Accion::DERECHA])
         {
-            velX+=VELOCIDAD_ANDAR_AUMENTO;
-            if(velX >= VELOCIDAD_ANDAR_MAX)
-                velX = VELOCIDAD_ANDAR_MAX;
+            moverseDerecha();
 
             if(mirandoDerecha)
                 cambiarEstado(EstadoPersonaje::ANDANDO_ACERCANDOSE);
@@ -184,9 +181,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         }
         else if (accionesRealizadas[Accion::IZQUIERDA])
         {
-            velX-=VELOCIDAD_ANDAR_AUMENTO;
-            if(velX <= -VELOCIDAD_ANDAR_MAX)
-                velX = -VELOCIDAD_ANDAR_MAX;
+            moverseIzquierda();
 
             if(!mirandoDerecha)
                 cambiarEstado(EstadoPersonaje::ANDANDO_ACERCANDOSE);
@@ -196,7 +191,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         else if (accionesRealizadas[Accion::ATACAR]){
             
             if(medidorSuper == MAX_MEDIDOR_SUPER){
-                contadorBlanco = 255;
+                contadorBlanco = 255.f;
                 medidorSuper = 0;
                 cambiarEstado(EstadoPersonaje::PREPARANDO_SUPER);
             } else {
@@ -233,7 +228,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
     case EstadoPersonaje::ANDANDO_ALEJANDOSE:
 
-        contadorEsquiveSuper++;
+        contadorEsquiveSuper+=TiempoDelta::unicaInstancia()->getFraccionDelta();
 
         if (accionesRealizadas[Accion::ATACAR]){
             contadorEsquiveSuper=0;
@@ -265,7 +260,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
 
     case EstadoPersonaje::SALTANDO_SUBIENDO:
-        velY+=GRAVEDAD;
+        velY+=GRAVEDAD*TiempoDelta::unicaInstancia()->getFraccionDelta();
 
         if(accionesRealizadas[Accion::ATACAR]) {
             detenerAccion(Accion::ATACAR);
@@ -281,7 +276,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
 
     case EstadoPersonaje::SALTANDO_BAJANDO:
-        velY+=GRAVEDAD;
+        velY+=GRAVEDAD*TiempoDelta::unicaInstancia()->getFraccionDelta();
 
         if(accionesRealizadas[Accion::ATACAR]) {
             detenerAccion(Accion::ATACAR);
@@ -302,7 +297,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
     
     case EstadoPersonaje::ATAQUE_AEREO:
-        velY+=GRAVEDAD;
+        velY+=GRAVEDAD*TiempoDelta::unicaInstancia()->getFraccionDelta();
 
         if(accionesRealizadas[Accion::DERECHA]) moverseDerecha();
         else if (accionesRealizadas[Accion::IZQUIERDA]) moverseIzquierda();
@@ -358,7 +353,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
         if(getPosicion().y < ALTURA_SUELO) {
             // Le ha pillado en el aire
-            velY+=GRAVEDAD;
+            velY+=GRAVEDAD*TiempoDelta::unicaInstancia()->getFraccionDelta();
 
             if(animaciones.at(estado)->haTerminado()){
                 cambiarEstado(velY < 0 ? EstadoPersonaje::SALTANDO_SUBIENDO : EstadoPersonaje::SALTANDO_BAJANDO);
@@ -383,14 +378,14 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
     
     case EstadoPersonaje::GOLPEADO_SUBIENDO:
-        velY+=GRAVEDAD;
+        velY+=GRAVEDAD*TiempoDelta::unicaInstancia()->getFraccionDelta();
 
         if(velY > 0)
             cambiarEstado(EstadoPersonaje::GOLPEADO_BAJANDO);
         break;
     
     case EstadoPersonaje::GOLPEADO_BAJANDO:
-        velY+=GRAVEDAD;
+        velY+=GRAVEDAD*TiempoDelta::unicaInstancia()->getFraccionDelta();
 
         if(animaciones.at(estado)->getPosicion().y > ALTURA_SUELO){
             animaciones.at(estado)->setPosicion(animaciones.at(estado)->getPosicion().x,ALTURA_SUELO);
@@ -411,13 +406,13 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
     case EstadoPersonaje::TUMBADO:
         {
-            velX *= 0.9;
+            velX *= (1 - 0.1*TiempoDelta::unicaInstancia()->getFraccionDelta());
 
             // Los personajes derrotados no se pueden levantar
             if(puntosDeVida == 0) break;
             
             // El contador siempre sube para que la gente no se quede tirada
-            contadorTumbado++;
+            contadorTumbado+=TiempoDelta::unicaInstancia()->getFraccionDelta();
 
             // Se pone a true si el jugador se ha movido en este frame para
             // levantarse antes
@@ -425,31 +420,31 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
             // También se puede subir pulsando botones
             if(accionesRealizadas[Accion::ABAJO]){
-                contadorTumbado++;
+                contadorTumbado+=TiempoDelta::unicaInstancia()->getFraccionDelta();
                 accionesRealizadas[Accion::ABAJO] = false;
                 movido = true;
             }
 
             if(accionesRealizadas[Accion::ARRIBA]){
-                contadorTumbado++;
+                contadorTumbado+=TiempoDelta::unicaInstancia()->getFraccionDelta();
                 accionesRealizadas[Accion::ARRIBA] = false;
                 movido = true;
             }
 
             if(accionesRealizadas[Accion::IZQUIERDA]){
-                contadorTumbado++;
+                contadorTumbado+=TiempoDelta::unicaInstancia()->getFraccionDelta();
                 accionesRealizadas[Accion::IZQUIERDA] = false;
                 movido = true;
             }
 
             if(accionesRealizadas[Accion::DERECHA]){
-                contadorTumbado++;
+                contadorTumbado+=TiempoDelta::unicaInstancia()->getFraccionDelta();
                 accionesRealizadas[Accion::DERECHA] = false;
                 movido = true;
             }
 
             if(accionesRealizadas[Accion::ATACAR]){
-                contadorTumbado++;
+                contadorTumbado+=TiempoDelta::unicaInstancia()->getFraccionDelta();
                 accionesRealizadas[Accion::ATACAR] = false;
                 movido = true;
             }
@@ -481,7 +476,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
                 cambiarEstado(EstadoPersonaje::QUIETO);
             }
         } else {
-            velY+=GRAVEDAD;
+            velY+=GRAVEDAD*TiempoDelta::unicaInstancia()->getFraccionDelta();
             if(accionesRealizadas[Accion::ATACAR]){
                 cambiarEstado(EstadoPersonaje::ATAQUE_AEREO);
             } else if(animaciones.at(estado)->haTerminado()){
@@ -582,8 +577,8 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     // Se consulta el movimiento de la animación por frames
     sf::Vector2f movimiento;
     movimiento = animaciones.at(estado)->getMovimientoFrameActual();
-    velX+=movimiento.x;
-    velY+=movimiento.y;
+    velX+=movimiento.x*TiempoDelta::unicaInstancia()->getFraccionDelta();
+    velY+=movimiento.y*TiempoDelta::unicaInstancia()->getFraccionDelta();
     
     // Una vez se hace todo, se aumenta la velocidad según se vea
     animaciones.at(estado)->mover(velX,velY);
@@ -602,7 +597,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     shader->setUniform("amount",contadorBlanco/255.f);
 
     if(contadorBlanco > 0) {
-        contadorBlanco-=3;
+        contadorBlanco-=3*TiempoDelta::unicaInstancia()->getFraccionDelta();
         if(contadorBlanco < 0) contadorBlanco = 0;
     }
 }

@@ -1,5 +1,6 @@
 #include "Escenario.hpp"
 #include "Constantes.hpp"
+#include "TiempoDelta.hpp"
 #include <iostream>
 
 Escenario::Escenario(sf::Texture& texturaFondo, sf::Texture& texturaFrente, sf::Texture& texturaSuelo) : spriteFondo(texturaFondo), spriteFrente(texturaFrente),
@@ -45,35 +46,35 @@ void Escenario::actualizar(Personaje& personaje1, Personaje& personaje2, std::li
     // Si hay un personaje yendose mucho a la izquierda, el otro está lejos del otro borde, y el escenario
     // aún puede ir más a la derecha, se mueve todo a la derecha
     if(personajeEnLadoIzquierdo && !personajeEnLadoDerecho && !escenarioTopeDerecha){
-        spriteFondo.move({1,0});
-        spriteFrente.move({1,0});
-        personaje1.mover(1,0);
-        personaje2.mover(1,0);
+        spriteFondo.move({TiempoDelta::unicaInstancia()->getFraccionDelta(),0});
+        spriteFrente.move({TiempoDelta::unicaInstancia()->getFraccionDelta(),0});
+        personaje1.mover(TiempoDelta::unicaInstancia()->getFraccionDelta(),0);
+        personaje2.mover(TiempoDelta::unicaInstancia()->getFraccionDelta(),0);
         for(int i=0;i<4;i++){
-            suelo[i].position.x++;
+            suelo[i].position.x+=TiempoDelta::unicaInstancia()->getFraccionDelta();
         }
-        suelo[2].position.x+=0.1;
-        suelo[3].position.x+=0.1;
+        suelo[2].position.x+=0.1*TiempoDelta::unicaInstancia()->getFraccionDelta();
+        suelo[3].position.x+=0.1*TiempoDelta::unicaInstancia()->getFraccionDelta();
 
         for(std::shared_ptr<Animacion>& efecto : efectos){
-            efecto->mover(1,0);
+            efecto->mover(TiempoDelta::unicaInstancia()->getFraccionDelta(),0);
         }
 
     } else
     // Si un personaje se va mucho a la derecha, se mueve todo a la izquierda
     if(personajeEnLadoDerecho && !personajeEnLadoIzquierdo && !escenarioTopeIzquierda){
-        spriteFondo.move({-1.f,0.f});
-        spriteFrente.move({-1.f,0.f});
-        personaje1.mover(-1.f,0.f);
-        personaje2.mover(-1.f,0.f);
+        spriteFondo.move({-TiempoDelta::unicaInstancia()->getFraccionDelta(),0.f});
+        spriteFrente.move({-TiempoDelta::unicaInstancia()->getFraccionDelta(),0.f});
+        personaje1.mover(-TiempoDelta::unicaInstancia()->getFraccionDelta(),0.f);
+        personaje2.mover(-TiempoDelta::unicaInstancia()->getFraccionDelta(),0.f);
         for(int i=0;i<4;i++){
-            suelo[i].position.x--;
+            suelo[i].position.x-=TiempoDelta::unicaInstancia()->getFraccionDelta();
         }
-        suelo[2].position.x-=0.1f;
-        suelo[3].position.x-=0.1f;
+        suelo[2].position.x-=0.1f*TiempoDelta::unicaInstancia()->getFraccionDelta();
+        suelo[3].position.x-=0.1f*TiempoDelta::unicaInstancia()->getFraccionDelta();
 
         for(std::shared_ptr<Animacion>& efecto : efectos){
-            efecto->mover(-1.f,0.f);
+            efecto->mover(-TiempoDelta::unicaInstancia()->getFraccionDelta(),0.f);
         }
     }
 }

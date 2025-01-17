@@ -1,10 +1,11 @@
 #include "VentanaPrincipal.hpp"
 #include "Constantes.hpp"
+#include "TiempoDelta.hpp"
 
 sf::RenderWindow * VentanaPrincipal::ventanaPrincipal = nullptr;
 int VentanaPrincipal::zoom = 1;
 int VentanaPrincipal::potenciaVibracion = 0;
-int VentanaPrincipal::contadorVibracion = 0;
+float VentanaPrincipal::contadorVibracion = 0.f;
 bool VentanaPrincipal::vibracionActivada = true;
 
 sf::RenderWindow * VentanaPrincipal::unicaInstancia()
@@ -47,7 +48,7 @@ void VentanaPrincipal::actualizar(){
     if(potenciaVibracion == 0) return;
 
     if(contadorVibracion > 0) {
-        contadorVibracion--;
+        contadorVibracion-=TiempoDelta::unicaInstancia()->getFraccionDelta();
         return;
     }
 

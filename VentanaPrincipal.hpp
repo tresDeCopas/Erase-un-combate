@@ -25,7 +25,7 @@ class VentanaPrincipal {
         static int potenciaVibracion;
 
         // Contador que, al llegar a cero, indica que se puede actualizar la vibración otra vez
-        static int contadorVibracion;
+        static float contadorVibracion;
 
     public:
         // Devuelve la única instancia

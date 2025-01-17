@@ -53,7 +53,7 @@ private:
     bool sonidoYaReproducido;
 
     // Número de frame actual
-    int frameActual;
+    float frameActual;
 
     // Indica si es el primer frame, para no ir al siguiente (si no, nunca se mostraría el primer frame al actualizarlo inmediatamente)
     bool primerFrame;

@@ -4,6 +4,7 @@
 #include "ContenedorDePersonajes.hpp"
 #include "ContenedorDeEfectos.hpp"
 #include "ReproductorDeMusica.hpp"
+#include "TiempoDelta.hpp"
 #include <iostream>
 #include <list>
 
@@ -56,6 +57,9 @@ void Combate::resetear(){
 
     // Se coloca el escenario en el centro
     escenario.resetear();
+
+    // Se resetea el tiempo delta
+    TiempoDelta::unicaInstancia()->resetearDelta();
 }
 
 void Combate::comenzar(){
@@ -73,15 +77,12 @@ void Combate::comenzar(){
         // Se reproduce una canción de combate
         ReproductorDeMusica::unicaInstancia()->reproducirCancionCombate();
 
-        // Se resetean los carteles, los personajes y el escenario
+        // Se resetean los carteles, los personajes, el escenario y el tiempo delta
         resetear();
 
         // El bucle de cada ronda realiza acciones en un orden muy específico para evitar problemas
 
         while(personajeJugador1.getPuntosDeVida() > 0 && personajeJugador2.getPuntosDeVida() > 0){
-
-            // Se prepara un reloj para ver cuánto tiempo pasa entre frames
-            sf::Clock reloj;
 
             // Se aclara el rectángulo que cubre el combate
             if(rectanguloOscuro.getFillColor().a > 0){
@@ -285,10 +286,11 @@ void Combate::comenzar(){
                 }
             }
 
-            // El juego se duerme hasta que dé tiempo a dibujar el siguiente frame, teniendo en cuenta
-            // que se deben dibujar 60 frames por segundo y que cada frame además necesita un tiempo
-            // previo de preparación para actualizar y dibujar y tal
-            sf::sleep(sf::seconds(1.f/NUMERO_FPS) - reloj.reset());
+            sf::sleep(sf::seconds(1.f/20.f));
+            //sf::sleep(sf::seconds(1.f/(NUMERO_FPS*2)));
+            
+            // Se resetea el tiempo delta para prepararlo para el siguiente frame
+            TiempoDelta::unicaInstancia()->resetearDelta();
 
         }
 

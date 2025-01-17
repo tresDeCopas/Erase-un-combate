@@ -41,14 +41,14 @@ class Personaje : public sf::Drawable {
 
         // Va aumentando si te mueves estando tumbado y cuando llega a MAX_CONTADOR_TUMBADO
         // tu personaje se levanta y el contador vuelve a cero
-        int contadorTumbado;
+        float contadorTumbado;
 
         // Sirve para que el personaje se vuelva blanco al transformarse para su ataque súper,
         // siendo su máximo 255 (completamente blanco) y su mínimo 0 (normal)
-        int contadorBlanco;
+        float contadorBlanco;
 
         // Cuenta cuántos frames lleva el personaje andando alejándose del enemigo
-        int contadorEsquiveSuper;
+        float contadorEsquiveSuper;
 
         // Jugador al que está asociado el personaje
         Jugador jugador;

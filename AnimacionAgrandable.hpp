@@ -27,7 +27,7 @@ class AnimacionAgrandable : public Animacion {
         int framesEspera;
 
         // Indica cuántos frames lleva el sprite con su tamaño máximo
-        int contadorEspera;
+        float contadorEspera;
 
     public:
         AnimacionAgrandable(int framesMaxTamano, sf::Texture& textura, std::string rutaSonido);

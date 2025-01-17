@@ -1,6 +1,7 @@
 #include "AnimacionAgrandable.hpp"
 #include "Constantes.hpp"
 #include "ReproductorDeSonidos.hpp"
+#include "TiempoDelta.hpp"
 
 AnimacionAgrandable::AnimacionAgrandable(int framesEspera, sf::Texture& textura, std::string rutaSonido) : 
     Animacion(textura), escalaActual(0), seEstaAgrandando(true), framesEspera(framesEspera), contadorEspera(0) {
@@ -25,7 +26,7 @@ void AnimacionAgrandable::actualizar(std::list<std::shared_ptr<Animacion>> &nuev
         if(std::abs(escalaActual - TASA_CRECIMIENTO_ANIMACION_AGRANDABLE) < UMBRAL_FLOAT)
             ReproductorDeSonidos::unicaInstancia()->reproducir(rutaSonido);
 
-        escalaActual+=TASA_CRECIMIENTO_ANIMACION_AGRANDABLE;
+        escalaActual+=TASA_CRECIMIENTO_ANIMACION_AGRANDABLE*TiempoDelta::unicaInstancia()->getFraccionDelta();
 
         if(escalaActual > 1.0) {
             // Se ha hecho grande del todo
@@ -40,13 +41,13 @@ void AnimacionAgrandable::actualizar(std::list<std::shared_ptr<Animacion>> &nuev
     // conseguir una escala de 1 (tamaño original) y se mantiene así
     // durante unos frames
     else if (contadorEspera < framesEspera){
-        contadorEspera++;
+        contadorEspera+=TiempoDelta::unicaInstancia()->getFraccionDelta();
     }
 
     // 3: Disminuyendo. El sprite ha estado el tiempo que tenía que estar
     // sin cambiar de tamaño y ahora le toca hacerse más pequeño
     else {
-        escalaActual-=TASA_CRECIMIENTO_ANIMACION_AGRANDABLE;
+        escalaActual-=TASA_CRECIMIENTO_ANIMACION_AGRANDABLE*TiempoDelta::unicaInstancia()->getFraccionDelta();
         if(escalaActual < 0.0) escalaActual = 0.0;
         sprite.setScale({escalaActual,escalaActual});
     }

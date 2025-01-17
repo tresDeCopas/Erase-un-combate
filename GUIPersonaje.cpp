@@ -1,6 +1,7 @@
 #include "GUIPersonaje.hpp"
 #include "Constantes.hpp"
 #include "ContenedorDeRecursos.hpp"
+#include "TiempoDelta.hpp"
 
 GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : 
     personaje(personaje), parteIzquierda(parteIzquierda),
@@ -76,7 +77,8 @@ GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) :
 void GUIPersonaje::actualizar(){
 
     // Se alterna la vibración lentamente
-    if(--contadorVibracion <= 0){
+    contadorVibracion-=TiempoDelta::unicaInstancia()->getFraccionDelta();
+    if(contadorVibracion <= 0){
         if(vibracion > 0){
             vibracion = -vibracion;
         } else if (vibracion < 0){
@@ -107,7 +109,7 @@ void GUIPersonaje::actualizar(){
         }
         
     } else {
-        retrasoContadorVidaAtrasado--;
+        retrasoContadorVidaAtrasado-=TiempoDelta::unicaInstancia()->getFraccionDelta();
     }
 
     rectanguloVidaReal.setSize(sf::Vector2f(((float)personaje.puntosDeVida/MAX_PUNTOS_DE_VIDA)*TAMANO_BARRA_VIDA.x,rectanguloVidaReal.getSize().y));

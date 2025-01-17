@@ -3,6 +3,7 @@
 #include "ReproductorDeSonidos.hpp"
 #include "Constantes.hpp"
 #include "ContenedorDeEfectos.hpp"
+#include "TiempoDelta.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <typeinfo>
@@ -31,48 +32,51 @@ AnimacionPorFrames::AnimacionPorFrames(float posicionX, float posicionY, float o
 
 void AnimacionPorFrames::actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones) {
 
+    // Se guarda el valor entero del frame anterior para comprobar si se ha avanzado de frame
+    int frameAntes = frameActual;
+
     if(tipoBucle == TipoBucle::NORMAL){
-        if(!primerFrame) frameActual++;
+        if(!primerFrame) frameActual+=TiempoDelta::unicaInstancia()->getFraccionDelta();
         if(frameActual >= (int)rectanguloCorrespondiente.size()) {
-            frameActual = 0;
+            frameActual -= (int)rectanguloCorrespondiente.size();
             if(!repetirSonido) sonidoYaReproducido = true;
         }
     } else if (tipoBucle == TipoBucle::AL_REVES){
-        if(frameActual == 0) {
-            frameActual = rectanguloCorrespondiente.size()-1;
+        if(frameActual <= 0) {
+            frameActual += rectanguloCorrespondiente.size()-1;
             if(!repetirSonido) sonidoYaReproducido = true;
         }
-        else if(!primerFrame) frameActual--;
+        else if(!primerFrame) frameActual-=TiempoDelta::unicaInstancia()->getFraccionDelta();
     } else if (tipoBucle == TipoBucle::SIN_BUCLE){
         if(frameActual < (int)rectanguloCorrespondiente.size()-1)
-            if(!primerFrame) frameActual++;
+            if(!primerFrame) frameActual+=TiempoDelta::unicaInstancia()->getFraccionDelta();
     }
 
     // Ya seguro que no es el primer frame
     primerFrame = false;
 
     // Se reproduce el sonido si es necesario
-    if(!sonidoYaReproducido && framesConSonido.count(frameActual)){
+    if(!sonidoYaReproducido && frameAntes != (int)frameActual && framesConSonido.count((int)frameActual)){
         ReproductorDeSonidos::unicaInstancia()->reproducir(rutaSonido);
     }
 
     // Se actualizan las nuevas animaciones si es necesario
-    if(framesConAnimaciones.count(frameActual)){
+    if(frameAntes != (int)frameActual && framesConAnimaciones.count((int)frameActual)){
 
-        std::shared_ptr<Animacion> anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto(framesConAnimaciones[frameActual].rutaAnimacion);
+        std::shared_ptr<Animacion> anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto(framesConAnimaciones[(int)frameActual].rutaAnimacion);
 
         sf::Vector2f posicionAnimacion(getPosicionEsqSupIzq());
 
-        posicionAnimacion.x+=framesConAnimaciones[frameActual].posicionInicial.x;
-        posicionAnimacion.y+=framesConAnimaciones[frameActual].posicionInicial.y;
+        posicionAnimacion.x+=framesConAnimaciones[(int)frameActual].posicionInicial.x;
+        posicionAnimacion.y+=framesConAnimaciones[(int)frameActual].posicionInicial.y;
 
         anim->setPosicion(posicionAnimacion);
 
         if(std::string(typeid(*anim).name()) == "AnimacionConGravedad"){
-            ((AnimacionConGravedad*)(anim.get()))->setVelocidad(framesConAnimaciones[frameActual].velocidadInicial);
+            ((AnimacionConGravedad*)(anim.get()))->setVelocidad(framesConAnimaciones[(int)frameActual].velocidadInicial);
         }
 
-        if(framesConAnimaciones.at(frameActual).necesitaVoltearse){
+        if(framesConAnimaciones.at((int)frameActual).necesitaVoltearse){
             // En este caso hay que usar la posición actual del sprite, al contrario
             // que las hitboxes, que usan una posición relativa al sprite que luego se
             // actualiza. Aquí, la posición es relativa a la ventana, por lo que hay que
@@ -87,7 +91,7 @@ void AnimacionPorFrames::actualizar(std::list<std::shared_ptr<Animacion>> &nueva
         nuevasAnimaciones.push_back(anim);
     }
 
-    sprite.setTextureRect(sf::IntRect({rectanguloCorrespondiente[frameActual]*sprite.getTextureRect().size.x,0}, {sprite.getTextureRect().size.x,sprite.getTextureRect().size.y}));
+    sprite.setTextureRect(sf::IntRect({rectanguloCorrespondiente[(int)frameActual]*sprite.getTextureRect().size.x,0}, {sprite.getTextureRect().size.x,sprite.getTextureRect().size.y}));
 }
 
 void AnimacionPorFrames::voltear(){
@@ -131,7 +135,7 @@ int AnimacionPorFrames::getNumeroRectangulo() {
 }
 
 int AnimacionPorFrames::getNumeroFrame(){
-    return frameActual;
+    return (int)frameActual;
 }
 
 void AnimacionPorFrames::setTipoBucle(TipoBucle tipoBucle){
@@ -139,11 +143,11 @@ void AnimacionPorFrames::setTipoBucle(TipoBucle tipoBucle){
 }
 
 sf::Vector2f AnimacionPorFrames::getMovimientoFrameActual(){
-    return framesConMovimiento[frameActual];
+    return framesConMovimiento[(int)frameActual];
 }
 
 bool AnimacionPorFrames::haTerminado(){
-    return tipoBucle == TipoBucle::SIN_BUCLE && frameActual == (int)rectanguloCorrespondiente.size()-1;
+    return tipoBucle == TipoBucle::SIN_BUCLE && frameActual >= (float)rectanguloCorrespondiente.size()-1;
 }
 
 void AnimacionPorFrames::resetear(){

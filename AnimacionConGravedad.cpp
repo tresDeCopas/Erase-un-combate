@@ -1,4 +1,5 @@
 #include "AnimacionConGravedad.hpp"
+#include "TiempoDelta.hpp"
 #include "Constantes.hpp"
 
 AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, std::string rutaSonido) : Animacion(textura)
@@ -22,10 +23,10 @@ AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, sf::Vector2f po
 
 void AnimacionConGravedad::actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones)
 {
-    sprite.move(velocidad);
-    sprite.rotate(sf::degrees(velocidadGiro));
+    sprite.move(velocidad*TiempoDelta::unicaInstancia()->getFraccionDelta());
+    sprite.rotate(sf::degrees(velocidadGiro*TiempoDelta::unicaInstancia()->getFraccionDelta()));
 
-    velocidad.y += GRAVEDAD;
+    velocidad.y += GRAVEDAD*TiempoDelta::unicaInstancia()->getFraccionDelta();
 
     if (sprite.getPosition().y+std::min(sprite.getTextureRect().size.y,sprite.getTextureRect().size.x)/2.0 > VENTANA_ALTURA)
     {
@@ -41,7 +42,7 @@ void AnimacionConGravedad::actualizar(std::list<std::shared_ptr<Animacion>> &nue
 
         velocidadGiro = velocidad.x*2;
 
-        velocidad.x /= 1.2;
+        velocidad.x /= (1 + 0.2*TiempoDelta::unicaInstancia()->getFraccionDelta());
         
         sprite.setPosition({sprite.getPosition().x,VENTANA_ALTURA-std::min(sprite.getTextureRect().size.y,sprite.getTextureRect().size.x)/2.f});
 
@@ -73,7 +74,7 @@ void AnimacionConGravedad::actualizar(std::list<std::shared_ptr<Animacion>> &nue
     }
 
     if(velocidad.y == 0){
-        contadorParpadeo++;
+        contadorParpadeo+=TiempoDelta::unicaInstancia()->getFraccionDelta();
     }
 
     if(contadorParpadeo >= MAX_CONTADOR_PARPADEO){
@@ -147,7 +148,7 @@ void AnimacionConGravedad::chocar(Hitbox hitbox){
 }
 
 void AnimacionConGravedad::draw(sf::RenderTarget& target, sf::RenderStates states) const{
-    if(contadorParpadeo%(DURACION_PARPADEO*2) < DURACION_PARPADEO) target.draw(sprite,states);
+    if((int)contadorParpadeo%(DURACION_PARPADEO*2) < DURACION_PARPADEO) target.draw(sprite,states);
 
     if(DEBUG && hitbox.has_value()){
         sf::RectangleShape rectanguloHitbox(sf::Vector2f(hitbox.value().getRectangulo().size.x,hitbox.value().getRectangulo().size.y));

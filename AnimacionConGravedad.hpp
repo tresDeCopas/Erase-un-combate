@@ -25,7 +25,7 @@ private:
 
     // Se va sumando 1 por cada frame que pase desde que el objeto se choca contra algo,
     // permitiendo que parpadee y finalmente desaparezca.
-    int contadorParpadeo;
+    float contadorParpadeo;
 
 public:
     // Constructor que crea una animación con gravedad y todas sus pescas
