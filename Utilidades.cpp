@@ -44,6 +44,8 @@ namespace util{
             return EstadoPersonaje::ATAQUE_NORMAL_3;
         if(string == "ataque-aereo")
             return EstadoPersonaje::ATAQUE_AEREO;
+        if(string == "ataque-especial")
+            return EstadoPersonaje::ATAQUE_ESPECIAL;
         if(string == "golpeado-peque")
             return EstadoPersonaje::GOLPEADO_PEQUE;
         if(string == "golpeado-medio")

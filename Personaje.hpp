@@ -3,6 +3,7 @@
 
 #include "AnimacionPorFrames.hpp"
 #include "Enums.hpp"
+#include "AtaqueEspecial.hpp"
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <list>
@@ -65,6 +66,9 @@ class Personaje : public sf::Drawable {
 
         // Indica qué acciones están siendo realizadas
         std::map<Accion,bool> accionesRealizadas;
+
+        // Sirve para comprobar si el jugador ha pulsado las teclas necesarias para hacer el ataque especial
+        AtaqueEspecial ataqueEspecial;
 
         // Función auxiliar para moverse un poco a la derecha
         void moverseDerecha();

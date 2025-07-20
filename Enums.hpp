@@ -27,6 +27,7 @@ enum class EstadoPersonaje {
     ATAQUE_NORMAL_2,    // Está atacando de pie (segundo ataque)
     ATAQUE_NORMAL_3,    // Está atacando de pie (tercer ataque)
     ATAQUE_AEREO,       // Está atacando en el aire
+    ATAQUE_ESPECIAL,    // Está haciendo el ataque especial
     GOLPEADO_PEQUE,     // Ha sufrido un ataque pequeño
     GOLPEADO_MEDIO,     // Ha sufrido un ataque medio
     GOLPEADO_BAJANDO,   // Ha sufrido un ataque que lo ha levantado por los aires

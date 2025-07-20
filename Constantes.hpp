@@ -74,6 +74,10 @@ const double UMBRAL_JOYSTICK = 50;
 // Tecla para salir del juego
 const sf::Keyboard::Scancode TECLA_SALIDA = sf::Keyboard::Scancode::Escape;
 
+// Frames que te da el juego desde que haces un input de un ataque especial hasta
+// que haces el siguiente como máximo
+const int COOLDOWN_ATAQUE_ESPECIAL = 30;
+
 /*
     CONSTANTES PARA EL SONIDO Y LA MÚSICA
 */

@@ -38,8 +38,8 @@
   "C_Cpp_Runner.compilerArgs": [],
   "C_Cpp_Runner.linkerArgs": [],
   "C_Cpp_Runner.includePaths": [
-    "c:/Users/Ángel/OneDrive - UNIVERSIDAD DE MURCIA/Mis programas/Érase un combate/**",
-    "C:\\SFML-2.6.1\\include"
+    "${workspaceFolder}/**",
+    "C:\\SFML-3.0.0\\include"
   ],
   "C_Cpp_Runner.includeSearch": [
     "*",
@@ -126,8 +126,8 @@
   },
   "makefile.launchConfigurations": [
     {
-      "cwd": "c:\\Users\\angel\\OneDrive - UNIVERSIDAD DE MURCIA\\Mis programas\\Érase un combate",
-      "binaryPath": "c:\\Users\\angel\\OneDrive - UNIVERSIDAD DE MURCIA\\Mis programas\\Érase un combate\\EraseUnCombate.exe",
+      "cwd": "${workspaceFolder}",
+      "binaryPath": "${workspaceFolder}/EraseUnCombate.exe",
       "binaryArgs": []
     }
   ],
