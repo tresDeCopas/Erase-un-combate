@@ -73,7 +73,7 @@ namespace util{
         if(string == "preparando-super")
             return EstadoPersonaje::PREPARANDO_SUPER;
         if(string == "atacando-super")
-            return EstadoPersonaje::ATACANDO_SUPER;
+            return EstadoPersonaje::ATAQUE_SUPER;
         if(string == "levantandose")
             return EstadoPersonaje::LEVANTANDOSE;
         if(string == "celebrando")

@@ -241,11 +241,18 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
     }
 
     // Se comprueba si el enemigo está a la derecha o a la izquierda
-    if((animaciones[estado]->getPosicion().x < posicionEnemigo.x && !mirandoDerecha) ||
-       (animaciones[estado]->getPosicion().x > posicionEnemigo.x && mirandoDerecha)){
-        mirandoDerecha = !mirandoDerecha;
-        for(auto const &[estado, anim] : animaciones){
-            anim->voltear();
+    if(estado != EstadoPersonaje::ATAQUE_NORMAL_1 &&
+       estado != EstadoPersonaje::ATAQUE_NORMAL_2 &&
+       estado != EstadoPersonaje::ATAQUE_NORMAL_3 &&
+       estado != EstadoPersonaje::ATAQUE_AEREO &&
+       estado != EstadoPersonaje::ATAQUE_AGACHADO &&
+       estado != EstadoPersonaje::ATAQUE_SUPER){
+        if((animaciones[estado]->getPosicion().x < posicionEnemigo.x && !mirandoDerecha) ||
+           (animaciones[estado]->getPosicion().x > posicionEnemigo.x && mirandoDerecha)){
+            mirandoDerecha = !mirandoDerecha;
+            for(auto const &[estado, anim] : animaciones){
+                anim->voltear();
+            }
         }
     }
 
