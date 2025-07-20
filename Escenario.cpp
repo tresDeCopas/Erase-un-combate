@@ -11,8 +11,7 @@ Escenario::Escenario(sf::Texture& texturaFondo, sf::Texture& texturaFrente){
     spriteFrente.setOrigin(spriteFrente.getTextureRect().getSize().x/2,0);
 
     // Los sprites se mueven al centro
-    spriteFondo.setPosition(VENTANA_ANCHURA/2,0);
-    spriteFrente.setPosition(VENTANA_ANCHURA/2,0);
+    resetear();
 }
 
 void Escenario::actualizar(Personaje& personaje1, Personaje& personaje2, std::list<std::shared_ptr<Animacion>>& efectos){
@@ -61,6 +60,11 @@ void Escenario::actualizar(Personaje& personaje1, Personaje& personaje2, std::li
             efecto->mover(-1,0);
         }
     }
+}
+
+void Escenario::resetear(){
+    spriteFondo.setPosition(VENTANA_ANCHURA/2,0);
+    spriteFrente.setPosition(VENTANA_ANCHURA/2,0);
 }
 
 void Escenario::dibujarFondo(sf::RenderTarget& target, sf::RenderStates states) const{

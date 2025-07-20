@@ -47,6 +47,9 @@ void Combate::resetear(){
     // Los personajes pasan al estado quieto
     personajeJugador1.cambiarEstado(EstadoPersonaje::QUIETO);
     personajeJugador2.cambiarEstado(EstadoPersonaje::QUIETO);
+
+    // Se coloca el escenario en el centro
+    escenario.resetear();
 }
 
 void Combate::comenzar(){
@@ -64,7 +67,7 @@ void Combate::comenzar(){
         // Se reproduce una canción de combate
         ReproductorDeMusica::unicaInstancia()->reproducirCancionCombate();
 
-        // Se resetean los carteles y los personajes
+        // Se resetean los carteles, los personajes y el escenario
         resetear();
 
         // El bucle de cada ronda realiza acciones en un orden muy específico para evitar problemas
