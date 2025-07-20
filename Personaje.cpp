@@ -16,6 +16,7 @@ Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames
     velX = 0;
     contadorTumbado = 0;
     contadorBlanco = 0;
+    contadorEsquiveSuper = 0;
     this->nombre = nombre;
     this->animaciones = animaciones;
     estado = EstadoPersonaje::QUIETO;
@@ -232,25 +233,32 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
     case EstadoPersonaje::ANDANDO_ALEJANDOSE:
 
+        contadorEsquiveSuper++;
+
         if (accionesRealizadas[Accion::ATACAR]){
+            contadorEsquiveSuper=0;
             cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
         } else if(accionesRealizadas[Accion::ARRIBA]){
             velY = VELOCIDAD_SALTO;
             accionesRealizadas[Accion::ARRIBA] = false;
             levantarPolvo(efectosInsertados);
+            contadorEsquiveSuper=0;
             cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
         } else if(accionesRealizadas[Accion::DERECHA]){
             moverseDerecha();
             if(mirandoDerecha){
+                contadorEsquiveSuper=0;
                 cambiarEstado(EstadoPersonaje::ANDANDO_ACERCANDOSE);
             }
         } else if(accionesRealizadas[Accion::IZQUIERDA]){
             moverseIzquierda();
             if(!mirandoDerecha){
+                contadorEsquiveSuper=0;
                 cambiarEstado(EstadoPersonaje::ANDANDO_ACERCANDOSE);
             }
         } else {
             pararMovimiento();
+            contadorEsquiveSuper=0;
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
 
@@ -465,11 +473,26 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
 
     case EstadoPersonaje::BLOQUEANDO:
-        pararMovimiento();
-        if(accionesRealizadas[Accion::ATACAR]){
-            cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
-        } else if(animaciones.at(estado)->haTerminado()){
-            cambiarEstado(EstadoPersonaje::QUIETO);
+        if(animaciones.at(estado)->getPosicion().y == ALTURA_SUELO) {
+            pararMovimiento();
+            if(accionesRealizadas[Accion::ATACAR]){
+                cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
+            } else if(animaciones.at(estado)->haTerminado()){
+                cambiarEstado(EstadoPersonaje::QUIETO);
+            }
+        } else {
+            velY+=GRAVEDAD;
+            if(accionesRealizadas[Accion::ATACAR]){
+                cambiarEstado(EstadoPersonaje::ATAQUE_AEREO);
+            } else if(animaciones.at(estado)->haTerminado()){
+                cambiarEstado(velY >= 0 ? EstadoPersonaje::SALTANDO_BAJANDO : EstadoPersonaje::SALTANDO_SUBIENDO);
+            } else if (animaciones.at(estado)->getPosicion().y >= ALTURA_SUELO){
+                animaciones.at(estado)->setPosicion(animaciones.at(estado)->getPosicion().x,ALTURA_SUELO);
+                velY = 0;
+                levantarPolvo(efectosInsertados);
+
+                cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
+            }
         }
         break;
 
@@ -511,6 +534,15 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     
     case EstadoPersonaje::CELEBRANDO:
         pararMovimiento();
+
+        break;
+
+    case EstadoPersonaje::ESQUIVE_SUPER:
+        pararMovimiento();
+
+        if(animaciones.at(estado)->haTerminado()){
+            cambiarEstado(EstadoPersonaje::QUIETO);
+        }
 
         break;
     }
@@ -697,10 +729,17 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
 
     // El ataque súper es inesquivablemente mortal
     if(hitboxElegidaEnemigo.getFuerzaAtaque() > MAX_ATAQUE_MEDIO){
-        velX = mirandoDerecha ? -IMPULSO_X_GOLPE_GRANDE : IMPULSO_X_GOLPE_GRANDE;
-        velY = IMPULSO_Y_GOLPE_GRANDE;
 
-        cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+        // Parry épico de ulti
+        if(estado == EstadoPersonaje::ANDANDO_ALEJANDOSE &&  contadorEsquiveSuper < MAX_CONTADOR_ESQUIVE_SUPER){
+            cambiarEstado(EstadoPersonaje::ESQUIVE_SUPER);
+        } else {
+            velX = mirandoDerecha ? -IMPULSO_X_GOLPE_GRANDE : IMPULSO_X_GOLPE_GRANDE;
+            velY = IMPULSO_Y_GOLPE_GRANDE;
+
+            cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+        }
+        
     } else {
 
         // Si no es súper, ahora sí que depende de cómo esté el personaje, pues
@@ -713,12 +752,13 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
             case EstadoPersonaje::GOLPEADO_BAJANDO:
             case EstadoPersonaje::GOLPEADO_SUBIENDO:
             case EstadoPersonaje::PREPARANDO_SUPER:
+            case EstadoPersonaje::ESQUIVE_SUPER:
             case EstadoPersonaje::TUMBADO:
             case EstadoPersonaje::LEVANTANDOSE:
             case EstadoPersonaje::CELEBRANDO:
                 break;
 
-            // En el suelo sin bloquear o en el aire (todo te pega)
+            // Atacando o sin moverse al revés del enemigo (todo te pega)
             case EstadoPersonaje::GOLPEADO_PEQUE:
             case EstadoPersonaje::QUIETO:
             case EstadoPersonaje::ANDANDO_ACERCANDOSE:
@@ -727,9 +767,16 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
             case EstadoPersonaje::ATAQUE_NORMAL_3:
             case EstadoPersonaje::ATAQUE_AGACHADO:
             case EstadoPersonaje::TOCANDO_SUELO:
+            case EstadoPersonaje::ATAQUE_AEREO:
+
+            // Caso especial en el que puedes bloquear en el aire
             case EstadoPersonaje::SALTANDO_SUBIENDO:
             case EstadoPersonaje::SALTANDO_BAJANDO:
-            case EstadoPersonaje::ATAQUE_AEREO:
+                if((estado == EstadoPersonaje::SALTANDO_SUBIENDO || estado == EstadoPersonaje::SALTANDO_BAJANDO) &&
+                   ((mirandoDerecha && accionesRealizadas[Accion::IZQUIERDA]) || (!mirandoDerecha && accionesRealizadas[Accion::DERECHA]))){
+                    // Los gotos son el diablo pero no se me ocurre nada mejor jejej
+                    goto bloqueoAereo;
+                }
 
                 if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
                     velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
@@ -751,9 +798,11 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
                 }
                 break;
             
-            // En el suelo bloqueando (los ataques bajos te pegan)
-            case EstadoPersonaje::BLOQUEANDO:
+            // Moviéndose al revés del enemigo o bloqueando (los ataques bajos te pegan)
             case EstadoPersonaje::ANDANDO_ALEJANDOSE:
+            case EstadoPersonaje::BLOQUEANDO:
+            
+                bloqueoAereo:
 
                 // Aún si estás bloqueando, los ataques bajos te dan
                 if(hitboxElegidaEnemigo.esAtaqueBajo()){
@@ -857,7 +906,7 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
             efectosInsertados.push_back(particula);
         }
 
-    } else {
+    } else if(estado != EstadoPersonaje::ESQUIVE_SUPER){
 
         VentanaPrincipal::vibrar(VIBRACION_ATAQUE_SUPER);
 
@@ -874,6 +923,10 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
             efectosInsertados.push_back(particula);
         }
 
+    } else {
+        // En este último caso se ha hecho un esquive súper, por lo que no hay puntos de vida que quitar ni nada más
+        // que hacer en esta función
+        return;
     }
 
     // Finalmente, se quitan puntos de vida según se vea
