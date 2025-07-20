@@ -76,6 +76,11 @@ class GUIPersonaje : public sf::Drawable {
         // Devuelve el número de rondas ganadas
         int getRondasGanadas();
 
+        // Resetea los contadores de vibración y el contador atrasado de puntos de vida, pero no el
+        // contador de rondas ganadas. Se usa cuando se cambia de ronda y los personajes vuelven a
+        // tener todos sus puntos de vida
+        void restablecerVida();
+
         // Dibuja la GUI en pantalla
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };

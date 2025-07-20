@@ -46,6 +46,10 @@ void Combate::resetear(){
     personajeJugador2.setPuntosDeVida(MAX_PUNTOS_DE_VIDA);
     personajeJugador2.setMedidorSuper(0);
 
+    // Las GUIs se preparan para la siguiente ronda
+    GUIJugador1.restablecerVida();
+    GUIJugador2.restablecerVida();
+
     // Los personajes pasan al estado quieto
     personajeJugador1.cambiarEstado(EstadoPersonaje::QUIETO);
     personajeJugador2.cambiarEstado(EstadoPersonaje::QUIETO);

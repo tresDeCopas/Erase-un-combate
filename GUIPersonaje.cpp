@@ -135,6 +135,15 @@ int GUIPersonaje::getRondasGanadas(){
     return rondasGanadas;
 }
 
+void GUIPersonaje::restablecerVida(){
+    vibracion = 0;
+    contadorVibracion = CONTADOR_VIBRACION_MAX;
+
+    contadorVidaAtrasado = MAX_PUNTOS_DE_VIDA;
+    retrasoContadorVidaAtrasado = 0;
+
+}
+
 void GUIPersonaje::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     sf::Transform mover;
     mover.translate(0,vibracion);
