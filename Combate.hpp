@@ -3,6 +3,7 @@
 
 #include "Personaje.hpp"
 #include "Enums.hpp"
+#include "GUIPersonaje.hpp"
 
 /*
     Esta clase define un combate, formado por dos jugadores, cada
@@ -19,6 +20,9 @@ class Combate{
 
         // Personaje asignado al jugador 2
         Personaje personajeJugador2;
+
+        // GUI para el personaje asignado al jugador 1
+        GUIPersonaje GUIJugador1;
 
         // Escenario para el combate
         //Escenario escenario;
