@@ -17,6 +17,9 @@ private:
     // Velocidad del objeto volador
     sf::Vector2f velocidad;
 
+    // Velocidad de giro del objeto volador en grados sexagesimales por frame
+    double velocidadGiro;
+
     // Indica si el objeto se ha chocado, por lo que empieza a parpadear y tal
     bool haChocado;
 
@@ -26,10 +29,10 @@ private:
 
 public:
     // Constructor que crea una animación con gravedad en base a una textura para el sprite, una posición inicial y una velocidad
-    AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, sf::Vector2f posicion, sf::Vector2f velocidad);
+    AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro);
 
     // Constructor igual al anterior pero también le mete sonido
-    AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, sf::Vector2f posicion, sf::Vector2f velocidad, sf::Sound sonido);
+    AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, sf::Sound sonido);
 
     // Actualiza la animación
     void actualizar();
@@ -45,6 +48,9 @@ public:
 
     // Establece la velocidad de movimiento de la animación
     void setVelocidad(sf::Vector2f velocidad);
+
+    // Establece la velocidad de giro de la animación
+    void setVelocidadGiro(const double &velocidadGiro);
 
     // Devuelve un clon de la animación
     std::shared_ptr<Animacion> clonar();

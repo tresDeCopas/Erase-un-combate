@@ -92,6 +92,9 @@ const int MAX_CONTADOR_PARPADEO = 40;
 // el efecto de parpadeo
 const int DURACION_PARPADEO = 2;
 
+// Máxima velocidad de giro de una partícula en cualquier dirección
+const double MAX_VELOCIDAD_GIRO_PART = 10;
+
 // Máxima velocidad en cualquier eje de una partícula pequeña
 const int MAX_VELOCIDAD_PARTICULA_PEQUE = 3;
 

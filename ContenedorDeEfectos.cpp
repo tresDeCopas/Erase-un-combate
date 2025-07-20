@@ -209,7 +209,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
             sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
 
-            anim = std::shared_ptr<Animacion>(new AnimacionConGravedad(textura,hitbox,sf::Vector2f(0,0),sf::Vector2f(0,0)));
+            anim = std::shared_ptr<Animacion>(new AnimacionConGravedad(textura,hitbox,sf::Vector2f(0,0),sf::Vector2f(0,0),0));
 
         }
 
