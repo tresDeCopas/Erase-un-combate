@@ -33,7 +33,7 @@ class ContenedorDePersonajes
         // NUNCA SE ASIGNA UN SINGLETON
         void operator=(const ContenedorDePersonajes &) = delete;
 
-        // Devuelve la única instancia
+        // Devuelve la ï¿½nica instancia
         static ContenedorDePersonajes * unicaInstancia();
 
 };
