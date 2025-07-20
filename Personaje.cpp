@@ -307,13 +307,16 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
 }
 
 void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::list<Animacion*> &efectosInsertados){
-    
+
     // Se sacan las hitboxes de la animación del estado actual
     std::list<Hitbox> hitboxes = this->animaciones[estado]->getHitboxes();
 
+    // Si la animación del estado actual no tiene hitboxes en este momento, no hace falta comprobar nada
+    if(hitboxes.size() == 0) return;
+
     // Se eliminan las hitboxes con daño
     auto it = hitboxes.begin();
-
+    
     while(it != hitboxes.end()){
         if(it->getFuerzaAtaque() > 0)
             it = hitboxes.erase(it);
@@ -397,10 +400,14 @@ void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::lis
         anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("bloqueado");
     } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
         anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("golpeado-peque");
+        anim->setRotacion(rand()%360);
+    } else {
+        // Es importante volver antes de tiempo o si no anim se queda vacío
+        return;
     }
 
     anim->setPosicion(posicionMedia);
-    anim->setRotacion(rand()%360);
+    
     efectosInsertados.push_back(anim);
 
 }
