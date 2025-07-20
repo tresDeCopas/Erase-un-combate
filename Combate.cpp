@@ -76,16 +76,12 @@ void Combate::comenzar(){
         // Se resetean los carteles, los personajes y el escenario
         resetear();
 
-        // Se prepara un reloj para asegurar que se consiguen 60 frames por segundo
-        sf::Clock reloj;
-
         // El bucle de cada ronda realiza acciones en un orden muy específico para evitar problemas
 
         while(personajeJugador1.getPuntosDeVida() > 0 && personajeJugador2.getPuntosDeVida() > 0){
 
-            // Se comprueba que ha pasado suficiente tiempo como para dibujar un frame
-            while(reloj.getElapsedTime().asSeconds() < 1.f/NUMERO_FPS);
-            reloj.restart();
+            // Se prepara un reloj para ver cuánto tiempo pasa entre frames
+            sf::Clock reloj;
 
             // Se aclara el rectángulo que cubre el combate
             if(rectanguloOscuro.getFillColor().a > 0){
@@ -288,6 +284,12 @@ void Combate::comenzar(){
                     primerJugadorParaActualizar = Jugador::JUGADOR1;
                 }
             }
+
+            // El juego se duerme hasta que dé tiempo a dibujar el siguiente frame, teniendo en cuenta
+            // que se deben dibujar 60 frames por segundo y que cada frame además necesita un tiempo
+            // previo de preparación para actualizar y dibujar y tal
+            sf::sleep(sf::seconds(1.f/NUMERO_FPS) - reloj.reset());
+
         }
 
         // Se termina el bucle de la ronda al ser uno de los luchadores derribado. Se detiene
@@ -317,9 +319,7 @@ void Combate::comenzar(){
         // haya celebrado su victoria y se haya terminado de reproducir la canción de fin de ronda)
         while(rectanguloOscuro.getFillColor().a != 255){
 
-            // Se comprueba que ha pasado suficiente tiempo como para dibujar un frame
-            while(reloj.getElapsedTime().asSeconds() < 1.f/NUMERO_FPS);
-            reloj.restart();
+            sf::Clock reloj;
 
             // PRIMER PASO: solo se recibe entrada si se cierra la ventana
             while(const std::optional evento = ventana->pollEvent()){
@@ -396,6 +396,8 @@ void Combate::comenzar(){
             ventana->draw(rectanguloOscuro);
             
             ventana->display();
+
+            sf::sleep(sf::seconds(1.f/NUMERO_FPS) - reloj.reset());
         }
     }
 }
