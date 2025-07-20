@@ -4,7 +4,8 @@
             "name": "windows-clang-x64",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\SFML-3.0.0\\include"
+                "${workspaceFolder}/build/_deps/yaml-cpp-src/include",
+                "${workspaceFolder}/build/_deps/json-src/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -27,7 +28,8 @@
             "name": "includePath",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/build/_deps/yaml-cpp-src/include"
+                "${workspaceFolder}/build/_deps/yaml-cpp-src/include",
+                "${workspaceFolder}/build/_deps/json-src/include"
             ],
             "defines": [
                 "_DEBUG",

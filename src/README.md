@@ -4,6 +4,10 @@
 
 En esta carpeta están las clases que tienen que ver con los distintos tipos de animaciones que hay disponibles, así como la clase genérica `Animacion` de la que heredan todas las demás clases de animaciones.
 
+## Carpeta `actualizador`
+
+En esta carpeta están las clases relacionadas con el actualizador automático que, como su propio nombre indica, se encarga de buscar actualizaciones del juego y de descargarlas e instalarlas si hubiera una nueva versión.
+
 ## Carpeta `combate`
 
 En esta carpeta están las clases relacionadas con los combates y los personajes que participan en estos.
