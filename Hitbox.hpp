@@ -1,25 +1,27 @@
 #ifndef __HITBOX_HPP__
 #define __HITBOX_HPP__
 
+#include "Enums.hpp"
+
 #include <SFML/Graphics.hpp>
 
 /*
-    Clase que implementa una caja de colisiones. Esta caja es un rect·ngulo
-    que indica el ·rea que abarca un ataque o un personaje, TOMANDO SIEMPRE COMO
+    Clase que implementa una caja de colisiones. Esta caja es un rect√°ngulo
+    que indica el √°rea que abarca un ataque o un personaje, TOMANDO SIEMPRE COMO
     REFERENCIA LA ESQUINA SUPERIOR IZQUIERDA DEL SPRITE, SEA CUAL SEA
 */
 class Hitbox {
     private:
 
-        // Rect·ngulo de la hitbox
+        // Rect√°ngulo de la hitbox
         sf::IntRect rectangulo;
 
-        // DaÒo que quita el ataque de la hitbox (si es un ataque)
+        // Da√±o que quita el ataque de la hitbox (si es un ataque)
         int fuerzaAtaque;
 
         // Indica si el ataque es bajo (los ataques realizados mientras el
-        // personaje est· agachado ser·n efectivos a˙n si el otro personaje est·
-        // protegiÈndose)
+        // personaje est√° agachado ser√°n efectivos a√∫n si el otro personaje est√°
+        // protegi√©ndose)
         bool bajo;
 
     public:
@@ -27,7 +29,7 @@ class Hitbox {
         // Constructor
         Hitbox(sf::IntRect rectangulo, int fuerzaAtaque, bool bajo);
 
-        // Devuelve el rect·ngulo
+        // Devuelve el rectÔøΩngulo
         sf::IntRect getRectangulo();
 
         // Devuelve la fuerza de ataque

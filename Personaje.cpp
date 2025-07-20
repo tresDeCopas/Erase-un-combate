@@ -36,6 +36,10 @@ sf::Vector2f Personaje::getPosicion(){
     return animaciones[estado]->getPosicion();
 }
 
+EstadoPersonaje Personaje::getEstado(){
+    return estado;
+}
+
 void Personaje::setJugador(Jugador jugador){
     this->jugador = jugador;
 }
@@ -239,10 +243,16 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         break;
     
     case EstadoPersonaje::GOLPEADO_PEQUE:
-        if(!animaciones[estado]->haTerminado()){
-            if(mirandoDerecha) velX-=2;
-            else velX+=2;
-        } else {
+        pararMovimiento();
+        if(animaciones[estado]->haTerminado()){
+            cambiarEstado(EstadoPersonaje::QUIETO);
+        }
+
+        break;
+    
+    case EstadoPersonaje::GOLPEADO_MEDIO:
+        pararMovimiento();
+        if(animaciones[estado]->haTerminado()){
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
 
@@ -252,23 +262,28 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
     // Se comprueba si el enemigo está a la derecha o a la izquierda y se voltea el
     // sprite según sea necesario. Si el personaje está atacando o recibiendo un golpe,
     // está demasiado ocupado como para ir volteándose
-    if(estado != EstadoPersonaje::ATAQUE_NORMAL_1 &&
-       estado != EstadoPersonaje::ATAQUE_NORMAL_2 &&
-       estado != EstadoPersonaje::ATAQUE_NORMAL_3 &&
-       estado != EstadoPersonaje::ATAQUE_AEREO &&
-       estado != EstadoPersonaje::ATAQUE_AGACHADO &&
-       estado != EstadoPersonaje::ATAQUE_SUPER &&
-       estado != EstadoPersonaje::GOLPEADO_BAJO &&
-       estado != EstadoPersonaje::GOLPEADO_PEQUE &&
-       estado != EstadoPersonaje::GOLPEADO_MEDIO &&
-       estado != EstadoPersonaje::GOLPEADO_GRANDE){
-        if((animaciones[estado]->getPosicion().x < posicionEnemigo.x && !mirandoDerecha) ||
-           (animaciones[estado]->getPosicion().x > posicionEnemigo.x && mirandoDerecha)){
-            mirandoDerecha = !mirandoDerecha;
-            for(auto const &[estado, anim] : animaciones){
-                anim->voltear();
-            }
-        }
+    switch(estado){
+        case EstadoPersonaje::ATAQUE_NORMAL_1:
+        case EstadoPersonaje::ATAQUE_NORMAL_2:
+        case EstadoPersonaje::ATAQUE_NORMAL_3:
+        case EstadoPersonaje::ATAQUE_AEREO:
+        case EstadoPersonaje::ATAQUE_AGACHADO:
+        case EstadoPersonaje::ATAQUE_SUPER:
+        case EstadoPersonaje::GOLPEADO_BAJO:
+        case EstadoPersonaje::GOLPEADO_PEQUE:
+        case EstadoPersonaje::GOLPEADO_MEDIO:
+        case EstadoPersonaje::GOLPEADO_GRANDE:
+            break;
+        
+        default:
+            if((animaciones[estado]->getPosicion().x < posicionEnemigo.x && !mirandoDerecha) ||
+                (animaciones[estado]->getPosicion().x > posicionEnemigo.x && mirandoDerecha)){
+                    mirandoDerecha = !mirandoDerecha;
+                    for(auto const &[estado, anim] : animaciones){
+                        anim->voltear();
+                    }
+                }
+            break;
     }
 
     animaciones[estado]->actualizar();
@@ -286,6 +301,67 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
     }
 }
 
-void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones){
+void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::list<Animacion*> &efectosInsertados){
+    
+    // Se sacan las hitboxes de la animación del estado actual
+    std::list<Hitbox> hitboxes = this->animaciones[estado]->getHitboxes();
 
+    // Se eliminan las hitboxes con daño
+    auto it = hitboxes.begin();
+
+    while(it != hitboxes.end()){
+        if(it->getFuerzaAtaque() > 0)
+            it = hitboxes.erase(it);
+        else it++;
+    }
+
+    Hitbox hitboxElegidaEnemigo = Hitbox(sf::IntRect(0,0,0,0),0,false);
+    Hitbox hitboxElegidaPropia = Hitbox(sf::IntRect(0,0,0,0),0,false);
+
+    for(Animacion * anim : animaciones){
+        for(Hitbox hEnemigo : anim->getHitboxes()){
+            for(Hitbox hPropia : hitboxes){
+                
+                sf::IntRect rectEnemigo = hEnemigo.getRectangulo();
+                rectEnemigo.left += anim->getPosicionEsqSupIzq().x;
+                rectEnemigo.top += anim->getPosicionEsqSupIzq().y;
+
+                sf::IntRect rectPropio = hPropia.getRectangulo();
+                rectPropio.left += this->animaciones[estado]->getPosicionEsqSupIzq().x;
+                rectPropio.top += this->animaciones[estado]->getPosicionEsqSupIzq().y;
+
+                if(rectEnemigo.intersects(rectPropio) && hEnemigo.getFuerzaAtaque() > hitboxElegidaEnemigo.getFuerzaAtaque()){
+                    hitboxElegidaEnemigo = hEnemigo;
+                    hitboxElegidaPropia = hPropia;
+                }
+            }
+        }
+    }
+
+    // Si no hubo golpe, no hay nada que hacer
+    if(hitboxElegidaEnemigo.getFuerzaAtaque() == 0){
+        return;
+    }
+
+    switch(estado){
+        case EstadoPersonaje::QUIETO:
+        case EstadoPersonaje::GOLPEADO_PEQUE:
+        case EstadoPersonaje::ANDANDO_ACERCANDOSE:
+        case EstadoPersonaje::ANDANDO_ALEJANDOSE:
+        case EstadoPersonaje::ATAQUE_NORMAL_1:
+        case EstadoPersonaje::ATAQUE_NORMAL_2:
+        case EstadoPersonaje::ATAQUE_NORMAL_3:
+
+            // TODO Tener en cuenta ataques bajos
+            // TODO Tener en cuenta bloqueos
+
+            if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
+                cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
+            } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+            }
+            break;
+    }
 }

@@ -2,13 +2,13 @@
 #include <sstream>
 
 /*
-    Este namespace contiene funciones útiles
+    Este namespace contiene funciones ï¿½tiles
 */
 
 namespace util{
 
-    // Dado un string de entrada y un carácter separador, corta el string original en substrings y
-    // los devuelve en forma de vector (sin incluir el carácter separador)
+    // Dado un string de entrada y un carï¿½cter separador, corta el string original en substrings y
+    // los devuelve en forma de vector (sin incluir el carï¿½cter separador)
     std::vector<std::string> separarString(std::string string, char separador){
 
         std::stringstream stringstream(string);

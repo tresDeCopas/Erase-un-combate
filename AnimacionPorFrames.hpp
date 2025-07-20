@@ -10,42 +10,45 @@
 
 /*
     Esta clase define animaciones para personajes y ataques formadas por varios frames
-    Cada animación puede tener asociado cualquier número de hitboxes
+    Cada animaciï¿½n puede tener asociado cualquier nï¿½mero de hitboxes
 */
 class AnimacionPorFrames : public Animacion {
     private:
 
-        // Tipo de repetición en bucle
+        // Tipo de repeticiï¿½n en bucle
         TipoBucle tipoBucle;
 
-        // Si tipoBucle es PING_PONG, indica si la animación va hacia delante o hacia atrás
+        // Si tipoBucle es PING_PONG, indica si la animaciï¿½n va hacia delante o hacia atrï¿½s
         bool pingPongHaciaDelante;
 
-        // Si tipoBucle no es SIN_BUCLE, indica cuántas veces se repetirá la animación (0 es infinito)
+        // Si tipoBucle no es SIN_BUCLE, indica cuï¿½ntas veces se repetirï¿½ la animaciï¿½n (0 es infinito)
         int numRepeticionesTotal;
 
-        // Si numRepeticionesTotal no es 0, indica cuántas veces se ha repetido la animación de momento
+        // Si numRepeticionesTotal no es 0, indica cuï¿½ntas veces se ha repetido la animaciï¿½n de momento
         int numRepeticionesActual;
 
-        // Correspondencia entre rectángulo y hitboxes
+        // Correspondencia entre rectï¿½ngulo y hitboxes
         std::map<int,std::list<Hitbox>> hitboxes;
 
-        // Correspondencia entre frame y rectángulo (por ejemplo, frame 0 rectángulo 0, o frame 5 rectángulo 2)
+        // Correspondencia entre frame y rectï¿½ngulo (por ejemplo, frame 0 rectï¿½ngulo 0, o frame 5 rectï¿½ngulo 2)
         std::map<int,int> rectanguloCorrespondiente;
 
-        // Indica qué frames deben hacer sonar el sonido de la animación
+        // Indica quï¿½ frames deben hacer sonar el sonido de la animaciï¿½n
         std::set<int> framesConSonido;
 
         // Indica si el sonido se debe repetir cada vez que vuelva a salir el frame o si una vez se
         // termine el bucle no hay que repetirlo
         bool repetirSonido;
 
-        // Si repetirSonido está a false, indica si el sonido ya se ha reproducido durante todo un bucle,
-        // por lo que habría que resetear la animación para que volviera a sonar
+        // Si repetirSonido estï¿½ a false, indica si el sonido ya se ha reproducido durante todo un bucle,
+        // por lo que habrï¿½a que resetear la animaciï¿½n para que volviera a sonar
         bool sonidoYaReproducido;
 
-        // Número de frame actual
+        // Nï¿½mero de frame actual
         int frameActual;
+
+        // Indica si es el primer frame, para no ir al siguiente (si no, nunca se mostrarÃ­a el primer frame al actualizarlo inmediatamente)
+        bool primerFrame;
 
     public:
 
@@ -55,26 +58,32 @@ class AnimacionPorFrames : public Animacion {
         // Constructor con sonido
         AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente, sf::Sound sonido, std::set<int> framesConSonido, bool repetirSonido);
 
-        // Actualiza la animación (avanza un frame)
+        // Actualiza la animaciï¿½n (avanza un frame)
         virtual void actualizar();
 
         // Le da la vuelta al sprite
         virtual void voltear();
 
-        // Devuelve qué rectángulo se está mostrando actualmente
+        // Devuelve quï¿½ rectï¿½ngulo se estï¿½ mostrando actualmente
         int getNumeroRectangulo();
 
-        // Cambia el tipo de bucle para la animación
+        // Devuelve quÃ© frame se estÃ¡ mostrando actualmente
+        int getNumeroFrame();
+
+        // Cambia el tipo de bucle para la animaciï¿½n
         void setTipoBucle(TipoBucle tipoBucle);
 
-        // Devuelve si ha terminado la animación (si el tipo de bucle es "SIN_BUCLE")
+        // Devuelve si ha terminado la animaciï¿½n (si el tipo de bucle es "SIN_BUCLE")
         bool haTerminado();
 
-        // Resetea la animación al primer frame y el primer rectángulo
+        // Resetea la animaciï¿½n al primer frame y el primer rectï¿½ngulo
         virtual void resetear();
 
-        // Devuelve un clon de la animación
+        // Devuelve un clon de la animaciï¿½n
         virtual Animacion * clonar();
+
+        // Devuelve una lista con las hitboxes del frame actual
+        virtual std::list<Hitbox> getHitboxes();
 
         // Las clases que heredan de sf::Drawable deben implementar draw
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

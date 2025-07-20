@@ -10,36 +10,40 @@ enum class Accion {
     NADA, IZQUIERDA, DERECHA, ARRIBA, ABAJO, ATACAR, ESCAPE
 };
 
-// Tipo de bucle en una animación
+// Tipo de bucle en una animaciï¿½n
 enum class TipoBucle {
-    SIN_BUCLE,      // No hay bucle, cuando la animación termina se deja de actualizar
-    NORMAL,         // Cuando termina la animación, vuelve a empezar desde el principio
+    SIN_BUCLE,      // No hay bucle, cuando la animaciï¿½n termina se deja de actualizar
+    NORMAL,         // Cuando termina la animaciï¿½n, vuelve a empezar desde el principio
     AL_REVES,       // Como el normal, pero desde el final hasta el principio
-    PING_PONG       // Cuando termina la animación, empieza desde el final hasta el principio y al revés
+    PING_PONG       // Cuando termina la animaciï¿½n, empieza desde el final hasta el principio y al revï¿½s
 };
 
 // Enumerado para estados en los que se puede encontrar un personaje
 enum class EstadoPersonaje {
-    QUIETO,             // No hace nada, solo está quieto en el sitio
-    AGACHADO,           // Está agachado y quieto
-    ATAQUE_AGACHADO,    // Está atacando mientras está agachado
-    ATAQUE_NORMAL_1,    // Está atacando de pie (primer ataque)
-    ATAQUE_NORMAL_2,    // Está atacando de pie (segundo ataque)
-    ATAQUE_NORMAL_3,    // Está atacando de pie (tercer ataque)
-    ATAQUE_AEREO,       // Está atacando en el aire
-    GOLPEADO_PEQUE,     // Ha sufrido un ataque pequeño
+    QUIETO,             // No hace nada, solo estï¿½ quieto en el sitio
+    AGACHADO,           // Estï¿½ agachado y quieto
+    ATAQUE_AGACHADO,    // Estï¿½ atacando mientras estï¿½ agachado
+    ATAQUE_NORMAL_1,    // Estï¿½ atacando de pie (primer ataque)
+    ATAQUE_NORMAL_2,    // Estï¿½ atacando de pie (segundo ataque)
+    ATAQUE_NORMAL_3,    // Estï¿½ atacando de pie (tercer ataque)
+    ATAQUE_AEREO,       // Estï¿½ atacando en el aire
+    GOLPEADO_PEQUE,     // Ha sufrido un ataque pequeï¿½o
     GOLPEADO_MEDIO,     // Ha sufrido un ataque medio
     GOLPEADO_GRANDE,    // Ha sufrido un ataque grande
     GOLPEADO_BAJO,      // Ha sufrido un ataque bajo
-    SALTANDO_SUBIENDO,  // Está en el aire subiendo después de saltar
-    SALTANDO_BAJANDO,   // Está en el aire bajando después de saltar y alcanzar la máxima altura
-    ANDANDO_ACERCANDOSE,// Está andando hacia el enemigo
-    ANDANDO_ALEJANDOSE, // Está andando alejándose del enemigo
-    BLOQUEANDO,         // Está bloqueando un ataque
-    PREPARANDO_SUPER,   // Está preparándose para lanzar el super ataque
-    ATAQUE_SUPER,     // Está haciendo el super ataque
-    LEVANTANDOSE,       // Se está levantando del suelo
-    CELEBRANDO          // Está celebrando su victoria
+    SALTANDO_SUBIENDO,  // Estï¿½ en el aire subiendo despuï¿½s de saltar
+    SALTANDO_BAJANDO,   // Estï¿½ en el aire bajando despuï¿½s de saltar y alcanzar la mï¿½xima altura
+    ANDANDO_ACERCANDOSE,// Estï¿½ andando hacia el enemigo
+    ANDANDO_ALEJANDOSE, // Estï¿½ andando alejï¿½ndose del enemigo
+    BLOQUEANDO,         // Estï¿½ bloqueando un ataque
+    PREPARANDO_SUPER,   // Estï¿½ preparï¿½ndose para lanzar el super ataque
+    ATAQUE_SUPER,     // Estï¿½ haciendo el super ataque
+    LEVANTANDOSE,       // Se estï¿½ levantando del suelo
+    CELEBRANDO          // Estï¿½ celebrando su victoria
+};
+
+enum class TipoPlantilla {
+    PERSONAJE, EFECTO
 };
 
 // Enumerado para los jugadores

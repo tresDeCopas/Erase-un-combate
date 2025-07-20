@@ -9,7 +9,7 @@
 #include <memory>
 
 /*
-    Esta clase define las cualidades de un personaje genérico, pudiendo ser
+    Esta clase define las cualidades de un personaje genï¿½rico, pudiendo ser
     utilizada por todos los posibles personajes al ser estos lo suficientemente
     parecidos como para compartir clase
 */
@@ -26,28 +26,28 @@ class Personaje : public sf::Drawable {
         // Velocidad en el eje X
         float velX;
 
-        // Verdadero si el personaje está mirando hacia la derecha (el enemigo está a la derecha)
+        // Verdadero si el personaje estï¿½ mirando hacia la derecha (el enemigo estï¿½ a la derecha)
         bool mirandoDerecha;
 
-        // Jugador al que está asociado el personaje
+        // Jugador al que estï¿½ asociado el personaje
         Jugador jugador;
 
         // Estado en el que se encuentra el personaje
         EstadoPersonaje estado;
 
-        // Animación del personaje según el estado
+        // Animaciï¿½n del personaje segï¿½n el estado
         std::map<EstadoPersonaje,Animacion*> animaciones;
 
-        // Indica qué acciones están siendo realizadas
+        // Indica quï¿½ acciones estï¿½n siendo realizadas
         std::map<Accion,bool> accionesRealizadas;
 
-        // Función auxiliar para moverse un poco a la derecha
+        // Funciï¿½n auxiliar para moverse un poco a la derecha
         void moverseDerecha();
 
-        // Función auxiliar para moverse un poco a la izquierda
+        // Funciï¿½n auxiliar para moverse un poco a la izquierda
         void moverseIzquierda();
 
-        // Función auxiliar para disminuir la velocidad un poco hacia 0
+        // Funciï¿½n auxiliar para disminuir la velocidad un poco hacia 0
         void pararMovimiento();
 
     public:
@@ -55,28 +55,31 @@ class Personaje : public sf::Drawable {
         // Construye el personaje
         Personaje(std::map<EstadoPersonaje,Animacion*> animaciones);
 
-        // Indica que se está pulsando un botón
+        // Indica que se estï¿½ pulsando un botï¿½n
         void realizarAccion(Accion accion);
 
-        // Indica que se ha soltado un botón
+        // Indica que se ha soltado un botï¿½n
         void detenerAccion(Accion accion);
 
-        // Actualiza la posición del personaje y demás según los botones que estén pulsados
+        // Actualiza la posiciï¿½n del personaje y demï¿½s segï¿½n los botones que estï¿½n pulsados
         virtual void actualizar(sf::Vector2f posicionEnemigo);
 
-        // Comprueba si la hitbox del personaje ha colisionado con algún ataque enemigo y
+        // Comprueba si la hitbox del personaje ha colisionado con algï¿½n ataque enemigo y
         // reacciona de forma adecuada
-        virtual void comprobarColisiones(std::list<Animacion*> &animaciones);
+        virtual void comprobarColisiones(std::list<Animacion*> &animaciones, std::list<Animacion*> &efectosInsertados);
 
         // Devuelve los puntos de vida actuales
         int getPuntosDeVida();
 
-        // Establece la posición del personaje
+        // Establece la posiciï¿½n del personaje
         void setPosicion(float x, float y);
         void setPosicion(sf::Vector2f posicion);
 
-        // Devuelve la posición del personaje
+        // Devuelve la posiciï¿½n del personaje
         sf::Vector2f getPosicion();
+
+        // Devuelve el estado actual del personaje
+        EstadoPersonaje getEstado();
 
         // Establece el jugador asociado
         void setJugador(Jugador jugador);

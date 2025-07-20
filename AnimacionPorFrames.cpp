@@ -41,7 +41,7 @@ AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX
 void AnimacionPorFrames::actualizar() {
 
     if(tipoBucle == TipoBucle::NORMAL){
-        frameActual++;
+        if(!primerFrame) frameActual++;
         if(frameActual >= (int)rectanguloCorrespondiente.size()) {
             frameActual = 0;
             if(!repetirSonido) sonidoYaReproducido = true;
@@ -51,11 +51,14 @@ void AnimacionPorFrames::actualizar() {
             frameActual = rectanguloCorrespondiente.size()-1;
             if(!repetirSonido) sonidoYaReproducido = true;
         }
-        else frameActual--;
+        else if(!primerFrame) frameActual--;
     } else if (tipoBucle == TipoBucle::SIN_BUCLE){
         if(frameActual < (int)rectanguloCorrespondiente.size()-1)
-            frameActual++;
+            if(!primerFrame) frameActual++;
     }
+
+    // Ya seguro que no es el primer frame
+    primerFrame = false;
 
     if(!sonidoYaReproducido && framesConSonido.count(frameActual)) sonido.play();
 
@@ -66,13 +69,13 @@ void AnimacionPorFrames::voltear(){
     // Al escalar el eje X por -1 se le da la vuelta muy guay todo pero no es suficiente
     sprite.scale(-1,1);
 
-    // También hay que voltear las hitboxes
+    // Tambiï¿½n hay que voltear las hitboxes
     for(auto const &[entero, listaHitboxes] : hitboxes){
         std::list<Hitbox> nuevaLista;
 
         for(Hitbox hitbox : listaHitboxes){
 
-            // Esto se explicaría mejor con un dibujito pero bueno
+            // Esto se explicarï¿½a mejor con un dibujito pero bueno
             int puntoCentral = sprite.getTextureRect().width/2;
 
             int derecha = hitbox.getRectangulo().left+hitbox.getRectangulo().width;
@@ -92,6 +95,10 @@ int AnimacionPorFrames::getNumeroRectangulo() {
     return rectanguloCorrespondiente[frameActual];
 }
 
+int AnimacionPorFrames::getNumeroFrame(){
+    return frameActual;
+}
+
 void AnimacionPorFrames::setTipoBucle(TipoBucle tipoBucle){
     this->tipoBucle = tipoBucle;
 }
@@ -102,27 +109,32 @@ bool AnimacionPorFrames::haTerminado(){
 
 void AnimacionPorFrames::resetear(){
 
-    // Para que se muestre el primer frame hay que colocar el conteo de frames en una posición más allá del límite,
-    // de lo contrario se saltará el primer frame siempre
+    // Para que se muestre el primer frame hay que colocar el conteo de frames en una posiciï¿½n mï¿½s allï¿½ del lï¿½mite,
+    // de lo contrario se saltarï¿½ el primer frame siempre
     switch(tipoBucle){
         case TipoBucle::NORMAL:
         case TipoBucle::PING_PONG:
         case TipoBucle::SIN_BUCLE:
-            frameActual = -1;
+            frameActual = 0;
             break;
 
         case TipoBucle::AL_REVES:
-            frameActual = rectanguloCorrespondiente.size();
+            frameActual = rectanguloCorrespondiente.size()-1;
             break;
     }
 
     numRepeticionesActual = 0;
     pingPongHaciaDelante = true;
     sonidoYaReproducido = false;
+    primerFrame = true;
 }
 
 Animacion * AnimacionPorFrames::clonar(){
     return new AnimacionPorFrames(*this);
+}
+
+std::list<Hitbox> AnimacionPorFrames::getHitboxes(){
+    return hitboxes[rectanguloCorrespondiente[frameActual]];
 }
 
 void AnimacionPorFrames::draw(sf::RenderTarget& target, sf::RenderStates states) const{
@@ -131,7 +143,8 @@ void AnimacionPorFrames::draw(sf::RenderTarget& target, sf::RenderStates states)
     if(DEBUG){
         for(Hitbox h : hitboxes.at(rectanguloCorrespondiente.at(frameActual))){
             sf::RectangleShape rectanguloHitbox(sf::Vector2f(h.getRectangulo().width,h.getRectangulo().height));
-            rectanguloHitbox.setPosition(sprite.getPosition().x-PERSONAJE_PLANTILLA_ORIGEN.x+h.getRectangulo().left,sprite.getPosition().y-PERSONAJE_PLANTILLA_ORIGEN.y+h.getRectangulo().top);
+            rectanguloHitbox.setPosition(h.getRectangulo().left,h.getRectangulo().top);
+            rectanguloHitbox.move(getPosicionEsqSupIzq());
             rectanguloHitbox.setFillColor(sf::Color::Transparent);
             rectanguloHitbox.setOutlineThickness(1);
             rectanguloHitbox.setOutlineColor(h.getFuerzaAtaque() > 0 ? HITBOX_ATAQUE_COLOR : HITBOX_NO_ATAQUE_COLOR);

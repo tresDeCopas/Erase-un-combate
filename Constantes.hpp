@@ -15,7 +15,7 @@
 */
 
 // Indica si se quiere activar el modo debug (mostrar hitboxes en pantalla y acta vecinal en la consola)
-const bool DEBUG = true;
+const bool DEBUG = false;
 
 // Color para las hitboxes que hacen da�o
 const sf::Color HITBOX_ATAQUE_COLOR = sf::Color::Red;
@@ -104,6 +104,18 @@ const float VELOCIDAD_SALTO = -7;
 
 // Posici�n en el eje Y del suelo
 const float ALTURA_SUELO = VENTANA_ALTURA-20;
+
+// Impulso inicial al recibir un golpe pequeño
+const float IMPULSO_GOLPE_PEQUE = 1;
+
+// Impulso inicial al recibir un golpe mediano
+const float IMPULSO_GOLPE_MEDIO = 2;
+
+// Máximo daño que puede hacer un ataque pequeño
+const int MAX_ATAQUE_PEQUE = 3;
+
+// Máximo daño que puede hacer un ataque medio
+const int MAX_ATAQUE_MEDIO = 6;
 
 /*
     CONSTANTES AUXILIARES PARA COSAS DE C++
