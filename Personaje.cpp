@@ -551,16 +551,18 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
 
     // Si sí que hubo golpe, depende ya de cómo le pille al personaje
     switch(estado){
-        // En el suelo sin bloquear
+        // En el suelo sin bloquear o en el aire (todo te pega)
         case EstadoPersonaje::GOLPEADO_PEQUE:
         case EstadoPersonaje::QUIETO:
         case EstadoPersonaje::ANDANDO_ACERCANDOSE:
         case EstadoPersonaje::ATAQUE_NORMAL_1:
         case EstadoPersonaje::ATAQUE_NORMAL_2:
         case EstadoPersonaje::ATAQUE_NORMAL_3:
-        case EstadoPersonaje::AGACHADO:
         case EstadoPersonaje::ATAQUE_AGACHADO:
         case EstadoPersonaje::TOCANDO_SUELO:
+        case EstadoPersonaje::SALTANDO_SUBIENDO:
+        case EstadoPersonaje::SALTANDO_BAJANDO:
+        case EstadoPersonaje::ATAQUE_AEREO:
 
             if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
                 velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
@@ -577,13 +579,12 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
             }
             break;
         
-        // En el suelo bloqueando
+        // En el suelo bloqueando (los ataques bajos te pegan)
         case EstadoPersonaje::BLOQUEANDO:
         case EstadoPersonaje::ANDANDO_ALEJANDOSE:
 
             // Aún si estás bloqueando, los ataques bajos te dan
             if(hitboxElegidaEnemigo.esAtaqueBajo()){
-
                 if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
                     velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
                     cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
@@ -605,17 +606,24 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
 
             break;
         
-        // En el aire
-        case EstadoPersonaje::SALTANDO_SUBIENDO:
-        case EstadoPersonaje::SALTANDO_BAJANDO:
-        case EstadoPersonaje::ATAQUE_AEREO:
-
-            if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
-                velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
-                cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
-            } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
-                velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
-                cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+        // Agachado (los ataques no bajos te pegan, los bajos los bloqueas)
+        case EstadoPersonaje::AGACHADO:
+            if(!hitboxElegidaEnemigo.esAtaqueBajo()){
+                if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                    velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
+                    cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
+                } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                    velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                    cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+                }
+            } else {
+                if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                    velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
+                    cambiarEstado(EstadoPersonaje::BLOQUEANDO);
+                } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                    velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                    cambiarEstado(EstadoPersonaje::BLOQUEANDO);
+                }
             }
             break;
     }
