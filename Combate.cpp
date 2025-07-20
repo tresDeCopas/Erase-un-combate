@@ -28,6 +28,7 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
 
     if(lider){
         if(listener.listen(NUMERO_PUERTO) != sf::Socket::Status::Done){
+            // TODO: por cada exit hacer que se ponga algo en la bitácora
             exit(1);
         }
         
@@ -327,7 +328,7 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
         cartelAPelear->actualizar(efectos);
     }
 
-    if(socket.getRemoteAddress() != sf::IpAddress(0,0,0,0))
+    if(socket.getRemoteAddress().has_value())
         recibirEntradaOnline();
     else
         recibirEntradaOffline();
