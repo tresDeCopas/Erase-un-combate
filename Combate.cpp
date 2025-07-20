@@ -420,9 +420,8 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
     {
         contadorCelebracion--;
     }
-
     // Si ya ha llegado a cero, se le dice al personaje que celebre y se reproduce la canción de fin de ronda
-    else if (ganador.getEstado() != EstadoPersonaje::CELEBRANDO)
+    else if (ganador.getEstado() == EstadoPersonaje::QUIETO)
     {
         ganador.cambiarEstado(EstadoPersonaje::CELEBRANDO);
         ReproductorDeMusica::unicaInstancia()->reproducirCancionFinRonda();
@@ -432,7 +431,7 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
             GUIJugador2.ganarRonda();
     }
     // Si ya se le ha dicho que celebre, se oscurece el rectángulo si ha terminado de celebrar
-    else if (ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() && !ReproductorDeMusica::unicaInstancia()->estaReproduciendo())
+    else if (ganador.getEstado() == EstadoPersonaje::CELEBRANDO && ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() && !ReproductorDeMusica::unicaInstancia()->estaReproduciendo())
     {
         sf::Color nuevoColor(rectanguloOscuro.getFillColor());
         nuevoColor.a += 5;
