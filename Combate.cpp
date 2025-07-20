@@ -13,6 +13,7 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
     personajeJugador1(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ1)),
     personajeJugador2(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ2)),
     GUIJugador1(personajeJugador1,true), GUIJugador2(personajeJugador2,false),
+    escenario(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/escenarios/"+nombreEscenario+"/fondo.png"),ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/escenarios/"+nombreEscenario+"/frente.png")),
     cartelTodoListo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-todo-listo")),
     cartelAPelear(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-a-pelear")){
 
@@ -23,7 +24,6 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
 
     personajeJugador1.setPosicion(VENTANA_ANCHURA/3,ALTURA_SUELO);
     personajeJugador2.setPosicion(2*VENTANA_ANCHURA/3,ALTURA_SUELO);
-    //escenario = ContenedorDeEscenarios::unicaInstancia()->obtener(idEscenario);
 
     cartelTodoListo->setPosicion(POSICION_CARTELES);
     cartelAPelear->setPosicion(POSICION_CARTELES);
@@ -105,6 +105,8 @@ void Combate::comenzar(){
                         efectos.push_back(efecto);
                     }
                 }
+                
+                // No se actualiza el escenario para dar el efecto de que se ha parado el tiempo
 
                 VentanaPrincipal::actualizar();
                 GUIJugador1.actualizar();
@@ -113,7 +115,8 @@ void Combate::comenzar(){
                 ventana->clear(sf::Color(100,100,120));
 
                 // Se dibuja todo como de costumbre (menos los personajes que están preparando súper)
-                // ventana->draw(escenario);
+                escenario.dibujarFondo(*ventana,sf::RenderStates::Default);
+
                 if(personajeJugador1.getEstado() != EstadoPersonaje::PREPARANDO_SUPER)
                     ventana->draw(personajeJugador1);
                 if(personajeJugador2.getEstado() != EstadoPersonaje::PREPARANDO_SUPER)
@@ -122,9 +125,6 @@ void Combate::comenzar(){
                 for(std::list<std::shared_ptr<Animacion>>::iterator iter = efectos.begin(); iter != efectos.end(); iter++){
                     ventana->draw(**iter);
                 }
-
-                ventana->draw(GUIJugador1);
-                ventana->draw(GUIJugador2);
 
                 // Se dibuja un rectángulo oscuro encima
                 sf::RectangleShape rectanguloOscuro(sf::Vector2f(VENTANA_ANCHURA,VENTANA_ALTURA));
@@ -137,6 +137,11 @@ void Combate::comenzar(){
                     ventana->draw(personajeJugador1);
                 if(personajeJugador2.getEstado() == EstadoPersonaje::PREPARANDO_SUPER)
                     ventana->draw(personajeJugador2);
+
+                escenario.dibujarFrente(*ventana,sf::RenderStates::Default);
+
+                ventana->draw(GUIJugador1);
+                ventana->draw(GUIJugador2);
 
                 ventana->display();
             } else {
@@ -175,7 +180,7 @@ void Combate::comenzar(){
                     }
                 }
 
-                // SEGUNDO PASO: ACTUALIZAR PERSONAJES Y EFECTOS
+                // SEGUNDO PASO: ACTUALIZAR PERSONAJES, EFECTOS, GUIS, ESCENARIO Y VENTANA
 
                 std::list<std::shared_ptr<Animacion>> nuevosEfectos;
 
@@ -198,6 +203,8 @@ void Combate::comenzar(){
 
                 GUIJugador1.actualizar();
                 GUIJugador2.actualizar();
+
+                escenario.actualizar(personajeJugador1,personajeJugador2,efectos);
 
                 VentanaPrincipal::actualizar();
 
@@ -234,13 +241,15 @@ void Combate::comenzar(){
                 // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
 
                 ventana->clear(sf::Color(100,100,120));
-                // ventana->draw(escenario);
+                escenario.dibujarFondo(*ventana,sf::RenderStates::Default);
                 ventana->draw(personajeJugador1);
                 ventana->draw(personajeJugador2);
 
                 for(auto iter = efectos.begin(); iter != efectos.end(); iter++){
                     ventana->draw(**iter);
                 }
+
+                escenario.dibujarFrente(*ventana,sf::RenderStates::Default);
 
                 ventana->draw(GUIJugador1);
                 ventana->draw(GUIJugador2);
@@ -326,6 +335,8 @@ void Combate::comenzar(){
             GUIJugador1.actualizar();
             GUIJugador2.actualizar();
 
+            escenario.actualizar(personajeJugador1,personajeJugador2,efectos);
+
             VentanaPrincipal::actualizar();
 
             // TERCER PASO: no se comprueban colisiones porque se supone que ya se ha terminado esta ronda. En su lugar, se
@@ -350,13 +361,15 @@ void Combate::comenzar(){
             // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
 
             ventana->clear(sf::Color(100,100,100));
-            // ventana->draw(escenario);
+            escenario.dibujarFondo(*ventana,sf::RenderStates::Default);
             ventana->draw(personajeJugador1);
             ventana->draw(personajeJugador2);
 
             for(auto iter = efectos.begin(); iter != efectos.end(); iter++){
                 ventana->draw(**iter);
             }
+
+            escenario.dibujarFrente(*ventana,sf::RenderStates::Default);
 
             ventana->draw(GUIJugador1);
             ventana->draw(GUIJugador2);

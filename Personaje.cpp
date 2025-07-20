@@ -63,6 +63,10 @@ EstadoPersonaje Personaje::getEstado(){
     return estado;
 }
 
+void Personaje::mover(float offsetX, float offsetY){
+    animaciones.at(estado)->mover(offsetX,offsetY);
+}
+
 void Personaje::setJugador(Jugador jugador){
     this->jugador = jugador;
 }

@@ -4,6 +4,7 @@
 #include "Personaje.hpp"
 #include "Enums.hpp"
 #include "GUIPersonaje.hpp"
+#include "Escenario.hpp"
 #include "AnimacionAgrandable.hpp"
 
 /*
@@ -29,7 +30,7 @@ class Combate{
         GUIPersonaje GUIJugador2;
 
         // Escenario para el combate
-        //Escenario escenario;
+        Escenario escenario;
 
         // Rectángulo negro que aparece antes de que empiece el combate y entre rondas
         sf::RectangleShape rectanguloOscuro;
