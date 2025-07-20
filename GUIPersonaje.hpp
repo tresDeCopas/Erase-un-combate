@@ -46,6 +46,12 @@ class GUIPersonaje : public sf::Drawable {
         // píxel por frame, lo cual es demasiado rápido para 60 FPS y 100 puntos de vida totales
         int retrasoContadorVidaAtrasado;
 
+        // Permite que la GUI vibre cuando el personaje sea golpeado
+        int vibracion;
+
+        // Contador para que no vibre demasiado rápido
+        int contadorVibracion;
+
         // El sprite principal de la GUI (base y frente (la base es el fondo y el
         // frente son las marcas transparentes que hay en las barras de vida y súper))
         sf::Sprite spritePrincipalBase;

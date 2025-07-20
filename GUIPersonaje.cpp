@@ -2,7 +2,7 @@
 #include "Constantes.hpp"
 #include "ContenedorDeRecursos.hpp"
 
-GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaje(personaje), parteIzquierda(parteIzquierda){
+GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaje(personaje), parteIzquierda(parteIzquierda), vibracion(0), contadorVibracion(CONTADOR_VIBRACION_MAX){
     
     rectanguloVidaReal.setSize(TAMANO_BARRA_VIDA);
     rectanguloVidaReal.setFillColor(COLOR_BARRA_VIDA_REAL);
@@ -68,6 +68,28 @@ GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaj
 
 void GUIPersonaje::actualizar(){
 
+    // Se alterna la vibración lentamente
+    if(--contadorVibracion <= 0){
+        if(vibracion > 0){
+            vibracion = -vibracion;
+        } else if (vibracion < 0){
+            vibracion = -vibracion;
+            vibracion--;
+        }
+        contadorVibracion = CONTADOR_VIBRACION_MAX;
+    }
+    
+
+    // Se actualiza el valor de la vibración si se recibe un golpe
+    if(abs(vibracion) < contadorVidaAtrasado - personaje.puntosDeVida){
+        vibracion = contadorVidaAtrasado - personaje.puntosDeVida;
+    }
+
+    // Se cambia el color de la base de la GUI según la vibración
+    int colorVibracion = 255-std::abs(vibracion)*10;
+    if(colorVibracion < 0) colorVibracion = 0;
+    spritePrincipalBase.setColor(sf::Color(255,colorVibracion,colorVibracion));
+
     if(retrasoContadorVidaAtrasado == 0){
         if(personaje.puntosDeVida > contadorVidaAtrasado){
             contadorVidaAtrasado++;
@@ -102,6 +124,10 @@ void GUIPersonaje::actualizar(){
 }
 
 void GUIPersonaje::draw(sf::RenderTarget& target, sf::RenderStates states) const{
+    sf::Transform mover;
+    mover.translate(0,vibracion);
+    states.transform*=mover;
+    
     target.draw(spritePrincipalBase,states);
     target.draw(rectanguloVidaAtrasada,states);
     target.draw(rectanguloVidaReal,states);

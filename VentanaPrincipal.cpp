@@ -16,6 +16,7 @@ sf::RenderWindow * VentanaPrincipal::unicaInstancia()
         // porque que pereza
         ventanaPrincipal->setKeyRepeatEnabled(false);
         ventanaPrincipal->setVerticalSyncEnabled(true);
+        //vibracionActivada = false;
 
         aumentarZoom();
         aumentarZoom();
