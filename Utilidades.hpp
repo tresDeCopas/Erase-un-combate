@@ -95,4 +95,9 @@ namespace util{
 
         return sf::Vector2f(izquierda + (derecha - izquierda)/2, arriba + (abajo-arriba)/2);
     }
+
+    // Devuelve un número real en el rango [0,1)
+    inline double realAleatorio(){
+        return ((double)rand()) / RAND_MAX;
+    }
 }

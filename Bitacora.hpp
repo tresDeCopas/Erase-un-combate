@@ -5,39 +5,37 @@
 #include <string>
 
 /*
-    Esta clase gestiona una bitácora que informa de cosas
-    importantes que pasan en la ejecución del programa
+    Esta clase gestiona una bitï¿½cora que informa de cosas
+    importantes que pasan en la ejecuciï¿½n del programa
 */
 
-class Bitacora{
-    private:
+class Bitacora
+{
+private:
+    // El propio fichero de bitï¿½cora
+    std::ofstream ficheroBitacora;
 
-        // El propio fichero de bitácora
-        std::ofstream ficheroBitacora;
+    Bitacora();
+    ~Bitacora();
 
-        Bitacora();
-        ~Bitacora();
+    // ï¿½nica instancia
+    static Bitacora *bitacora;
 
-        // Única instancia
-        static Bitacora * bitacora;
+public:
+    // Se escriben cosas en el fichero de bitÃ¡cora terminando con un fin de lÃ­nea
+    void escribir(std::string cosillas);
 
-    public:
+    // Se comprueba si la tarjeta grï¿½fica tiene lo que hay que tener
+    void comprobarGrafica();
 
-        // Write stuff in the log file ending in \n
-        void escribir(std::string cosillas);
+    // NUNCA SE COPIA UN SINGLETON
+    Bitacora(Bitacora &otra) = delete;
 
-        // Se comprueba si la tarjeta gráfica tiene lo que hay que tener
-        void comprobarGrafica();
+    // NUNCA SE ASIGNA UN SINGLETON
+    void operator=(const Bitacora &) = delete;
 
-        // NUNCA SE COPIA UN SINGLETON
-        Bitacora(Bitacora &otra) = delete;
-
-        // NUNCA SE ASIGNA UN SINGLETON
-        void operator=(const Bitacora &) = delete;
-
-        // Devuelve la única instancia de la bitácora
-        static Bitacora * unicaInstancia();
-
+    // Devuelve la ï¿½nica instancia de la bitï¿½cora
+    static Bitacora *unicaInstancia();
 };
 
 #endif // __BITACORA_HPP__

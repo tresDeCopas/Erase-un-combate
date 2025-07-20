@@ -2,6 +2,7 @@
 #include "ContenedorDeRecursos.hpp"
 #include "Bitacora.hpp"
 #include "AnimacionPorFrames.hpp"
+#include "AnimacionConGravedad.hpp"
 #include "Utilidades.hpp"
 #include <SFML/Audio.hpp>
 #include <fstream>
@@ -73,107 +74,147 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
         Bitacora::unicaInstancia()->escribir("Juan Cuesta: animación de tipo " + tipoAnimacion + ".");
 
-        // Se obtiene el tipo de bucle
-        std::getline(fichero,linea);
-        nombreBucle = util::separarString(linea,':')[1];
-
-        // Se salta una l�nea en blanco y se empiezan a sacar rect�ngulos
-        numeroRectangulos = 0;
-        std::getline(fichero,linea);
-        std::getline(fichero,linea);
-
-        // En esta variable se guarda el mapa que mapea n�meros de rect�ngulo a hitboxes
-        std::map<int,std::list<Hitbox>> hitboxes;
-
-        while(util::separarString(linea,':')[0] == "Rectangulo"){
-
-            Bitacora::unicaInstancia()->escribir("Juan Cuesta: rect�ngulo " + std::to_string(numeroRectangulos) + ".");
-
-            // Lista de hitboxes para este rect�ngulo
-            std::list<Hitbox> listaHitboxes;
-
-            // Se salta la l�nea que dice "Hitboxes" y empezamos a contar hitboxes
-            std::getline(fichero,linea);
-            std::getline(fichero,linea);
-
-            while(linea != ""){
-                // Se sacan los enteros (pero son strings)
-                std::vector<std::string> enterosPeroSonStrings = util::separarString(linea,',');
-
-                // Se sacan los enteros de verdad
-                std::vector<int> enteros;
-                for(std::string string : enterosPeroSonStrings){
-                    enteros.push_back(std::stoi(string));
-                }
-
-                // Se crea la hitbox en base a muchas cosas
-                Hitbox h(sf::IntRect(enteros[0],enteros[1],enteros[2],enteros[3]),enteros[4],false);
-
-                listaHitboxes.push_back(h);
-
-                std::getline(fichero,linea);
-            }
-
-            hitboxes[numeroRectangulos] = listaHitboxes;
-
-            std::getline(fichero,linea);
-            numeroRectangulos++;
-        }
-
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: finalmente, se apuntan los frames.");
-
-        // Ahora sacamos la correspondencia de frames y rect�ngulos
-        std::getline(fichero,linea);
-
-        int contadorFrame = 0;
-
-        // En esta variable se guarda el mapa que mapea n�meros de frame a n�meros de rect�ngulo
-        std::map<int,int> frameARectangulo;
-
-        for(std::string rectanguloString : util::separarString(linea,',')){
-
-            frameARectangulo[contadorFrame] = std::stoi(rectanguloString);
-
-            contadorFrame++;
-        }
-
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: número de frames: " + std::to_string(contadorFrame));
-
-        // Nos saltamos dos l�neas, y ahora puede haber informaci�n sobre los sonidos o no
-        std::getline(fichero,linea);
-        std::getline(fichero,linea);
-
         std::shared_ptr<Animacion> anim;
 
-        if(util::separarString(linea,':')[0] == "Sonido"){
+        if(tipoAnimacion == "frames"){
 
-            bool repetirSonido = util::separarString(linea,':')[1] == "repetir";
+            // Se obtiene el tipo de bucle
+            std::getline(fichero,linea);
+            nombreBucle = util::separarString(linea,':')[1];
 
-            sonido.setBuffer(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener("sonidos/efectos/"+nombreEfecto+".wav"));
-
-            // Avanzamos de l�nea para conseguir la lista de frames
+            // Se salta una l�nea en blanco y se empiezan a sacar rect�ngulos
+            numeroRectangulos = 0;
+            std::getline(fichero,linea);
             std::getline(fichero,linea);
 
-            std::set<int> framesConSonido;
+            // En esta variable se guarda el mapa que mapea n�meros de rect�ngulo a hitboxes
+            std::map<int,std::list<Hitbox>> hitboxes;
 
-            for(std::string s : util::separarString(linea,',')){
-                framesConSonido.insert(std::stoi(s));
+            while(util::separarString(linea,':')[0] == "Rectangulo"){
+
+                Bitacora::unicaInstancia()->escribir("Juan Cuesta: rect�ngulo " + std::to_string(numeroRectangulos) + ".");
+
+                // Lista de hitboxes para este rect�ngulo
+                std::list<Hitbox> listaHitboxes;
+
+                // Se salta la l�nea que dice "Hitboxes" y empezamos a contar hitboxes
+                std::getline(fichero,linea);
+                std::getline(fichero,linea);
+
+                while(linea != ""){
+                    // Se sacan los enteros (pero son strings)
+                    std::vector<std::string> enterosPeroSonStrings = util::separarString(linea,',');
+
+                    // Se sacan los enteros de verdad
+                    std::vector<int> enteros;
+                    for(std::string string : enterosPeroSonStrings){
+                        enteros.push_back(std::stoi(string));
+                    }
+
+                    // Se crea la hitbox en base a muchas cosas
+                    Hitbox h(sf::IntRect(enteros[0],enteros[1],enteros[2],enteros[3]),enteros[4],false);
+
+                    listaHitboxes.push_back(h);
+
+                    std::getline(fichero,linea);
+                }
+
+                hitboxes[numeroRectangulos] = listaHitboxes;
+
+                std::getline(fichero,linea);
+                numeroRectangulos++;
+            }
+
+            Bitacora::unicaInstancia()->escribir("Juan Cuesta: finalmente, se apuntan los frames.");
+
+            // Ahora sacamos la correspondencia de frames y rect�ngulos
+            std::getline(fichero,linea);
+
+            int contadorFrame = 0;
+
+            // En esta variable se guarda el mapa que mapea n�meros de frame a n�meros de rect�ngulo
+            std::map<int,int> frameARectangulo;
+
+            for(std::string rectanguloString : util::separarString(linea,',')){
+
+                frameARectangulo[contadorFrame] = std::stoi(rectanguloString);
+
+                contadorFrame++;
+            }
+
+            Bitacora::unicaInstancia()->escribir("Juan Cuesta: número de frames: " + std::to_string(contadorFrame));
+
+            // Nos saltamos dos l�neas, y ahora puede haber informaci�n sobre los sonidos o no
+            std::getline(fichero,linea);
+            std::getline(fichero,linea);
+
+            if(util::separarString(linea,':')[0] == "Sonido"){
+
+                bool repetirSonido = util::separarString(linea,':')[1] == "repetir";
+
+                sonido.setBuffer(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener("sonidos/efectos/"+nombreEfecto+".wav"));
+
+                // Avanzamos de l�nea para conseguir la lista de frames
+                std::getline(fichero,linea);
+
+                std::set<int> framesConSonido;
+
+                for(std::string s : util::separarString(linea,',')){
+                    framesConSonido.insert(std::stoi(s));
+                }
+
+                sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
+
+                anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
+                                                util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,sonido,framesConSonido,repetirSonido));
+
+            } else {
+                sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
+
+                anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
+                                                util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo));
+            }
+
+        } else {
+            
+            // Se salta una l�nea en blanco y se saca la hitbox
+            std::getline(fichero,linea);
+            std::getline(fichero,linea);
+
+            Hitbox hitbox(sf::IntRect(-1,-1,-1,-1),0,false);
+
+            auto vectorAux = util::separarString(linea,':');
+
+            if(vectorAux[0] == "Hitbox"){
+                
+                if(vectorAux.size() > 1){
+                    // Se sacan los enteros (pero son strings)
+                    std::vector<std::string> enterosPeroSonStrings(util::separarString(vectorAux[1],','));
+
+                    // Se sacan los enteros de verdad
+                    std::vector<int> enteros;
+                    for(std::string string : enterosPeroSonStrings){
+                        enteros.push_back(std::stoi(string));
+                    }
+
+                    // Se crea la hitbox en base a muchas cosas
+                    hitbox = Hitbox(sf::IntRect(enteros[0],enteros[1],enteros[2],enteros[3]),enteros[4],false);
+                }
+
+            } else {
+                Bitacora::unicaInstancia()->escribir("Juan Cuesta: Oye Emilio... esto de que el fichero efectos/" + nombreEfecto + ".txt tenga una línea de hitbox que no comienza por \"Hitbox\"... ¿Tú lo ves normal?");
+                Bitacora::unicaInstancia()->escribir("Emilio: Bueno, normal... es que después de vivir con mi padre ya no hay nada que me sorprenda.");
+                Bitacora::unicaInstancia()->escribir("Juan Cuesta: Pues no, no es normal. Qué follón... se suspende la junta.");
             }
 
             sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
 
-            anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
-                                              util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,sonido,framesConSonido,repetirSonido));
+            anim = std::shared_ptr<Animacion>(new AnimacionConGravedad(textura,hitbox,sf::Vector2f(0,0),sf::Vector2f(0,0)));
 
-        } else {
-            sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
-
-            anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
-                                              util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo));
         }
 
         animaciones.insert(std::pair<std::string,std::shared_ptr<Animacion>>(nombreEfecto,anim));
 
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: se termin� de cargar la animación para el efecto " + nombreEfecto + ".\n");
+        Bitacora::unicaInstancia()->escribir("Juan Cuesta: se terminó de cargar la animación para el efecto " + nombreEfecto + ".\n");
     }
 }

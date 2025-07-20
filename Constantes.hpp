@@ -81,11 +81,50 @@ const std::string SECUENCIA_DELIMITADORA_FICHERO = "----";
 const std::string SECUENCIA_FIN_FICHERO = "####";
 
 /*
+    CONSTANTES PARA LAS ANIMACIONES
+*/
+
+// Valor máximo que debería tener el contador de parpadeo para hacer que una animación
+// con gravedad se dé por terminada
+const int MAX_CONTADOR_PARPADEO = 40;
+
+// Cada cuántos frames las animaciones con gravedad pasan a ser visibles o invisibles para
+// el efecto de parpadeo
+const int DURACION_PARPADEO = 2;
+
+// Máxima velocidad en cualquier eje de una partícula pequeña
+const int MAX_VELOCIDAD_PARTICULA_PEQUE = 3;
+
+// Máxima velocidad en cualquier eje de una partícula mediana
+const int MAX_VELOCIDAD_PARTICULA_MEDIA = 6;
+
+// Máxima velocidad en cualquier eje de una partícula grande
+const int MAX_VELOCIDAD_PARTICULA_GRANDE = 8;
+
+// Cuántas partículas distintas hay de tipo pequeño
+const int TIPO_PEQUE_CUANTAS_PARTICULAS = 3;
+
+// Cuántas partículas distintas hay de tipo medio
+const int TIPO_MEDIO_CUANTAS_PARTICULAS = 3;
+
+// Cuántas partículas distintas hay de tipo pequeño
+const int TIPO_GRANDE_CUANTAS_PARTICULAS = 3;
+
+// El número de partículas que salen cuando te pegan con un ataque pequeño
+const int NUM_PARTICULAS_GOLPEADO_PEQUE = 2;
+
+// El número de partículas que salen cuando te pegan con un ataque medio
+const int NUM_PARTICULAS_GOLPEADO_MEDIO = 4;
+
+// El número de partículas que salen cuando te pegan con un ataque grande
+const int NUM_PARTICULAS_GOLPEADO_GRANDE = 7;
+
+/*
     CONSTANTES PARA LOS PERSONAJES
 */
 
 // Origen de los personajes (usando la plantilla)
-const sf::Vector2f PERSONAJE_PLANTILLA_ORIGEN = sf::Vector2f(64,100);
+const sf::Vector2f PERSONAJE_PLANTILLA_ORIGEN = sf::Vector2f(64, 100);
 
 // Gravedad del escenario
 const float GRAVEDAD = 0.3;
@@ -103,7 +142,7 @@ const float VELOCIDAD_ANDAR_AUMENTO = 0.3;
 const float VELOCIDAD_SALTO = -7;
 
 // Posici�n en el eje Y del suelo
-const float ALTURA_SUELO = VENTANA_ALTURA-10;
+const float ALTURA_SUELO = VENTANA_ALTURA - 10;
 
 // Impulso inicial al recibir un golpe pequeño
 const float IMPULSO_GOLPE_PEQUE = 1;
