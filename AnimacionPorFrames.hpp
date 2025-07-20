@@ -47,6 +47,9 @@ class AnimacionPorFrames : public Animacion {
         // Devuelve qué rectángulo se está mostrando actualmente
         int getNumeroRectangulo();
 
+        // Cambia el tipo de bucle para la animación
+        void setTipoBucle(TipoBucle tipoBucle);
+
         // Resetea la animación al primer frame y el primer rectángulo
         virtual void resetear();
 

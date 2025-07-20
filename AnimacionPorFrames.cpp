@@ -25,6 +25,10 @@ int AnimacionPorFrames::getNumeroRectangulo() {
     return rectanguloCorrespondiente[frameActual];
 }
 
+void AnimacionPorFrames::setTipoBucle(TipoBucle tipoBucle){
+    this->tipoBucle = tipoBucle;
+}
+
 void AnimacionPorFrames::resetear(){
     frameActual = 0;
     numRepeticionesActual = 0;
