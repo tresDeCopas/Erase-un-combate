@@ -9,7 +9,7 @@
 
 /*
     Clase que se encarga de la correspondencia entre jugadores y controles,
-    adem�s de indicar qu� significan las teclas y botones que se pulsan
+    además de indicar qué significan las teclas y botones que se pulsan
 */
 class GestorDeControles
 {
@@ -23,7 +23,7 @@ class GestorDeControles
         // Mapa que guarda, para cada control, el jugador al que está asignado
         std::map<Control, Jugador> controlAJugador;
 
-        // Mapa que guarda, para cada tecla v�lida (excepto la tecla de salir), la parte del teclado y la acción asociada
+        // Mapa que guarda, para cada tecla válida (excepto la tecla de salir), la parte del teclado y la acción asociada
         std::map<sf::Keyboard::Key,std::pair<Control,Accion>> teclaAControlYAccion;
 
         // Mapa que guarda, para cada jugador, otro mapa que indica qué acciones
@@ -39,7 +39,7 @@ class GestorDeControles
 
     public:
 
-        // Dado un evento, devuelve el jugador y la acci�n que est� haciendo
+        // Dado un evento, devuelve el jugador y la acción que está haciendo
         std::pair<Jugador,Accion> comprobarEvento(sf::Event evento);
 
         // NUNCA SE COPIA UN SINGLETON
