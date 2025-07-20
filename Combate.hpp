@@ -6,6 +6,8 @@
 #include "GUIPersonaje.hpp"
 #include "Escenario.hpp"
 #include "AnimacionAgrandable.hpp"
+#include "ConectorOnline.hpp"
+#include <optional>
 #include <SFML/Network.hpp>
 
 /*
@@ -39,17 +41,6 @@ class Combate{
         // Ronda actual
         int numeroRonda;
 
-        // Indica si el jugador actual es el líder del combate
-        bool lider;
-
-        // Permite comunicarse con el otro ordenador
-        //sf::TcpSocket socket;
-        sf::UdpSocket socket;
-        std::optional<sf::IpAddress> direccionIP;
-
-        // Permite aceptar conexiones en caso de que seamos el líder
-        //sf::TcpListener listener;
-
         // Cartel que aparece al principio de la ronda en el que pone "¿Todo listo?"
         std::shared_ptr<Animacion> cartelTodoListo;
 
@@ -61,6 +52,9 @@ class Combate{
 
         // Cartel que aparece al terminar una ronda en el que pone "¡Gana el jugador 2!"
         std::shared_ptr<Animacion> cartelGanaJugador2;
+
+        // Conector para jugar online (puede que sí puede que no)
+        std::optional<ConectorOnline> conector;
 
     private:
         // Devuelve todo a la normalidad para la siguiente ronda (excepto el contador

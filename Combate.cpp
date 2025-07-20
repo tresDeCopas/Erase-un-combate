@@ -17,7 +17,6 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
                                                                                                                                                      escenario(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/escenarios/" + nombreEscenario + "/fondo.png"),
                                                                                                                                                                ContenedorDeTexturas::unicaInstancia()->obtener("sprites/escenarios/" + nombreEscenario + "/frente.png"),
                                                                                                                                                                ContenedorDeTexturas::unicaInstancia()->obtener("sprites/escenarios/" + nombreEscenario + "/suelo.png")),
-                                                                                                                                                     lider(lider), direccionIP(direccionIP),
                                                                                                                                                      cartelTodoListo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-todo-listo")),
                                                                                                                                                      cartelAPelear(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-a-pelear"))
 {
@@ -27,42 +26,8 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
     rectanguloOscuro.setOutlineThickness(0);
     rectanguloOscuro.setFillColor(sf::Color::Black);
 
-    /*if(lider){
-        if(listener.listen(NUMERO_PUERTO) != sf::Socket::Status::Done){
-            // TODO: por cada exit hacer que se ponga algo en la bitácora
-            exit(1);
-        }
-
-        if(listener.accept(socket) != sf::Socket::Status::Done){
-            exit(1);
-        }
-    } else if (direccionIP != sf::IpAddress(0,0,0,0)){
-        if(socket.connect(direccionIP,NUMERO_PUERTO) != sf::Socket::Status::Done){
-            exit(1);
-        }
-    }*/
-
-    if (direccionIP != sf::IpAddress(0, 0, 0, 0))
-    {
-        if (socket.bind(NUMERO_PUERTO) != sf::Socket::Status::Done)
-            exit(1);
-
-        if (lider)
-        {
-            std::cout << "Recibiendo mensaje...\n";
-
-            sf::Packet paquete;
-            unsigned short puerto = NUMERO_PUERTO;
-            socket.receive(paquete, this->direccionIP, puerto);
-        }
-        else
-        {
-            std::cout << "Enviando mensaje...\n";
-
-            sf::Packet paquete;
-            unsigned short puerto = NUMERO_PUERTO;
-            socket.send(paquete, direccionIP, puerto);
-        }
+    if(direccionIP != sf::IpAddress(0,0,0,0)){
+        conector.emplace(direccionIP,lider);
     }
 
     personajeJugador1.setPosicion(VENTANA_ANCHURA / 3, ALTURA_SUELO);
@@ -210,10 +175,9 @@ void Combate::recibirEntradaOnline()
 
     sf::RenderWindow *ventana = VentanaPrincipal::unicaInstancia();
 
-    // Estas son máscaras de bits donde se ponen las acciones que hacemos o dejamos
-    // de hacer. Será lo que se le mande al otro jugador por la red
-    uint8_t accionesRealizadas = 0;
-    uint8_t accionesDetenidas = 0;
+    // Aquí se ponen las acciones que se hacen o se dejan de hacer
+    std::unordered_set<Accion> accionesRealizadas;
+    std::unordered_set<Accion> accionesDetenidas;
 
     while (const std::optional evento = ventana->pollEvent())
     {
@@ -227,116 +191,46 @@ void Combate::recibirEntradaOnline()
             std::pair<Jugador, Accion> par = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
 
             // No merece la pena prestarle atención: se han usado las teclas del otro jugador
-            if ((par.first == Jugador::JUGADOR1 && !lider) || (par.first == Jugador::JUGADOR2 && lider))
+            if ((par.first == Jugador::JUGADOR1 && !conector->isLider()) || (par.first == Jugador::JUGADOR2 && conector->isLider()))
             {
                 continue;
             }
-
-            Personaje &personajeElegido = par.first == Jugador::JUGADOR1 ? personajeJugador1 : personajeJugador2;
 
             if ((dynamic_cast<AnimacionAgrandable *>(cartelAPelear.get()))->haTerminadoDeAgrandarse())
             {
                 if (evento->is<sf::Event::KeyPressed>() || evento->is<sf::Event::JoystickButtonPressed>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) > UMBRAL_JOYSTICK))
                 {
-                    personajeElegido.realizarAccion(par.second);
-                    accionesRealizadas |= util::accionABit(par.second);
+                    accionesRealizadas.insert(par.second);
                 }
                 else if (evento->is<sf::Event::KeyReleased>() || evento->is<sf::Event::JoystickButtonReleased>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK))
                 {
-                    personajeElegido.detenerAccion(par.second);
-                    accionesDetenidas |= util::accionABit(par.second);
+                    accionesDetenidas.insert(par.second);
                 }
             }
         }
     }
 
-    // Se crea un paquete con las acciones realizadas y las acciones detenidas
-    sf::Packet paqueteEnviado;
-    paqueteEnviado << accionesRealizadas << accionesDetenidas;
+    // Ahora que sabemos lo que ha hecho el jugador local, lo tenemos que mandar por los interneses
+    // para que el otro lo sepa también, y tenemos que saber qué ha hecho el otro para poder estar
+    // sincronizados y que todo vaya bien
+    AccionesOnline accionesOnline(conector->enviarRecibirAcciones(accionesRealizadas,accionesDetenidas));
 
-    // Se crea un paquete para recibir datos
-    sf::Packet paqueteRecibido;
+    Personaje &personajeLocal = conector->isLider() ? personajeJugador2 : personajeJugador1;
+    Personaje &personajeRemoto = conector->isLider() ? personajeJugador1 : personajeJugador2;
 
-    unsigned short puerto = NUMERO_PUERTO;
+    // Ahora se comprueban las acciones que debería realizar cada personaje
 
-    if (lider)
-    {
-        // El lider es el que envía primero
-        while (socket.send(paqueteEnviado, direccionIP.value(), puerto) != sf::Socket::Status::Done)
-            ;
-        if (socket.receive(paqueteRecibido, direccionIP, puerto) != sf::Socket::Status::Done)
-        {
-            exit(1);
-        }
-    }
-    else
-    {
-        // El invitado envía después
-        if (socket.receive(paqueteRecibido, direccionIP, puerto) != sf::Socket::Status::Done)
-        {
-            exit(1);
-        }
-        while (socket.send(paqueteEnviado, direccionIP.value(), puerto) != sf::Socket::Status::Done)
-            ;
-    }
+    for(const Accion &a : accionesOnline.accionesRealizadasLocal)
+        personajeLocal.realizarAccion(a);
+    
+    for(const Accion &a : accionesOnline.accionesDetenidasLocal)
+        personajeLocal.detenerAccion(a);
 
-    paqueteRecibido >> accionesRealizadas >> accionesDetenidas;
-
-    Personaje &personajeElegido = lider ? personajeJugador2 : personajeJugador1;
-
-    // Ahora se comprueba qué venía en el paquete
-
-    // Acciones realizadas
-    if (accionesRealizadas & BIT_ARRIBA)
-    {
-        personajeElegido.realizarAccion(Accion::ARRIBA);
-    }
-
-    if (accionesRealizadas & BIT_ABAJO)
-    {
-        personajeElegido.realizarAccion(Accion::ABAJO);
-    }
-
-    if (accionesRealizadas & BIT_IZQUIERDA)
-    {
-        personajeElegido.realizarAccion(Accion::IZQUIERDA);
-    }
-
-    if (accionesRealizadas & BIT_DERECHA)
-    {
-        personajeElegido.realizarAccion(Accion::DERECHA);
-    }
-
-    if (accionesRealizadas & BIT_ATAQUE)
-    {
-        personajeElegido.realizarAccion(Accion::ATACAR);
-    }
-
-    // Acciones detenidas
-    if (accionesDetenidas & BIT_ARRIBA)
-    {
-        personajeElegido.detenerAccion(Accion::ARRIBA);
-    }
-
-    if (accionesDetenidas & BIT_ABAJO)
-    {
-        personajeElegido.detenerAccion(Accion::ABAJO);
-    }
-
-    if (accionesDetenidas & BIT_IZQUIERDA)
-    {
-        personajeElegido.detenerAccion(Accion::IZQUIERDA);
-    }
-
-    if (accionesDetenidas & BIT_DERECHA)
-    {
-        personajeElegido.detenerAccion(Accion::DERECHA);
-    }
-
-    if (accionesDetenidas & BIT_ATAQUE)
-    {
-        personajeElegido.detenerAccion(Accion::ATACAR);
-    }
+    for(const Accion &a : accionesOnline.accionesRealizadasRemoto)
+        personajeRemoto.realizarAccion(a);
+    
+    for(const Accion &a : accionesOnline.accionesDetenidasRemoto)
+        personajeRemoto.detenerAccion(a);
 }
 
 void Combate::actualizarPersonajesEfectosGuisEscenarioVentana(std::list<std::shared_ptr<Animacion>> &efectos, std::list<std::shared_ptr<Animacion>> &nuevosEfectos)
@@ -407,7 +301,7 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
         cartelAPelear->actualizar(efectos);
     }
 
-    if (socket.getLocalPort() != 0)
+    if (conector.has_value())
         recibirEntradaOnline();
     else
         recibirEntradaOffline();

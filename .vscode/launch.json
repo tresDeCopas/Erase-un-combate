@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/angel/OneDrive - UNIVERSIDAD DE MURCIA/Mis programas/Érase un combate",
-      "program": "c:/Users/angel/OneDrive - UNIVERSIDAD DE MURCIA/Mis programas/Érase un combate/build/Debug/outDebug",
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/EraseUnCombate.exe",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
