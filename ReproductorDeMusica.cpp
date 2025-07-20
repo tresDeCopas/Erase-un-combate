@@ -92,5 +92,6 @@ bool ReproductorDeMusica::estaReproduciendo()
 
 void ReproductorDeMusica::setVolumen(float nuevoVolumen)
 {
-    musicaActual.setVolume(nuevoVolumen > VOLUMEN_MAXIMO_MUSICA ? VOLUMEN_MAXIMO_MUSICA : nuevoVolumen < 0 ? 0 : nuevoVolumen);
+    volumenActual = (nuevoVolumen > VOLUMEN_MAXIMO_MUSICA ? VOLUMEN_MAXIMO_MUSICA : nuevoVolumen < 0 ? 0 : nuevoVolumen);
+    musicaActual.setVolume(volumenActual);
 }

@@ -51,8 +51,8 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
     // En esta variable se guarda el número de rectángulos de la animación actual
     int numeroRectangulos;
 
-    // En esta variable se guarda el sonido que se reproducirá en cada animación
-    sf::Sound sonido;
+    // En esta variable se guarda la ruta del sonido que se reproducirá en cada animación
+    std::string rutaSonido;
 
     // Abrimos cada fichero del directorio
     for(const auto & entrada : std::filesystem::directory_iterator("ficheros/efectos")){
@@ -153,12 +153,14 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
             // Nos saltamos dos líneas, y ahora puede haber información sobre los sonidos o no
             std::getline(fichero,linea);
             std::getline(fichero,linea);
+            
+            bool repetirSonido = false;
 
             if(util::separarString(linea,':')[0] == "Sonido"){
 
-                bool repetirSonido = util::separarString(linea,':')[1] == "repetir";
+                repetirSonido = util::separarString(linea,':')[1] == "repetir";
 
-                sonido.setBuffer(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener("sonidos/efectos/"+nombreEfecto+".wav"));
+                rutaSonido = "sonidos/efectos/"+nombreEfecto+".wav";
 
                 // Avanzamos de línea para conseguir la lista de frames
                 std::getline(fichero,linea);
@@ -168,20 +170,14 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
                 for(std::string s : util::separarString(linea,',')){
                     framesConSonido.insert(std::stoi(s));
                 }
-
-                sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
-
-                anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
-                                                util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,std::set<int>(),std::map<int,sf::Vector2f>(),
-                                                std::map<int,IndicacionesSobreAnimacion>(),sonido,repetirSonido));
-
-            } else {
-                sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
-
-                anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
-                                                util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,std::set<int>(),std::map<int,sf::Vector2f>(),
-                                                std::map<int,IndicacionesSobreAnimacion>(),sf::Sound(),false));
             }
+
+            sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
+
+            anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
+                                            util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,std::set<int>(),std::map<int,sf::Vector2f>(),
+                                            std::map<int,IndicacionesSobreAnimacion>(),rutaSonido,repetirSonido));
+            
 
         } else {
             
@@ -220,7 +216,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
             sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
 
             // Esto es feísimo y tendría que mirármelo (usar)
-            anim = std::shared_ptr<Animacion>(new AnimacionConGravedad(textura,sf::Vector2f(0,0),sf::Vector2f(0,0),0));
+            anim = std::shared_ptr<Animacion>(new AnimacionConGravedad(textura,sf::Vector2f(0,0),sf::Vector2f(0,0),0,rutaSonido));
             if(hitboxValida) ((AnimacionConGravedad*)anim.get())->setHitbox(hitbox);
 
         }

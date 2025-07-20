@@ -17,8 +17,8 @@ class Animacion : public sf::Drawable {
         // Sprite para la animación
         sf::Sprite sprite;
 
-        // Sonido para la animación
-        sf::Sound sonido;
+        // Ruta del sonido
+        std::string rutaSonido;
 
     public:
 

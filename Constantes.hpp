@@ -75,11 +75,14 @@ const double UMBRAL_JOYSTICK = 50;
 const sf::Keyboard::Key TECLA_SALIDA = sf::Keyboard::Key::Escape;
 
 /*
-    CONSTANTES PARA EL SONIDO
+    CONSTANTES PARA EL SONIDO Y LA MÚSICA
 */
 
 // Volumen máximo del reproductor de música
-const float VOLUMEN_MAXIMO_MUSICA = 100.0;
+const double VOLUMEN_MAXIMO_MUSICA = 100.0f;
+
+// Volumen máximo del reproductor de efectos de sonido
+const double VOLUMEN_MAXIMO_SONIDOS = 100.0f;
 
 /*
     CONSTANTES PARA LOS FICHEROS
