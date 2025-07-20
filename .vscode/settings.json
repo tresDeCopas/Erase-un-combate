@@ -117,7 +117,8 @@
     "text_encoding": "cpp",
     "typeinfo": "cpp",
     "variant": "cpp",
-    "*.tpp": "cpp"
+    "*.tpp": "cpp",
+    "set": "cpp"
   },
   "makefile.launchConfigurations": [
     {

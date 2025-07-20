@@ -57,8 +57,10 @@ void Combate::comenzar(){
 
         // SEGUNDO PASO: ACTUALIZAR PERSONAJES Y EFECTOS
 
-        personajeJugador1.actualizar(personajeJugador2.getPosicion());
-        personajeJugador2.actualizar(personajeJugador1.getPosicion());
+        std::list<std::shared_ptr<Animacion>> nuevosEfectos;
+
+        personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
+        personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectos);
 
         for(auto iter = efectos.begin(); iter != efectos.end();){
             if((*iter)->haTerminado()){
@@ -72,8 +74,6 @@ void Combate::comenzar(){
         VentanaPrincipal::actualizar();
 
         // TERCER PASO: COMPROBAR COLISIONES.
-
-        std::list<std::shared_ptr<Animacion>> nuevosEfectos;
 
         efectos.push_back(personajeJugador2.getAnimaciones()[personajeJugador2.getEstado()]);
 

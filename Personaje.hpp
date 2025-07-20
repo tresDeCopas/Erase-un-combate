@@ -35,20 +35,23 @@ class Personaje : public sf::Drawable {
         // Estado en el que se encuentra el personaje
         EstadoPersonaje estado;
 
-        // Animaci�n del personaje seg�n el estado
+        // Animación del personaje según el estado
         std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones;
 
-        // Indica qu� acciones est�n siendo realizadas
+        // Indica qué acciones están siendo realizadas
         std::map<Accion,bool> accionesRealizadas;
 
-        // Funci�n auxiliar para moverse un poco a la derecha
+        // Función auxiliar para moverse un poco a la derecha
         void moverseDerecha();
 
-        // Funci�n auxiliar para moverse un poco a la izquierda
+        // Función auxiliar para moverse un poco a la izquierda
         void moverseIzquierda();
 
-        // Funci�n auxiliar para disminuir la velocidad un poco hacia 0
+        // Función auxiliar para disminuir la velocidad un poco hacia 0
         void pararMovimiento();
+
+        // Función auxiliar para mostrar dos nubes de polvo a los pies del personaje
+        void levantarPolvo(std::list<std::shared_ptr<Animacion>> &efectosInsertados);
 
     public:
 
@@ -62,7 +65,7 @@ class Personaje : public sf::Drawable {
         void detenerAccion(Accion accion);
 
         // Actualiza la posici�n del personaje y dem�s seg�n los botones que est�n pulsados
-        virtual void actualizar(sf::Vector2f posicionEnemigo);
+        virtual void actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_ptr<Animacion>> &efectosInsertados);
 
         // Comprueba si la hitbox del personaje ha colisionado con alg�n ataque enemigo y
         // reacciona de forma adecuada

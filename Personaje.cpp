@@ -99,7 +99,22 @@ void Personaje::pararMovimiento(){
        (!positivo && velX > 0)) velX = 0;
 }
 
-void Personaje::actualizar(sf::Vector2f posicionEnemigo){
+void Personaje::levantarPolvo(std::list<std::shared_ptr<Animacion>> &efectosInsertados){
+    std::shared_ptr<Animacion> polvo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("polvo"));
+
+    std::shared_ptr<Animacion> polvoVolteado(polvo->clonar());
+
+    polvoVolteado->voltear();
+
+    polvoVolteado->setPosicion(this->getPosicion().x-OFFSET_POLVO, this->getPosicion().y);
+
+    polvo->setPosicion(this->getPosicion().x+OFFSET_POLVO, this->getPosicion().y);
+
+    efectosInsertados.push_back(polvoVolteado);
+    efectosInsertados.push_back(polvo);
+}
+
+void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_ptr<Animacion>> &efectosInsertados){
 
     // Según el estado, se hace una cosa u otra
     switch(estado){
@@ -111,6 +126,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         {
             velY = VELOCIDAD_SALTO;
             accionesRealizadas[Accion::ARRIBA] = false;
+            levantarPolvo(efectosInsertados);
             cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
         }
         else if (accionesRealizadas[Accion::ABAJO])
@@ -153,6 +169,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         } else if(accionesRealizadas[Accion::ARRIBA]){
             velY = VELOCIDAD_SALTO;
             accionesRealizadas[Accion::ARRIBA] = false;
+            levantarPolvo(efectosInsertados);
             cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
         } else if(accionesRealizadas[Accion::DERECHA]){
             moverseDerecha();
@@ -177,6 +194,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         } else if(accionesRealizadas[Accion::ARRIBA]){
             velY = VELOCIDAD_SALTO;
             accionesRealizadas[Accion::ARRIBA] = false;
+            levantarPolvo(efectosInsertados);
             cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
         } else if(accionesRealizadas[Accion::DERECHA]){
             moverseDerecha();
@@ -214,6 +232,8 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         if(animaciones[estado]->getPosicion().y > ALTURA_SUELO){
             animaciones[estado]->setPosicion(animaciones[estado]->getPosicion().x,ALTURA_SUELO);
             velY = 0;
+            levantarPolvo(efectosInsertados);
+
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
         break;
