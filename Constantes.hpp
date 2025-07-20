@@ -15,7 +15,7 @@
 */
 
 // Indica si se quiere activar el modo debug (mostrar hitboxes en pantalla y acta vecinal en la consola)
-const bool DEBUG = true;
+const bool DEBUG = false;
 
 // Color para las hitboxes que hacen daño
 const sf::Color HITBOX_ATAQUE_COLOR = sf::Color::Red;

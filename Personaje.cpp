@@ -119,11 +119,13 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     // Según el estado, se hace una cosa u otra
     switch(estado){
     case EstadoPersonaje::TOCANDO_SUELO:
+        pararMovimiento();
         if(animaciones[estado]->haTerminado())
             cambiarEstado(EstadoPersonaje::QUIETO);
         
         // No se pone break porque el estado TOCANDO_SUELO es como si fuera el estado QUIETO
         // pero con un poco más de paripé para hacerlo más realista todo
+        break;
 
     case EstadoPersonaje::QUIETO:
 
@@ -223,6 +225,12 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     case EstadoPersonaje::SALTANDO_SUBIENDO:
         velY+=GRAVEDAD;
 
+        if(accionesRealizadas[Accion::ATACAR]) {
+            detenerAccion(Accion::ATACAR);
+            cambiarEstado(EstadoPersonaje::ATAQUE_AEREO);
+            break;
+        }
+        
         if(accionesRealizadas[Accion::DERECHA]) moverseDerecha();
         else if (accionesRealizadas[Accion::IZQUIERDA]) moverseIzquierda();
 
@@ -231,6 +239,27 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
 
     case EstadoPersonaje::SALTANDO_BAJANDO:
+        velY+=GRAVEDAD;
+
+        if(accionesRealizadas[Accion::ATACAR]) {
+            detenerAccion(Accion::ATACAR);
+            cambiarEstado(EstadoPersonaje::ATAQUE_AEREO);
+            break;
+        }
+
+        if(accionesRealizadas[Accion::DERECHA]) moverseDerecha();
+        else if (accionesRealizadas[Accion::IZQUIERDA]) moverseIzquierda();
+
+        if(animaciones[estado]->getPosicion().y > ALTURA_SUELO){
+            animaciones[estado]->setPosicion(animaciones[estado]->getPosicion().x,ALTURA_SUELO);
+            velY = 0;
+            levantarPolvo(efectosInsertados);
+
+            cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
+        }
+        break;
+    
+    case EstadoPersonaje::ATAQUE_AEREO:
         velY+=GRAVEDAD;
 
         if(accionesRealizadas[Accion::DERECHA]) moverseDerecha();
@@ -242,6 +271,11 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             levantarPolvo(efectosInsertados);
 
             cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
+        } else if (animaciones[estado]->haTerminado()){
+            if(velY < 0)
+                cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
+            else
+                cambiarEstado(EstadoPersonaje::SALTANDO_BAJANDO);
         }
         break;
 
@@ -416,6 +450,7 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
         case EstadoPersonaje::ATAQUE_NORMAL_3:
         case EstadoPersonaje::AGACHADO:
         case EstadoPersonaje::ATAQUE_AGACHADO:
+        case EstadoPersonaje::TOCANDO_SUELO:
 
             if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
                 velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
