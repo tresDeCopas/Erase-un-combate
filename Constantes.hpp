@@ -67,8 +67,9 @@ const int NUMERO_CONTROLES = 10;
 
 // El movimiento mínimo que se tiene que hacer con un joystick para considerar la
 // entrada válida (esto evita que con mover el joystick 0.00001 milimetros ya está
-// moviéndose el personaje)
-const double UMBRAL_JOYSTICK = 0.3;
+// moviéndose el personaje). Hay que tener en cuenta que el máximo al que puede llegar
+// un joystick sin drift ni defectos es 100
+const double UMBRAL_JOYSTICK = 50;
 
 // Tecla para salir del juego
 const sf::Keyboard::Key TECLA_SALIDA = sf::Keyboard::Key::Escape;

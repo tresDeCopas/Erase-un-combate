@@ -34,6 +34,12 @@ class VentanaPrincipal {
         // Disminuye el zoom en 100% con respecto al zoom actual (de 300% a 200%, luego 100% y ya no baja más)
         static void disminuirZoom();
 
+        // Establece el zoom actual en el indicado (debe ser 1 o mayor)
+        static void setZoom(int zoom);
+
+        // Devuelve un número del 1 al n representando el aumento con respecto al tamaño inicial
+        static int getZoom();
+
         // Dada una potencia de vibración, la pantalla se pone a vibrar hacia arriba y hacia abajo
         static void vibrar(int potenciaVibracion);
 

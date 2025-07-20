@@ -174,7 +174,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
                 repetirSonido = util::separarString(linea,':')[1] == "repetir";
 
-                sonido.setBuffer(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener("sonidos/"+nombrePersonaje+"/"+nombreEstado+".wav"));
+                sonido.setBuffer(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener("sonidos/personajes/"+nombrePersonaje+"/"+nombreEstado+".wav"));
 
                 // Avanzamos de línea para conseguir la lista de frames
                 std::getline(fichero,linea);

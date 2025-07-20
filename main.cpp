@@ -1,9 +1,6 @@
 #include "Combate.hpp"
-#include "ContenedorDeRecursos.hpp"
 #include "ContenedorDePersonajes.hpp"
 #include "ContenedorDeEfectos.hpp"
-#include <SFML/Graphics.hpp>
-#include <iostream>
 
 int main(){
 

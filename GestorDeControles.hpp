@@ -13,30 +13,34 @@
 */
 class GestorDeControles
 {
-    protected:
+    private:
+        // El constructor es privado porque la clase es Singleton
         GestorDeControles();
+
+        // La única instancia
         static GestorDeControles * gestorDeControles;
 
-    private:
-
-        // Mapa que guarda, para cada control, el jugador al que est� asignado
+        // Mapa que guarda, para cada control, el jugador al que está asignado
         std::map<Control, Jugador> controlAJugador;
 
-        // Mapa que guarda, para cada tecla v�lida (excepto la tecla de salir), la parte del teclado y la acci�n asociada
+        // Mapa que guarda, para cada tecla v�lida (excepto la tecla de salir), la parte del teclado y la acción asociada
         std::map<sf::Keyboard::Key,std::pair<Control,Accion>> teclaAControlYAccion;
 
-        // Funci�n que indica si un control est� libre
+        // Mapa que guarda, para cada jugador, otro mapa que indica qué acciones
+        // está realizando con el joystick, para evitar mandar 819791837 eventos por mover
+        // un joystick ligeramente un poco más hacia el lado cada vez
+        std::map<Jugador,std::map<Accion,bool>> jugadorRealizandoAccionJoystick;
+
+        // Función que indica si un control está libre
         bool estaLibre(Control c);
+
+        // Permite establecer un mando para que lo use un jugador
+        bool conectarMando(Jugador j, Control c);
 
     public:
 
         // Dado un evento, devuelve el jugador y la acci�n que est� haciendo
         std::pair<Jugador,Accion> comprobarEvento(sf::Event evento);
-
-        // Permite establecer un mando para que lo use un jugador
-        // TODO ES UN PORCULO QUE TENGA QUE DECIRTE QUÉ CONTROL USAR DESDE FUERA,
-        // MEJOR TE DOY EL EVENTO Y YA LO DESMENUZAS TU CON TIEMPO QUE SABES MÁS DEL TEMA
-        bool conectarMando(Jugador j, Control c);
 
         // NUNCA SE COPIA UN SINGLETON
         GestorDeControles(GestorDeControles &otro) = delete;

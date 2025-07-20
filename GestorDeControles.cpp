@@ -1,5 +1,7 @@
 #include "GestorDeControles.hpp"
 #include "Constantes.hpp"
+#include "SelectorJugadorParaMando.hpp"
+#include <iostream>
 
 // La instancia es nula al principio
 GestorDeControles * GestorDeControles::gestorDeControles = nullptr;
@@ -26,6 +28,17 @@ GestorDeControles::GestorDeControles()
     teclaAControlYAccion[sf::Keyboard::J] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::IZQUIERDA);
     teclaAControlYAccion[sf::Keyboard::L] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::DERECHA);
     teclaAControlYAccion[sf::Keyboard::Space] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ATACAR);
+
+    // En un principio ningún jugador está moviendo el joystick porque ninguno usa mando
+    // (y aunque lo usaran, en un principio nadie debería estar haciendo nada)
+    jugadorRealizandoAccionJoystick[Jugador::JUGADOR1][Accion::ABAJO] = false;
+    jugadorRealizandoAccionJoystick[Jugador::JUGADOR1][Accion::IZQUIERDA] = false;
+    jugadorRealizandoAccionJoystick[Jugador::JUGADOR1][Accion::DERECHA] = false;
+    jugadorRealizandoAccionJoystick[Jugador::JUGADOR1][Accion::ARRIBA] = false;
+    jugadorRealizandoAccionJoystick[Jugador::JUGADOR2][Accion::ABAJO] = false;
+    jugadorRealizandoAccionJoystick[Jugador::JUGADOR2][Accion::IZQUIERDA] = false;
+    jugadorRealizandoAccionJoystick[Jugador::JUGADOR2][Accion::DERECHA] = false;
+    jugadorRealizandoAccionJoystick[Jugador::JUGADOR2][Accion::ARRIBA] = false;
 
     // Al principio los controles no están asociados a nadie
     for(int i=0;i<NUMERO_CONTROLES;i++){
@@ -74,14 +87,30 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
         // por lo que el control 3 es el mando 0 y así sucesivamente
         Control control = static_cast<Control>(evento.joystickButton.joystickId+2);
 
-        // Si el control es de alguien, se actualiza el par
         pair.first = controlAJugador[control];
-        if(pair.first != Jugador::NADIE)
+        if(pair.first != Jugador::NADIE){
+            // Si el control es de alguien, se actualiza el par
             pair.second = Accion::ATACAR;
+        } else {
+            // Si el control no está asignado a un jugador, se comprueba si ninguno tiene mando
+            Jugador jugadorTecladoIzq = controlAJugador[Control::TECLADO_IZQUIERDA];
+            Jugador jugadorTecladoDer = controlAJugador[Control::TECLADO_DERECHA];
+
+            if(jugadorTecladoIzq != Jugador::NADIE && jugadorTecladoDer == Jugador::NADIE){
+                // Si uno tiene mando pero el otro no, se asigna al otro
+                conectarMando(jugadorTecladoIzq,control);
+            } else if(jugadorTecladoIzq == Jugador::NADIE && jugadorTecladoDer != Jugador::NADIE){
+                // Si uno tiene mando pero el otro no, se asigna al otro
+                conectarMando(jugadorTecladoDer,control);
+            } else if(jugadorTecladoIzq != Jugador::NADIE && jugadorTecladoDer != Jugador::NADIE){
+                // Si ninguno tiene mando, se pregunta para quién es el mando
+                Jugador jugadorConMando = SelectorJugadorParaMando::unicaInstancia()->decidirJugador(control);
+                conectarMando(jugadorConMando,control);
+            } 
+        }
 
     } else if (evento.type == sf::Event::JoystickMoved){
         // Alguien ha movido un joystick
-
         Control control = static_cast<Control>(evento.joystickMove.joystickId+2);
 
         // Se saca el jugador correspondiente al mando. Si hay jugador,
@@ -95,10 +124,22 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
                 case sf::Joystick::Axis::PovX:
                 case sf::Joystick::Axis::X:
                 case sf::Joystick::Axis::R:
-                    if(evento.joystickMove.position > UMBRAL_JOYSTICK)
+
+                    if(evento.joystickMove.position > UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA]){
                         pair.second = Accion::DERECHA;
-                    else if(evento.joystickMove.position < -UMBRAL_JOYSTICK)
+                        jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA] = true;
+                    } else if(evento.joystickMove.position < -UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::IZQUIERDA]){
                         pair.second = Accion::IZQUIERDA;
+                        jugadorRealizandoAccionJoystick[pair.first][Accion::IZQUIERDA] = true;
+                    } else if (std::abs(evento.joystickMove.position) < UMBRAL_JOYSTICK){
+                        if(jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA]){
+                            pair.second = Accion::DERECHA;
+                            jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA] = false;
+                        } else if(jugadorRealizandoAccionJoystick[pair.first][Accion::IZQUIERDA]){
+                            pair.second = Accion::IZQUIERDA;
+                            jugadorRealizandoAccionJoystick[pair.first][Accion::IZQUIERDA] = false;
+                        }
+                    }
                     break;
 
                 // PovY, Y y U son los ejes Y de tres posibles entradas
@@ -106,10 +147,21 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
                 case sf::Joystick::Axis::PovY:
                 case sf::Joystick::Axis::Y:
                 case sf::Joystick::Axis::U:
-                    if(evento.joystickMove.position > UMBRAL_JOYSTICK)
-                        pair.second = Accion::ARRIBA;
-                    else if(evento.joystickMove.position < -UMBRAL_JOYSTICK)
+                    if(evento.joystickMove.position < -UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO]){
                         pair.second = Accion::ABAJO;
+                        jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO] = true;
+                    } else if(evento.joystickMove.position >UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::ARRIBA]){
+                        pair.second = Accion::ARRIBA;
+                        jugadorRealizandoAccionJoystick[pair.first][Accion::ARRIBA] = true;
+                    } else if (std::abs(evento.joystickMove.position) < UMBRAL_JOYSTICK){
+                        if(jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO]){
+                            pair.second = Accion::ABAJO;
+                            jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO] = false;
+                        } else if(jugadorRealizandoAccionJoystick[pair.first][Accion::ARRIBA]){
+                            pair.second = Accion::ARRIBA;
+                            jugadorRealizandoAccionJoystick[pair.first][Accion::ARRIBA] = false;
+                        }
+                    }
                     break;
                 default:
                     break;
