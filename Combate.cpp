@@ -29,7 +29,7 @@ void Combate::comenzar(){
     sf::Clock reloj;
 
     while(true){
-
+        
         if(reloj.getElapsedTime().asSeconds() < 1.0/VENTANA_FPS){
             continue;
         } else {

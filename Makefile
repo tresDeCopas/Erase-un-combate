@@ -1,8 +1,8 @@
 EraseUnCombate:
 ifeq ($(OS),Windows_NT)
-	g++ -Wall -pipe -O0 *.cpp -g -o EraseUnCombate.exe -I C:\SFML-2.6.1\include -L C:\SFML-2.6.1\lib -lsfml-system -lsfml-graphics -lsfml-window -lsfml-audio
+	g++ -Wall -pipe -O3 *.cpp -g -o EraseUnCombate.exe -I C:\SFML-2.6.1\include -L C:\SFML-2.6.1\lib -lsfml-system -lsfml-graphics -lsfml-window -lsfml-audio
 else
-	g++ -Wall -pipe -O0 *.cpp -g -o EraseUnCombate.out -lsfml-system -lsfml-graphics -lsfml-window -lsfml-audio
+	g++ -Wall -pipe -O3 *.cpp -g -o EraseUnCombate.out -lsfml-system -lsfml-graphics -lsfml-window -lsfml-audio
 endif
 
 run:

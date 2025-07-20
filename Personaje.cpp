@@ -11,6 +11,7 @@ Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animac
     puntosDeVida = MAX_PUNTOS_DE_VIDA;
     velY = 0;
     velX = 0;
+    contadorTumbado = 0;
     this->animaciones = animaciones;
     estado = EstadoPersonaje::QUIETO;
     mirandoDerecha = true;
@@ -339,6 +340,92 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         }
 
         break;
+    
+    case EstadoPersonaje::GOLPEADO_SUBIENDO:
+        velY+=GRAVEDAD;
+
+        if(velY > 0)
+            cambiarEstado(EstadoPersonaje::GOLPEADO_BAJANDO);
+        break;
+    
+    case EstadoPersonaje::GOLPEADO_BAJANDO:
+        velY+=GRAVEDAD;
+
+        if(animaciones[estado]->getPosicion().y > ALTURA_SUELO){
+            animaciones[estado]->setPosicion(animaciones[estado]->getPosicion().x,ALTURA_SUELO);
+            levantarPolvo(efectosInsertados);
+            velX *= 0.5;
+
+            if(velY < VELOCIDAD_PASAR_A_TIRADO){
+                velY = 0;
+
+                cambiarEstado(EstadoPersonaje::TUMBADO);
+            } else {
+                velY *= -0.5;
+
+                cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+            }
+        }
+        break;
+
+    case EstadoPersonaje::TUMBADO:
+        {
+            velX *= 0.9;
+            
+            // El contador siempre sube para que la gente no se quede tirada
+            contadorTumbado++;
+
+            // Se pone a true si el jugador se ha movido en este frame para
+            // levantarse antes
+            bool movido = false;
+
+            // También se puede subir pulsando botones
+            if(accionesRealizadas[Accion::ABAJO]){
+                contadorTumbado++;
+                accionesRealizadas[Accion::ABAJO] = false;
+                movido = true;
+            }
+
+            if(accionesRealizadas[Accion::ARRIBA]){
+                contadorTumbado++;
+                accionesRealizadas[Accion::ARRIBA] = false;
+                movido = true;
+            }
+
+            if(accionesRealizadas[Accion::IZQUIERDA]){
+                contadorTumbado++;
+                accionesRealizadas[Accion::IZQUIERDA] = false;
+                movido = true;
+            }
+
+            if(accionesRealizadas[Accion::DERECHA]){
+                contadorTumbado++;
+                accionesRealizadas[Accion::DERECHA] = false;
+                movido = true;
+            }
+
+            if(accionesRealizadas[Accion::ATACAR]){
+                contadorTumbado++;
+                accionesRealizadas[Accion::ATACAR] = false;
+                movido = true;
+            }
+
+            if(contadorTumbado >= MAX_CONTADOR_TUMBADO){
+                contadorTumbado = 0;
+                cambiarEstado(EstadoPersonaje::LEVANTANDOSE);
+            } else if (movido){
+                velX+=((rand()%2 ? -0.5 : 0.5) * util::realAleatorio());
+            }
+        }
+        break;
+    
+    case EstadoPersonaje::LEVANTANDOSE:
+        pararMovimiento();
+        
+        if(animaciones[estado]->haTerminado())
+            cambiarEstado(EstadoPersonaje::QUIETO);
+
+        break;
 
     case EstadoPersonaje::BLOQUEANDO:
         pararMovimiento();
@@ -347,8 +434,8 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         } else if(animaciones[estado]->haTerminado()){
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
-
         break;
+
     case EstadoPersonaje::AGACHADO:
         pararMovimiento();
 
@@ -367,8 +454,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             cambiarEstado(EstadoPersonaje::AGACHADO);
         }
         break;
-
-        break;
     }
 
     // Se comprueba si el enemigo está a la derecha o a la izquierda y se voltea el
@@ -381,10 +466,11 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         case EstadoPersonaje::ATAQUE_AEREO:
         case EstadoPersonaje::ATAQUE_AGACHADO:
         case EstadoPersonaje::ATAQUE_SUPER:
-        case EstadoPersonaje::GOLPEADO_BAJO:
+        case EstadoPersonaje::GOLPEADO_BAJANDO:
+        case EstadoPersonaje::GOLPEADO_SUBIENDO:
+        case EstadoPersonaje::TUMBADO:
         case EstadoPersonaje::GOLPEADO_PEQUE:
         case EstadoPersonaje::GOLPEADO_MEDIO:
-        case EstadoPersonaje::GOLPEADO_GRANDE:
         case EstadoPersonaje::BLOQUEANDO:
             break;
         
@@ -407,10 +493,12 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     // Si el personaje se sale por la derecha, no dejar que pase
     if(animaciones[estado]->getPosicion().x > VENTANA_ANCHURA-1){
         animaciones[estado]->setPosicion(VENTANA_ANCHURA-1,animaciones[estado]->getPosicion().y);
-        velX = 0;
+        if(estado == EstadoPersonaje::GOLPEADO_BAJANDO || estado == EstadoPersonaje::GOLPEADO_SUBIENDO || estado == EstadoPersonaje::TUMBADO) velX *= -1;
+        else velX = 0;
     } else if (animaciones[estado]->getPosicion().x < 0){
         animaciones[estado]->setPosicion(0,animaciones[estado]->getPosicion().y);
-        velX = 0;
+        if(estado == EstadoPersonaje::GOLPEADO_BAJANDO || estado == EstadoPersonaje::GOLPEADO_SUBIENDO || estado == EstadoPersonaje::TUMBADO) velX *= -1;
+        else velX = 0;
     }
 }
 
@@ -479,7 +567,13 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
                 cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
             } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
                 velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
-                cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+                if(hitboxElegidaEnemigo.esAtaqueBajo()){
+                    velX/=2;
+                    velY = IMPULSO_GOLPE_BAJO_MEDIO;
+                    cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+                } else {
+                    cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+                }
             }
             break;
         
@@ -495,7 +589,9 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
                     cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
                 } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
                     velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
-                    cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+                    velX/=2;
+                    velY = IMPULSO_GOLPE_BAJO_MEDIO;
+                    cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
                 }
             } else {
                 if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){

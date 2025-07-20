@@ -47,10 +47,10 @@ namespace util{
             return EstadoPersonaje::GOLPEADO_PEQUE;
         if(string == "golpeado-medio")
             return EstadoPersonaje::GOLPEADO_MEDIO;
-        if(string == "golpeado-grande")
-            return EstadoPersonaje::GOLPEADO_GRANDE;
-        if(string == "golpeado-bajo")
-            return EstadoPersonaje::GOLPEADO_BAJO;
+        if(string == "golpeado-subiendo")
+            return EstadoPersonaje::GOLPEADO_SUBIENDO;
+        if(string == "golpeado-bajando")
+            return EstadoPersonaje::GOLPEADO_BAJANDO;
         if(string == "saltando-subiendo")
             return EstadoPersonaje::SALTANDO_SUBIENDO;
         if(string == "saltando-bajando")
@@ -67,6 +67,8 @@ namespace util{
             return EstadoPersonaje::PREPARANDO_SUPER;
         if(string == "atacando-super")
             return EstadoPersonaje::ATAQUE_SUPER;
+        if(string == "tumbado")
+            return EstadoPersonaje::TUMBADO;
         if(string == "levantandose")
             return EstadoPersonaje::LEVANTANDOSE;
         if(string == "celebrando")
