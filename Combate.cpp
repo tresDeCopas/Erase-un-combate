@@ -223,21 +223,25 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
     std::list<std::shared_ptr<Animacion>> efectosA(efectos);
     std::list<std::shared_ptr<Animacion>> efectosB(efectos);
 
-    // Se mete la hitbox del otro jugador para cada lista auxiliar de efectos
-    efectosA.push_back(personajeJugador2.getAnimacionSegunEstado(personajeJugador2.getEstado()));
-    efectosB.push_back(personajeJugador1.getAnimacionSegunEstado(personajeJugador1.getEstado()));
+    // Se mete la hitbox del otro jugador para cada lista auxiliar de efectos. Esto es un poco follón pero de esta forma me
+    // aseguro que se puedan comprobar las colisiones en paralelo sin que haya problemas. Se crea una copia de la animación actual
+    // de cada jugador (empiezo a pensar que paralelizar esto va a ser más porculero que hacerlo secuencial)
+
+    efectosA.push_back(personajeJugador2.getAnimacionSegunEstado(personajeJugador2.getEstado())->clonar());
+    efectosB.push_back(personajeJugador1.getAnimacionSegunEstado(personajeJugador1.getEstado())->clonar());
 
     #pragma omp parallel num_threads(2)
     {
-        #pragma omp sections
+        #pragma omp single
         {
-            #pragma omp section
+            #pragma omp task
             personajeJugador1.comprobarColisiones(efectosA,nuevosEfectosA);
     
-            #pragma omp section
+            #pragma omp task
             personajeJugador2.comprobarColisiones(efectosB,nuevosEfectosB);
         }
     }
+        
 
     // Se añaden los efectos del jugador 2 a los del jugador 1 y así tenemos solo una lista
     for(std::shared_ptr<Animacion>& anim : nuevosEfectosB){
