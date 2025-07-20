@@ -24,9 +24,16 @@ class Escenario {
         // (por ejemplo, farolas o árboles)
         sf::Sprite spriteFrente;
 
+        // Textura para el suelo
+        sf::Texture& texturaSuelo;
+
+        // Suelo hecho especialmente para que se vaya torciendo con el movimiento. Está formado por cuatro
+        // vértices de los cuales los dos de abajo se van moviento más de la cuenta para conseguir el efecto
+        sf::VertexArray suelo;
+
     public:
         // Construye un escenario utilizando la textura del fondo y la textura del frente
-        Escenario(sf::Texture& texturaFondo, sf::Texture& texturaFrente);
+        Escenario(sf::Texture& texturaFondo, sf::Texture& texturaFrente, sf::Texture& texturaSuelo);
 
         // Actualiza el escenario según la posición de los personajes (también puede actualizar
         // la posición de los personajes y los efectos para que se muevan con el fondo)
