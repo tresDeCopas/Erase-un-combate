@@ -14,8 +14,8 @@
     CONSTANTES PARA EL DEBUG
 */
 
-// Indica si se quieren mostrar las hitboxes
-const bool HITBOX_MOSTRAR = true;
+// Indica si se quiere activar el modo debug (mostrar hitboxes en pantalla y acta vecinal en la consola)
+const bool DEBUG = false;
 
 // Color para las hitboxes que hacen daño
 const sf::Color HITBOX_ATAQUE_COLOR = sf::Color::Red;
@@ -36,8 +36,8 @@ const int MAXIMA_LONGITUD_TEXTURA = 1024;
 */
 
 // Anchura y altura de la ventana principal
-const int VENTANA_ANCHURA = 300;
-const int VENTANA_ALTURA = 200;
+const int VENTANA_ANCHURA = 400;
+const int VENTANA_ALTURA = 300;
 
 // FPS máximos de la ventana principal
 const int VENTANA_FPS = 60;
@@ -71,26 +71,36 @@ const sf::Keyboard::Key TECLA_SALIDA = sf::Keyboard::Key::Escape;
 const float VOLUMEN_MAXIMO_MUSICA = 100.0;
 
 /*
+    CONSTANTES PARA LOS FICHEROS
+*/
+
+// Secuencia de caracteres que delimita los distintos elementos de un fichero
+const std::string SECUENCIA_DELIMITADORA_FICHERO = "----";
+
+// Secuencia de caracteres que indica el fin de un fichero
+const std::string SECUENCIA_FIN_FICHERO = "####";
+
+/*
     CONSTANTES PARA LOS PERSONAJES
 */
 
 // Gravedad del escenario
-const float GRAVEDAD = 0.4;
+const float GRAVEDAD = 0.3;
 
 // Puntos de vida máximos de un personaje
 const int MAX_PUNTOS_DE_VIDA = 100;
 
 // Velocidad máxima en el eje X a la que se puede mover un personaje
-const float VELOCIDAD_ANDAR_MAX = 3;
+const float VELOCIDAD_ANDAR_MAX = 2.5;
 
 // Aumento de velocidad cada frame al andar
-const float VELOCIDAD_ANDAR_AUMENTO = 0.5;
+const float VELOCIDAD_ANDAR_AUMENTO = 0.3;
 
 // Velocidad que se consigue en el eje Y al saltar
-const float VELOCIDAD_SALTO = -3;
+const float VELOCIDAD_SALTO = -7;
 
 // Posición en el eje Y del suelo
-const float ALTURA_SUELO = 180;
+const float ALTURA_SUELO = VENTANA_ALTURA-20;
 
 /*
     CONSTANTES AUXILIARES PARA COSAS DE C++

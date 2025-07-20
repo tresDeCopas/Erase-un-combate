@@ -1,30 +1,106 @@
-Personaje: Juan Cuesta
+Personaje:juan-cuesta
 
-Estado: QUIETO
-Fichero: sprites/juancuesta/quieto.png
-Bucle: NORMAL
+Estado:quieto
+Bucle:normal
+
+Rectangulo:0
+Hitboxes:
+51,29,27,71,0
 
 Rectangulo:1
 Hitboxes:
-51,29,0
+51,30,27,70,0
 
 Rectangulo:2
 Hitboxes:
-51,29,0
+51,30,27,70,0
 
 Rectangulo:3
 Hitboxes:
-51,29,0
-
-Rectangulo:4
-Hitboxes:
-51,29,0
+51,29,27,71,0
 
 Frames:
-1,1,2,2,3,3,4,4
+0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3
 
-Bucle: NORMAL
+Estado:andando-acercandose
+Bucle:normal
 
-Estado: 
+Rectangulo:0
+Hitboxes:
+51,29,28,71,0
+
+Rectangulo:1
+Hitboxes:
+51,27,28,73,0
+
+Rectangulo:2
+Hitboxes:
+51,29,28,71,0
+
+Rectangulo:3
+Hitboxes:
+51,27,28,73,0
+
+Frames:
+0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3
+
+Estado:andando-alejandose
+Bucle:al-reves
+
+Rectangulo:0
+Hitboxes:
+51,27,28,73,0
+
+Rectangulo:1
+Hitboxes:
+51,29,28,71,0
+
+Rectangulo:2
+Hitboxes:
+51,27,28,73,0
+
+Rectangulo:3
+Hitboxes:
+51,29,28,71,0
+
+Frames:
+0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3
+
+Estado:saltando-subiendo
+Bucle:normal
+
+Rectangulo:0
+Hitboxes:
+51,26,27,74,0
+
+Rectangulo:1
+Hitboxes:
+51,26,27,74,0
+
+Rectangulo:2
+Hitboxes:
+51,26,27,74,0
+
+Frames:
+0,0,0,0,0,1,1,1,1,1,2,2,2,2,2
+
+Estado:saltando-bajando
+Bucle:normal
+
+Rectangulo:0
+Hitboxes:
+51,25,27,75,0
+
+Rectangulo:1
+Hitboxes:
+51,25,27,75,0
+
+Rectangulo:2
+Hitboxes:
+51,25,27,75,0
+
+Frames:
+0,0,0,0,0,1,1,1,1,1,2,2,2,2,2
+
 ----
 ####

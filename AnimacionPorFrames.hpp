@@ -34,7 +34,7 @@ class AnimacionPorFrames : public Animacion {
         std::map<int,int> rectanguloCorrespondiente;
 
         // Número de frame actual
-        int frameActual;
+        unsigned int frameActual;
 
     public:
 
@@ -52,6 +52,9 @@ class AnimacionPorFrames : public Animacion {
 
         // Resetea la animación al primer frame y el primer rectángulo
         virtual void resetear();
+
+        // Devuelve un clon de la animación
+        virtual Animacion * clonar();
 
         // Las clases que heredan de sf::Drawable deben implementar draw
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

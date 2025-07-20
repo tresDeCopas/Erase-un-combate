@@ -18,18 +18,6 @@ enum class TipoBucle {
     PING_PONG       // Cuando termina la animación, empieza desde el final hasta el principio y al revés
 };
 
-// Tipo de hitbox
-enum class TipoHitbox {
-    INVALIDA,       // Para animaciones sin hitbox (nubes de polvo, partículas que saltan...)
-    PERSONAJE,      // Hitbox para un personaje
-    ATAQUE          // Hitbox para un ataque
-};
-
-// Tipo de ataque
-enum class TipoAtaque {
-    PEQUE, MEDIO, GRANDE, BAJO, AEREO
-};
-
 // Enumerado para estados en los que se puede encontrar un personaje
 enum class EstadoPersonaje {
     QUIETO,             // No hace nada, solo está quieto en el sitio
@@ -70,24 +58,5 @@ enum class Control{
     ENUMERADOS DE IDENTIFICADORES
 */
 
-// Enumerado para los identificadores de texturas
-enum class IDTextura {
-
-};
-
-// Enumerado para los identificadores de sonidos
-enum class IDSonido {
-
-};
-
-// Enumerado para los identificadores de fuentes
-enum class IDFuente {
-
-};
-
-// Enumerado para los identificadores de canciones
-enum class IDMusica {
-
-};
 
 #endif // __ENUMS_HPP__

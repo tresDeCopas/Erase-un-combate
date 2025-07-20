@@ -69,6 +69,7 @@
 		<Unit filename="Personaje.hpp" />
 		<Unit filename="ReproductorDeMusica.cpp" />
 		<Unit filename="ReproductorDeMusica.hpp" />
+		<Unit filename="Utilidades.hpp" />
 		<Unit filename="VentanaPrincipal.cpp" />
 		<Unit filename="VentanaPrincipal.hpp" />
 		<Unit filename="main.cpp" />

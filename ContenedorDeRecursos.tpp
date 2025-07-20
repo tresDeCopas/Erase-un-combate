@@ -71,7 +71,11 @@ ContenedorDeFuentes * ContenedorDeRecursos<Recurso,Identificador>::unicaInstanci
 template <class Recurso, class Identificador>
 void ContenedorDeRecursos<Recurso,Identificador>::cargarTodasLasTexturas()
 {
-    //load(TextureID::GabrielaTextbox,"sprites/textbox/gabrielaTextbox.png");
+    cargar("sprites/juan-cuesta/quieto.png","sprites/juan-cuesta/quieto.png");
+    cargar("sprites/juan-cuesta/andando-acercandose.png","sprites/juan-cuesta/andando-acercandose.png");
+    cargar("sprites/juan-cuesta/andando-alejandose.png","sprites/juan-cuesta/andando-alejandose.png");
+    cargar("sprites/juan-cuesta/saltando-subiendo.png","sprites/juan-cuesta/saltando-subiendo.png");
+    cargar("sprites/juan-cuesta/saltando-bajando.png","sprites/juan-cuesta/saltando-bajando.png");
 }
 
 template <class Recurso, class Identificador>

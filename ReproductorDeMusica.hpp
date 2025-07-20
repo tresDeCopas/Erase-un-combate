@@ -21,16 +21,13 @@ class ReproductorDeMusica
         static ReproductorDeMusica * reproductorDeMusica;
 
         sf::Music musicaActual;
-        std::map<IDMusica, std::string> rutasDeFicheros;
+        std::map<std::string, std::string> rutasDeFicheros;
         float volumenActual;
 
     public:
 
-        // Guarda la ruta indicada en el mapa de rutas para acceder después
-        void cargar(IDMusica identificador, const std::string ruta);
-
         // Reproduce la canción dado su identificador
-        void reproducir(IDMusica cancion);
+        void reproducir(std::string cancion);
 
         // Detiene por completo la reproducción de la canción
         void detener();
@@ -40,9 +37,6 @@ class ReproductorDeMusica
 
         // Establece el nuevo volumen para la canción actual y las siguientes
         void establecerVolumen(float nuevoVolumen);
-
-        // Carga todas las canciones
-        void cargarTodaLaMusica();
 
         // NUNCA SE COPIA UN SINGLETON
         ReproductorDeMusica(ReproductorDeMusica &otro) = delete;

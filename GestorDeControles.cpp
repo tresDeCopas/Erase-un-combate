@@ -21,8 +21,8 @@ GestorDeControles::GestorDeControles()
     teclaAControlYAccion[sf::Keyboard::LShift] = std::pair<Control,Accion>(Control::TECLADO_IZQUIERDA,Accion::ATACAR);
 
     // Teclas, controles y acciones para la parte izquierda del teclado
-    teclaAControlYAccion[sf::Keyboard::I] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ABAJO);
-    teclaAControlYAccion[sf::Keyboard::K] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ARRIBA);
+    teclaAControlYAccion[sf::Keyboard::K] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ABAJO);
+    teclaAControlYAccion[sf::Keyboard::I] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ARRIBA);
     teclaAControlYAccion[sf::Keyboard::J] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::IZQUIERDA);
     teclaAControlYAccion[sf::Keyboard::L] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::DERECHA);
     teclaAControlYAccion[sf::Keyboard::Space] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ATACAR);
@@ -67,7 +67,7 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
     // Este es el par que va a ser devuelto (empieza vacío)
     std::pair<Jugador,Accion> pair(Jugador::NADIE,Accion::NADA);
 
-    if(evento.type == sf::Event::JoystickButtonPressed){
+    if(evento.type == sf::Event::JoystickButtonPressed || evento.type == sf::Event::JoystickButtonReleased){
         // Alguien ha pulsado un botón de mando (el botón da igual, todos
         // hacen lo mismo). Se le suma 2 al numerito del control porque los dos
         // primeros controles son la parte izquierda del teclado y la parte derecha,
@@ -115,7 +115,7 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
                     break;
             }
         }
-    } else if (evento.type == sf::Event::KeyPressed){
+    } else if (evento.type == sf::Event::KeyPressed || evento.type == sf::Event::KeyReleased){
         // Alguien ha pulsado una tecla
 
         // Si es la tecla de salida tiene solución fácil
