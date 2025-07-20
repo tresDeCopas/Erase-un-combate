@@ -1,7 +1,9 @@
 #ifndef __ENUMS_HPP__
 #define __ENUMS_HPP__
 
-// Este fichero contiene enumerados (enums)
+/*
+    Este fichero contiene enumerados (enums)
+*/
 
 // Enumerado para acciones que se pueden llevar a cabo al pulsar teclas
 enum class Accion {
@@ -12,16 +14,15 @@ enum class Accion {
 enum class TipoBucle {
     SIN_BUCLE,      // No hay bucle, cuando la animación termina se deja de actualizar
     NORMAL,         // Cuando termina la animación, vuelve a empezar desde el principio
+    AL_REVES,       // Como el normal, pero desde el final hasta el principio
     PING_PONG       // Cuando termina la animación, empieza desde el final hasta el principio y al revés
 };
 
 // Tipo de hitbox
 enum class TipoHitbox {
     INVALIDA,       // Para animaciones sin hitbox (nubes de polvo, partículas que saltan...)
-    PERSONAJE1,     // Hitbox para el propio personaje 1
-    ATAQUE1,        // Hitbox para un ataque realizado por el personaje 1
-    PERSONAJE2,     // Hitbox para el propio personaje 2
-    ATAQUE2         // Hitbox para un ataque realizado por el personaje 2
+    PERSONAJE,      // Hitbox para un personaje
+    ATAQUE          // Hitbox para un ataque
 };
 
 // Tipo de ataque
@@ -38,9 +39,10 @@ enum class EstadoPersonaje {
     ATAQUE_NORMAL_2,    // Está atacando de pie (segundo ataque)
     ATAQUE_NORMAL_3,    // Está atacando de pie (tercer ataque)
     ATAQUE_AEREO,       // Está atacando en el aire
-    GOLPEADO_PEQUE,   // Ha sufrido un ataque pequeño
+    GOLPEADO_PEQUE,     // Ha sufrido un ataque pequeño
     GOLPEADO_MEDIO,     // Ha sufrido un ataque medio
-    GOLPEADO_GRANDE,     // Ha sufrido un ataque grande
+    GOLPEADO_GRANDE,    // Ha sufrido un ataque grande
+    GOLPEADO_BAJO,      // Ha sufrido un ataque bajo
     SALTANDO,           // Está en el aire después de saltar
     ANDANDO_IZQUIERDA,  // Está andando hacia la izquierda
     ANDANDO_DERECHA,    // Está andando hacia la derecha
@@ -61,6 +63,20 @@ enum class Control{
     TECLADO_IZQUIERDA, TECLADO_DERECHA,
     MANDO0, MANDO1, MANDO2, MANDO3,
     MANDO4, MANDO5, MANDO6, MANDO7
+};
+
+/*
+    ENUMERADOS DE IDENTIFICADORES
+*/
+
+// Enumerado para los identificadores de personajes
+enum class IDPersonaje {
+    JUAN_CUESTA
+};
+
+// Enumerado para los identificadores de escenarios
+enum class IDEscenario {
+
 };
 
 // Enumerado para los identificadores de texturas
