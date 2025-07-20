@@ -17,17 +17,14 @@ class ContenedorDePersonajes
 
         static ContenedorDePersonajes * contenedorDePersonajes;
 
-        std::map<IDPersonaje, Personaje*> personajes;
+        std::map<std::string, Personaje> personajes;
 
     public:
 
-        // Carga un personaje de un fichero dado
-        void cargar(IDPersonaje identificador, const std::string ruta);
+        // Devuelve una copia del personaje pedido
+        Personaje obtenerPersonaje(std::string nombre);
 
-        // Devuelve un puntero a una copia del personaje pedido
-        Personaje * obtenerPersonaje(IDPersonaje);
-
-        // Carga todos los personajes
+        // Carga todos los personajes, sacados del mismo fichero
         void cargarTodosLosPersonajes();
 
         // NUNCA SE COPIA UN SINGLETON

@@ -15,10 +15,10 @@ class Combate{
     private:
 
         // Personaje asignado al jugador 1
-        Personaje * personajeJugador1;
+        Personaje personajeJugador1;
 
         // Personaje asignado al jugador 2
-        Personaje * personajeJugador2;
+        Personaje personajeJugador2;
 
         // Escenario para el combate
         //Escenario escenario;
@@ -28,12 +28,9 @@ class Combate{
 
     public:
 
-        // Construye el combate en base a los identificadores de los personajes
-        // y al escenario en el que se va a pelear
-        Combate(IDPersonaje idPersonajeJ1, IDPersonaje idPersonajeJ2, IDEscenario idEscenario);
-
-        // Libera los personajes
-        ~Combate();
+        // Construye el combate en base a los nombres de los personajes
+        // y del escenario en el que se va a pelear
+        Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, std::string nombreEscenario);
 
         // Comienza el combate (la clase pasa a tomar el control de
         // la ventana principal hasta que termine el combate)

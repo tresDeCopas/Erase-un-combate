@@ -1,0 +1,30 @@
+Personaje: Juan Cuesta
+
+Estado: QUIETO
+Fichero: sprites/juancuesta/quieto.png
+Bucle: NORMAL
+
+Rectangulo:1
+Hitboxes:
+51,29,0
+
+Rectangulo:2
+Hitboxes:
+51,29,0
+
+Rectangulo:3
+Hitboxes:
+51,29,0
+
+Rectangulo:4
+Hitboxes:
+51,29,0
+
+Frames:
+1,1,2,2,3,3,4,4
+
+Bucle: NORMAL
+
+Estado: 
+----
+####
