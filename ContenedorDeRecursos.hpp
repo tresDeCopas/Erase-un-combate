@@ -9,8 +9,8 @@
 
 /*
     El Contenedor de Recursos es una clase que se encarga de guardar recursos. En vez
-    de tenerlos por ahí desperdigados, se tienen en esta clase guardados y centralizados
-    para que no se pierdan. Como es una clase genérica se puede usar para texturas,
+    de tenerlos por ahÃ­ desperdigados, se tienen en esta clase guardados y centralizados
+    para que no se pierdan. Como es una clase genÃ©rica se puede usar para texturas,
     sonidos y fuentes.
 */
 
@@ -46,29 +46,24 @@ class ContenedorDeRecursos
         // Devuelve un recurso dado su identificador
         Recurso& obtener(Identificador id);
 
-        // Carga todos los recursos (depende del tipo específico)
-        void cargarTodasLasTexturas();
-        void cargarTodosLosSonidos();
-        void cargarTodasLasFuentes();
-
         // NUNCA SE CLONA UN SINGLETON
         ContenedorDeRecursos(ContenedorDeRecursos &otro) = delete;
 
         // NUNCA SE ASIGNA UN SINGLETON
         void operator=(const ContenedorDeRecursos &) = delete;
 
-        // Métodos Singleton para obtener la única instancia
+        // MÃ©todos Singleton para obtener la Ãºnica instancia
         static ContenedorDeTexturas * unicaInstanciaTexturas();
         static ContenedorDeSonidos * unicaInstanciaSonidos();
         static ContenedorDeFuentes * unicaInstanciaFuentes();
 
 };
 
-// Al usar templates no se puede incluir ContenedorDeRecursos.hpp en un hipotético fichero
-// ContenedorDeRecursos.cpp, así que no queda otra, tenemos que hacerlo al revés. También hay
-// que cambiar la extensión del .cpp a cualquier otra cosa (por ejemplo, .tpp) para que no se
+// Al usar templates no se puede incluir ContenedorDeRecursos.hpp en un hipotÃ©tico fichero
+// ContenedorDeRecursos.cpp, asÃ­ que no queda otra, tenemos que hacerlo al revÃ©s. TambiÃ©n hay
+// que cambiar la extensiÃ³n del .cpp a cualquier otra cosa (por ejemplo, .tpp) para que no se
 // compile, ya que lo normal es que los .cpp contengan la cabecera encima, pero como este es
-// al revés pues no se compila y se deja aquí debajo que está muy bien puesto
+// al revÃ©s pues no se compila y se deja aquÃ­ debajo que estÃ¡ muy bien puesto
 
 #include "ContenedorDeRecursos.tpp"
 

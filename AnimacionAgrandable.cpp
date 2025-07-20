@@ -3,11 +3,10 @@
 #include "ReproductorDeSonidos.hpp"
 
 AnimacionAgrandable::AnimacionAgrandable(int framesEspera, sf::Texture& textura, std::string rutaSonido) : 
-    escalaActual(0), seEstaAgrandando(true), framesEspera(framesEspera), contadorEspera(0) {
+    Animacion(textura), escalaActual(0), seEstaAgrandando(true), framesEspera(framesEspera), contadorEspera(0) {
     
-    sprite.setTexture(textura);
-    sprite.setOrigin(sprite.getTextureRect().width / 2, sprite.getTextureRect().height / 2);
-    sprite.setScale(0,0);
+    sprite.setOrigin({(float)sprite.getTextureRect().size.x / 2, (float)sprite.getTextureRect().size.y / 2});
+    sprite.setScale({0.f,0.f});
 
     this->rutaSonido = rutaSonido;
 
@@ -33,7 +32,7 @@ void AnimacionAgrandable::actualizar(std::list<std::shared_ptr<Animacion>> &nuev
             escalaActual = 1.0;
             seEstaAgrandando = false;
         }
-        sprite.setScale(escalaActual,escalaActual);
+        sprite.setScale({escalaActual,escalaActual});
 
     }
     
@@ -49,12 +48,12 @@ void AnimacionAgrandable::actualizar(std::list<std::shared_ptr<Animacion>> &nuev
     else {
         escalaActual-=TASA_CRECIMIENTO_ANIMACION_AGRANDABLE;
         if(escalaActual < 0.0) escalaActual = 0.0;
-        sprite.setScale(escalaActual,escalaActual);
+        sprite.setScale({escalaActual,escalaActual});
     }
 }
 
 void AnimacionAgrandable::resetear(){
-    sprite.setScale(0,0);
+    sprite.setScale({0.f,0.f});
     escalaActual = 0;
     seEstaAgrandando = true;
     contadorEspera = 0;
@@ -64,7 +63,7 @@ void AnimacionAgrandable::voltear(){
     // El sprite se escala de forma que el eje X esté invertido. Esto no
     // significa que la escala sea 1 (eso sería con setScale()), sino que
     // la escala actual de multiplica por lo que se indica
-    sprite.scale(-1,1);
+    sprite.scale({-1,1});
 }
 
 std::list<Hitbox> AnimacionAgrandable::getHitboxes(){

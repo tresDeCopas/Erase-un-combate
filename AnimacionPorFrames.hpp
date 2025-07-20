@@ -7,6 +7,7 @@
 #include "IndicacionesSobreAnimacion.hpp"
 #include <SFML/Graphics.hpp>
 #include <list>
+#include <set>
 #include <map>
 
 /*
@@ -60,7 +61,7 @@ private:
 public:
 
     // Constructor de la hostia que podría ser más corto pero nose
-    AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente, std::set<int> framesConSonido, std::map<int,sf::Vector2f> framesConMovimiento, std::map<int,IndicacionesSobreAnimacion> framesConAnimaciones, std::string rutaSonido, bool repetirSonido);
+    AnimacionPorFrames(float posicionX, float posicionY, float origenX, float origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente, std::set<int> framesConSonido, std::map<int,sf::Vector2f> framesConMovimiento, std::map<int,IndicacionesSobreAnimacion> framesConAnimaciones, std::string rutaSonido, bool repetirSonido);
 
     // Actualiza la animación (avanza un frame), reproduciendo el sonido si es necesario. En nuevasAnimaciones
     // se insertan las nuevas animaciones que serán introducidas. Puede que se deba mover la animación, por lo que se 

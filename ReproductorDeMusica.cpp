@@ -48,7 +48,7 @@ void ReproductorDeMusica::reproducir(std::string cancion, bool bucle)
         exit(EXIT_FAILURE);
     }
 
-    musicaActual.setLoop(bucle);
+    musicaActual.setLooping(bucle);
     musicaActual.setVolume(volumenActual);
     musicaActual.play();
 }

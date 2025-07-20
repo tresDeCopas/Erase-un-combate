@@ -22,6 +22,10 @@ class Animacion : public sf::Drawable {
 
     public:
 
+        // Constructor para inicializar el sprite o si no el sfml se queja porque no existe constructor por
+        // defecto para sf::Sprite
+        Animacion(sf::Texture &textura);
+
         // Actualiza la animación (avanza un frame), reproduciendo el sonido si es necesario. En nuevasAnimaciones
         // se insertan las nuevas animaciones que serán introducidas
         virtual void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones) = 0;

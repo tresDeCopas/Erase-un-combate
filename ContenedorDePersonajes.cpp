@@ -109,7 +109,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                     }
 
                     // Se crea la hitbox en base a muchas cosas
-                    Hitbox h(sf::IntRect(enteros[0],enteros[1],enteros[2],enteros[3]),enteros[4],nombreEstado == "ataque-agachado" && enteros[4] > 0);
+                    Hitbox h(sf::IntRect({enteros[0],enteros[1]},{enteros[2],enteros[3]}),enteros[4],nombreEstado == "ataque-agachado" && enteros[4] > 0);
 
                     listaHitboxes.push_back(h);
 

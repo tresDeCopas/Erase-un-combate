@@ -17,10 +17,6 @@ class SelectorJugadorParaMando {
         // La única instancia
         static SelectorJugadorParaMando * selectorJugadorParaMando;
 
-        // Sprite y textura del fondo (será una captura de pantalla de lo que había antes)
-        sf::Texture texturaFondo;
-        sf::Sprite spriteFondo;
-
         // Imagen que aparece cuando seleccionas la opción del jugador 1
         sf::Sprite spriteJugador1;
 

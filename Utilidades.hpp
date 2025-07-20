@@ -25,7 +25,8 @@ namespace util{
     EstadoPersonaje stringAEstadoPersonaje(std::string string);
 
     // Dados dos rectángulos, calcula el centro del subrectángulo que resulta de la intersección
-    // de ambos rectángulos
+    // de ambos rectángulos (en SFML 3 está la función findIntersection que te encuentra el rectángulo
+    // de la intersección pero ya que hice esto pues lo voy a seguir utilizando porque le he cogido cariño)
     sf::Vector2f centroDeInterseccion(sf::IntRect r1, sf::IntRect r2);
 
     // Devuelve un número real en el rango [0,1)

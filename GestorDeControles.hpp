@@ -24,7 +24,7 @@ class GestorDeControles
         std::map<Control, Jugador> controlAJugador;
 
         // Mapa que guarda, para cada tecla válida (excepto la tecla de salir), la parte del teclado y la acción asociada
-        std::map<sf::Keyboard::Key,std::pair<Control,Accion>> teclaAControlYAccion;
+        std::map<sf::Keyboard::Scancode,std::pair<Control,Accion>> teclaAControlYAccion;
 
         // Mapa que guarda, para cada jugador, otro mapa que indica qué acciones
         // está realizando con el joystick, para evitar mandar 819791837 eventos por mover
@@ -40,7 +40,7 @@ class GestorDeControles
     public:
 
         // Dado un evento, devuelve el jugador y la acción que está haciendo
-        std::pair<Jugador,Accion> comprobarEvento(sf::Event evento);
+        std::pair<Jugador,Accion> comprobarEvento(std::optional<sf::Event> evento);
 
         // NUNCA SE COPIA UN SINGLETON
         GestorDeControles(GestorDeControles &otro) = delete;

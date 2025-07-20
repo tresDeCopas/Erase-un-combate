@@ -16,18 +16,18 @@ GestorDeControles * GestorDeControles::unicaInstancia()
 GestorDeControles::GestorDeControles()
 {
     // Teclas, controles y acciones para la parte izquierda del teclado
-    teclaAControlYAccion[sf::Keyboard::S] = std::pair<Control,Accion>(Control::TECLADO_IZQUIERDA,Accion::ABAJO);
-    teclaAControlYAccion[sf::Keyboard::W] = std::pair<Control,Accion>(Control::TECLADO_IZQUIERDA,Accion::ARRIBA);
-    teclaAControlYAccion[sf::Keyboard::A] = std::pair<Control,Accion>(Control::TECLADO_IZQUIERDA,Accion::IZQUIERDA);
-    teclaAControlYAccion[sf::Keyboard::D] = std::pair<Control,Accion>(Control::TECLADO_IZQUIERDA,Accion::DERECHA);
-    teclaAControlYAccion[sf::Keyboard::LShift] = std::pair<Control,Accion>(Control::TECLADO_IZQUIERDA,Accion::ATACAR);
+    teclaAControlYAccion[sf::Keyboard::Scancode::S] = std::pair<Control,Accion>(Control::TECLADO_IZQUIERDA,Accion::ABAJO);
+    teclaAControlYAccion[sf::Keyboard::Scancode::W] = std::pair<Control,Accion>(Control::TECLADO_IZQUIERDA,Accion::ARRIBA);
+    teclaAControlYAccion[sf::Keyboard::Scancode::A] = std::pair<Control,Accion>(Control::TECLADO_IZQUIERDA,Accion::IZQUIERDA);
+    teclaAControlYAccion[sf::Keyboard::Scancode::D] = std::pair<Control,Accion>(Control::TECLADO_IZQUIERDA,Accion::DERECHA);
+    teclaAControlYAccion[sf::Keyboard::Scancode::LShift] = std::pair<Control,Accion>(Control::TECLADO_IZQUIERDA,Accion::ATACAR);
 
     // Teclas, controles y acciones para la parte izquierda del teclado
-    teclaAControlYAccion[sf::Keyboard::K] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ABAJO);
-    teclaAControlYAccion[sf::Keyboard::I] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ARRIBA);
-    teclaAControlYAccion[sf::Keyboard::J] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::IZQUIERDA);
-    teclaAControlYAccion[sf::Keyboard::L] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::DERECHA);
-    teclaAControlYAccion[sf::Keyboard::Space] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ATACAR);
+    teclaAControlYAccion[sf::Keyboard::Scancode::K] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ABAJO);
+    teclaAControlYAccion[sf::Keyboard::Scancode::I] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ARRIBA);
+    teclaAControlYAccion[sf::Keyboard::Scancode::J] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::IZQUIERDA);
+    teclaAControlYAccion[sf::Keyboard::Scancode::L] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::DERECHA);
+    teclaAControlYAccion[sf::Keyboard::Scancode::Space] = std::pair<Control,Accion>(Control::TECLADO_DERECHA,Accion::ATACAR);
 
     // En un principio ningún jugador está moviendo el joystick porque ninguno usa mando
     // (y aunque lo usaran, en un principio nadie debería estar haciendo nada)
@@ -75,17 +75,24 @@ bool GestorDeControles::conectarMando(Jugador j, Control c){
     return true;
 }
 
-std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
+std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(std::optional<sf::Event> evento)
 {
     // Este es el par que va a ser devuelto (empieza vacío)
     std::pair<Jugador,Accion> pair(Jugador::NADIE,Accion::NADA);
 
-    if(evento.type == sf::Event::JoystickButtonPressed || evento.type == sf::Event::JoystickButtonReleased){
+    if(evento->is<sf::Event::JoystickButtonPressed>() || evento->is<sf::Event::JoystickButtonReleased>()){
         // Alguien ha pulsado un botón de mando (el botón da igual, todos
         // hacen lo mismo). Se le suma 2 al numerito del control porque los dos
         // primeros controles son la parte izquierda del teclado y la parte derecha,
         // por lo que el control 3 es el mando 0 y así sucesivamente
-        Control control = static_cast<Control>(evento.joystickButton.joystickId+2);
+
+        Control control;
+        if(evento->is<sf::Event::JoystickButtonPressed>()) {
+            control = static_cast<Control>(evento->getIf<sf::Event::JoystickButtonPressed>()->joystickId+2);
+        } else {
+            control = static_cast<Control>(evento->getIf<sf::Event::JoystickButtonReleased>()->joystickId+2);
+        }
+
 
         pair.first = controlAJugador[control];
         if(pair.first != Jugador::NADIE){
@@ -109,29 +116,29 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
             } 
         }
 
-    } else if (evento.type == sf::Event::JoystickMoved){
+    } else if (evento->is<sf::Event::JoystickMoved>()){
         // Alguien ha movido un joystick
-        Control control = static_cast<Control>(evento.joystickMove.joystickId+2);
+        Control control = static_cast<Control>(evento->getIf<sf::Event::JoystickMoved>()->joystickId+2);
 
         // Se saca el jugador correspondiente al mando. Si hay jugador,
         // se hacen cosas
         pair.first = controlAJugador[control];
         if(pair.first != Jugador::NADIE){
             // Dependiendo del eje, se decide hacia dónde se mueve
-            switch(evento.joystickMove.axis){
+            switch(evento->getIf<sf::Event::JoystickMoved>()->axis){
                 // PovX, X y R son los ejes X de tres posibles entradas
                 // PovX es la cruceta, X es el joystick izquierdo y R el joystick derecho
                 case sf::Joystick::Axis::PovX:
                 case sf::Joystick::Axis::X:
                 case sf::Joystick::Axis::R:
 
-                    if(evento.joystickMove.position > UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA]){
+                    if(evento->getIf<sf::Event::JoystickMoved>()->position > UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA]){
                         pair.second = Accion::DERECHA;
                         jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA] = true;
-                    } else if(evento.joystickMove.position < -UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::IZQUIERDA]){
+                    } else if(evento->getIf<sf::Event::JoystickMoved>()->position < -UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::IZQUIERDA]){
                         pair.second = Accion::IZQUIERDA;
                         jugadorRealizandoAccionJoystick[pair.first][Accion::IZQUIERDA] = true;
-                    } else if (std::abs(evento.joystickMove.position) < UMBRAL_JOYSTICK){
+                    } else if (std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK){
                         if(jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA]){
                             pair.second = Accion::DERECHA;
                             jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA] = false;
@@ -147,13 +154,13 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
                 case sf::Joystick::Axis::PovY:
                 case sf::Joystick::Axis::Y:
                 case sf::Joystick::Axis::U:
-                    if(evento.joystickMove.position < -UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO]){
+                    if(evento->getIf<sf::Event::JoystickMoved>()->position < -UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO]){
                         pair.second = Accion::ABAJO;
                         jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO] = true;
-                    } else if(evento.joystickMove.position >UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::ARRIBA]){
+                    } else if(evento->getIf<sf::Event::JoystickMoved>()->position > UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::ARRIBA]){
                         pair.second = Accion::ARRIBA;
                         jugadorRealizandoAccionJoystick[pair.first][Accion::ARRIBA] = true;
-                    } else if (std::abs(evento.joystickMove.position) < UMBRAL_JOYSTICK){
+                    } else if (std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK){
                         if(jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO]){
                             pair.second = Accion::ABAJO;
                             jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO] = false;
@@ -167,18 +174,27 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
                     break;
             }
         }
-    } else if (evento.type == sf::Event::KeyPressed || evento.type == sf::Event::KeyReleased){
+    } else if (evento->is<sf::Event::KeyPressed>() || evento->is<sf::Event::KeyReleased>()){
         // Alguien ha pulsado una tecla
 
         // Si es la tecla de salida tiene solución fácil
-        if(evento.key.code == TECLA_SALIDA)
+
+        sf::Keyboard::Scancode scancode;
+        
+        if(evento->is<sf::Event::KeyPressed>()){
+            scancode = evento->getIf<sf::Event::KeyPressed>()->scancode;
+        } else {
+            scancode = evento->getIf<sf::Event::KeyReleased>()->scancode;
+        }
+
+        if(scancode == TECLA_SALIDA)
             pair.second = Accion::ESCAPE;
         else {
             // Si es otra tecla, hay que ver si es una de las que nos interesa
-            if(teclaAControlYAccion.count(evento.key.code)){
+            if(teclaAControlYAccion.count(scancode)){
                 // Si es una tecla que tenemos registrada, se comprueba su control y su acción
-                Control c = teclaAControlYAccion[evento.key.code].first;
-                Accion a = teclaAControlYAccion[evento.key.code].second;
+                Control c = teclaAControlYAccion[scancode].first;
+                Accion a = teclaAControlYAccion[scancode].second;
 
                 // Se asigna el personaje y la acción
                 pair.first = controlAJugador[c];
