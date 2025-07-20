@@ -70,10 +70,10 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
         if(!fichero.is_open()){
             Bitacora::unicaInstancia()->escribir("Emilio: ... pero señor Juan, es para hoy.");
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: Creo... creo que he extraviado el fichero ficheros/efectos.txt...");
-            Bitacora::unicaInstancia()->escribir("Juan Cuesta: Qué follon... se suspende la junta.");
+            Bitacora::unicaInstancia()->escribir("Juan Cuesta: Qué follón... se suspende la junta.");
             exit(EXIT_FAILURE);
         } else {
-            Bitacora::unicaInstancia()->escribir("Emilio: Listo señor Juan.");
+            //Bitacora::unicaInstancia()->escribir("Emilio: Listo señor Juan.");
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: registrando efecto " + nombreEfecto + ".");
         }
 
@@ -82,7 +82,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
         // Se obtiene el tipo de animación
         tipoAnimacion = util::separarString(linea,':')[1];
 
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: animación de tipo " + tipoAnimacion + ".");
+        // Bitacora::unicaInstancia()->escribir("Juan Cuesta: animación de tipo " + tipoAnimacion + ".");
 
         std::shared_ptr<Animacion> anim;
 
@@ -102,7 +102,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
             while(util::separarString(linea,':')[0] == "Rectangulo"){
 
-                Bitacora::unicaInstancia()->escribir("Juan Cuesta: rectángulo " + std::to_string(numeroRectangulos) + ".");
+                // Bitacora::unicaInstancia()->escribir("Juan Cuesta: rectángulo " + std::to_string(numeroRectangulos) + ".");
 
                 // Lista de hitboxes para este rectángulo
                 std::list<Hitbox> listaHitboxes;
@@ -135,7 +135,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
                 numeroRectangulos++;
             }
 
-            Bitacora::unicaInstancia()->escribir("Juan Cuesta: finalmente, se apuntan los frames.");
+            // Bitacora::unicaInstancia()->escribir("Juan Cuesta: finalmente, se apuntan los frames.");
 
             // Ahora sacamos la correspondencia de frames y rectángulos
             std::getline(fichero,linea);
@@ -152,7 +152,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
                 contadorFrame++;
             }
 
-            Bitacora::unicaInstancia()->escribir("Juan Cuesta: número de frames: " + std::to_string(contadorFrame));
+            // Bitacora::unicaInstancia()->escribir("Juan Cuesta: número de frames: " + std::to_string(contadorFrame));
 
             // Nos saltamos dos líneas, y ahora puede haber información sobre los sonidos o no
             std::getline(fichero,linea);

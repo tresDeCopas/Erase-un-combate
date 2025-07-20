@@ -1,7 +1,7 @@
 #include <assert.h>
 #include "Bitacora.hpp"
 
-// Las variables est�ticas para implementar Singleton se inicializan nulas
+// Las variables estáticas para implementar Singleton se inicializan nulas
 template <class Recurso, class Identificador>
 ContenedorDeTexturas * ContenedorDeRecursos<Recurso,Identificador>::contenedorDeTexturas = nullptr;
 
@@ -13,15 +13,15 @@ ContenedorDeFuentes * ContenedorDeRecursos<Recurso,Identificador>::contenedorDeF
 
 template <class Recurso, class Identificador>
 void ContenedorDeRecursos<Recurso,Identificador>::cargar(Identificador id, const std::string& rutaFichero){
-    // Los punteros �nicos son mejores que los normales porque se borran solos cuando
+    // Los punteros únicos son mejores que los normales porque se borran solos cuando
     // se salen del scope este como le llaman (cuando se acaba la funcion o el if{} ya me entiendes)
     std::unique_ptr<Recurso> recurso(new Recurso());
 
-    // Se intenta cargar el recurso. Si no es posible, se escribe en la bit�cora y se va todo a la mi3rda
+    // Se intenta cargar el recurso. Si no es posible, se escribe en la bitácora y se va todo a la mi3rda
     if(!recurso->loadFromFile(rutaFichero)){
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Emilio, �has podido cargar el fichero " + rutaFichero + " como te ped�?");
-        Bitacora::unicaInstancia()->escribir("Emilio: Lo siento se�or Juan pero no est� por aqu�, y yo de porter�a para fuera cobro un suplemento.");
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Qu� follon... Se suspende la junta.");
+        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Emilio, ¿has podido cargar el fichero " + rutaFichero + " como te pedí?");
+        Bitacora::unicaInstancia()->escribir("Emilio: Lo siento señor Juan pero no está por aquí, y yo de portería para fuera cobro un suplemento.");
+        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Qué follon... Se suspende la junta.");
         exit(EXIT_FAILURE);
     }
 
@@ -45,7 +45,7 @@ Recurso& ContenedorDeRecursos<Recurso,Identificador>::obtener(Identificador id){
     // Una vez se tiene el elemento (es un par (Identificador,std::unique_ptr<Recurso>)), se saca
     // el recurso y se devuelve. Como el segundo elemento es un puntero, se
     // usa el asterisco para decir que vamos a devolver el propio objeto (en realidad
-    // devolvemos una referencia, el objeto real est� en memoria din�mica)
+    // devolvemos una referencia, el objeto real está en memoria dinámica)
     return *(encontrado -> second);
 }
 
