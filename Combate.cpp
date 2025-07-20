@@ -4,6 +4,7 @@
 #include "ContenedorDePersonajes.hpp"
 #include "ContenedorDeEfectos.hpp"
 #include "ReproductorDeMusica.hpp"
+#include <omp.h>
 #include <iostream>
 #include <list>
 
@@ -58,10 +59,297 @@ void Combate::resetear(){
     escenario.resetear();
 }
 
-void Combate::comenzar(){
-
-    // Sacamos la ventana principal para que el nombre no sea tan largo
+void Combate::actualizarFramePreparandoSuper(std::list<std::shared_ptr<Animacion>> &efectos){
+    
+    // Sacamos la ventana principal
     sf::RenderWindow * ventana = VentanaPrincipal::unicaInstancia();
+
+    // Se actualizan solo los personajes preparando súper
+    if(personajeJugador1.getEstado() == EstadoPersonaje::PREPARANDO_SUPER){
+        std::list<std::shared_ptr<Animacion>> nuevosEfectos;
+
+        personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
+
+        for(const std::shared_ptr<Animacion> &efecto : nuevosEfectos){
+            efectos.push_back(efecto);
+        }
+    }
+
+    if(personajeJugador2.getEstado() == EstadoPersonaje::PREPARANDO_SUPER){
+        std::list<std::shared_ptr<Animacion>> nuevosEfectos;
+
+        personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectos);
+
+        for(const std::shared_ptr<Animacion> &efecto : nuevosEfectos){
+            efectos.push_back(efecto);
+        }
+    }
+    
+    // No se actualiza el escenario para dar el efecto de que se ha parado el tiempo
+
+    VentanaPrincipal::actualizar();
+    GUIJugador1.actualizar();
+    GUIJugador2.actualizar();
+
+    ventana->clear(sf::Color(100,100,120));
+
+    // Se dibuja todo como de costumbre (menos los personajes que están preparando súper)
+    escenario.dibujarFondo(*ventana,sf::RenderStates::Default);
+
+    if(personajeJugador1.getEstado() != EstadoPersonaje::PREPARANDO_SUPER)
+        ventana->draw(personajeJugador1);
+    if(personajeJugador2.getEstado() != EstadoPersonaje::PREPARANDO_SUPER)
+        ventana->draw(personajeJugador2);
+    
+    for(std::list<std::shared_ptr<Animacion>>::iterator iter = efectos.begin(); iter != efectos.end(); iter++){
+        ventana->draw(**iter);
+    }
+
+    // Se dibuja un rectángulo oscuro encima
+    sf::RectangleShape rectanguloOscuro(sf::Vector2f(VENTANA_ANCHURA,VENTANA_ALTURA));
+    rectanguloOscuro.setPosition({0,0});
+    rectanguloOscuro.setFillColor(sf::Color(0,0,0,100));
+    ventana->draw(rectanguloOscuro);
+
+    // Se dibujan los personajes preparando súper
+    if(personajeJugador1.getEstado() == EstadoPersonaje::PREPARANDO_SUPER)
+        ventana->draw(personajeJugador1);
+    if(personajeJugador2.getEstado() == EstadoPersonaje::PREPARANDO_SUPER)
+        ventana->draw(personajeJugador2);
+
+    escenario.dibujarFrente(*ventana,sf::RenderStates::Default);
+
+    ventana->draw(GUIJugador1);
+    ventana->draw(GUIJugador2);
+
+    ventana->display();
+}
+
+void Combate::recibirEntrada(){
+
+    sf::RenderWindow * ventana = VentanaPrincipal::unicaInstancia();
+
+    while(const std::optional evento = ventana->pollEvent()){
+        if(evento->is<sf::Event::Closed>()){
+            ventana->close();
+            exit(EXIT_SUCCESS);
+        } else {
+            std::pair<Jugador,Accion> par = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
+
+            Personaje& personajeElegido = par.first == Jugador::JUGADOR1 ? personajeJugador1 : personajeJugador2;
+
+            if((dynamic_cast<AnimacionAgrandable*>(cartelAPelear.get()))->haTerminadoDeAgrandarse()){
+                if(evento->is<sf::Event::KeyPressed>() || evento->is<sf::Event::JoystickButtonPressed>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) > UMBRAL_JOYSTICK)){
+                    personajeElegido.realizarAccion(par.second);
+                } else if(evento->is<sf::Event::KeyReleased>() || evento->is<sf::Event::JoystickButtonReleased>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK)){
+                    personajeElegido.detenerAccion(par.second);
+                }
+            }
+        }
+    }
+}
+
+void Combate::actualizarPersonajesEfectosGuisEscenarioVentana(std::list<std::shared_ptr<Animacion>> &efectos, std::list<std::shared_ptr<Animacion>> &nuevosEfectos){
+    // Se preparan otra lista para meter nuevos efectos (dos listas porque se quiere paralelizar la actualización
+    // de los personajes, así que si digo de meter cosas en la misma lista se nos va a la mi3rda todo)
+    std::list<std::shared_ptr<Animacion>> nuevosEfectosAux;
+
+    // Aquí la ejecución se bifurca en dos hilos que se ejecutarán a la vez o a lo mejor no, quién sabe. El caso
+    // es que así tarda menos digo yo, ley de Amdahl ley de Moore ley de Gustaffson transistores power wall ya
+    // me entiendes
+    #pragma omp parallel num_threads(2)
+    {
+        #pragma omp sections
+        {
+            #pragma omp section
+            personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
+
+            #pragma omp section
+            personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectosAux);
+        }
+    }
+
+    // Se añaden los efectos del jugador 2 a los del jugador 1 y así tenemos solo una lista
+    for(std::shared_ptr<Animacion>& anim : nuevosEfectosAux){
+        nuevosEfectos.push_back(anim);
+    }
+
+    for(auto iter = efectos.begin(); iter != efectos.end();){
+        if((*iter)->haTerminado()){
+            iter = efectos.erase(iter);
+        } else {
+            (*iter)->actualizar(nuevosEfectos);
+            iter++;
+        }
+    }
+
+    GUIJugador1.actualizar();
+    GUIJugador2.actualizar();
+
+    escenario.actualizar(personajeJugador1,personajeJugador2,efectos);
+
+    VentanaPrincipal::actualizar();
+}
+
+void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efectos){
+
+    sf::RenderWindow * ventana = VentanaPrincipal::unicaInstancia();
+
+    // PRIMER PASO: RECIBIR ENTRADA DEL TECLADO O DE LOS MANDOS
+    // En este paso se actualizan los valores booleanos de los personajes, que
+    // indican si una acción está siendo realizada o no. Se comprueba si se han terminado
+    // de mostrar los dos carteles del principio del combate y entonces se puede comenzar a
+    // jugar (en realidad el segundo cartel, el de "¡A pelear!" deja de bloquear el movimiento
+    // de los personajes cuando se agranda a su máximo tamaño)
+    if(!cartelTodoListo->haTerminado()){
+        cartelTodoListo->actualizar(efectos);
+    } else if(!cartelAPelear->haTerminado()){
+        cartelAPelear->actualizar(efectos);
+    }
+
+    recibirEntrada();
+
+    // SEGUNDO PASO: ACTUALIZAR PERSONAJES, EFECTOS, GUIS, ESCENARIO Y VENTANA
+
+    std::list<std::shared_ptr<Animacion>> nuevosEfectosA;
+    std::list<std::shared_ptr<Animacion>> nuevosEfectosB;
+
+    actualizarPersonajesEfectosGuisEscenarioVentana(efectos, nuevosEfectosA);
+
+    // TERCER PASO: COMPROBAR COLISIONES
+
+    // Copias de la lista de efectos para poder meter las hitboxes del enemigo para cada uno
+    // de los dos personajes
+    std::list<std::shared_ptr<Animacion>> efectosA(efectos);
+    std::list<std::shared_ptr<Animacion>> efectosB(efectos);
+
+    // Se mete la hitbox del otro jugador para cada lista auxiliar de efectos
+    efectosA.push_back(personajeJugador2.getAnimacionSegunEstado(personajeJugador2.getEstado()));
+    efectosB.push_back(personajeJugador1.getAnimacionSegunEstado(personajeJugador1.getEstado()));
+
+    #pragma omp parallel num_threads(2)
+    {
+        #pragma omp sections
+        {
+            #pragma omp section
+            personajeJugador1.comprobarColisiones(efectosA,nuevosEfectosA);
+    
+            #pragma omp section
+            personajeJugador2.comprobarColisiones(efectosB,nuevosEfectosB);
+        }
+    }
+
+    // Se añaden los efectos del jugador 2 a los del jugador 1 y así tenemos solo una lista
+    for(std::shared_ptr<Animacion>& anim : nuevosEfectosB){
+        nuevosEfectosA.push_back(anim);
+    }
+
+    for(auto iter = nuevosEfectosA.begin(); iter != nuevosEfectosA.end();iter++){
+        efectos.push_back(*iter);
+    }
+
+    // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
+
+    ventana->clear(sf::Color(100,100,120));
+    escenario.dibujarFondo(*ventana,sf::RenderStates::Default);
+    ventana->draw(personajeJugador1);
+    ventana->draw(personajeJugador2);
+
+    for(auto iter = efectos.begin(); iter != efectos.end(); iter++){
+        ventana->draw(**iter);
+    }
+
+    escenario.dibujarFrente(*ventana,sf::RenderStates::Default);
+
+    ventana->draw(GUIJugador1);
+    ventana->draw(GUIJugador2);
+
+    if(!cartelTodoListo->haTerminado()){
+        ventana->draw(*cartelTodoListo);
+    } else if (!cartelAPelear->haTerminado()){
+        ventana->draw(*cartelAPelear);
+    }
+
+    // Lo último que se dibuja es el rectángulo que cubre el combate
+    ventana->draw(rectanguloOscuro);
+    
+    ventana->display();
+
+    // Ahora que ha terminado el frame le damos la vuelta al jugador cuyas colisiones serán
+    // actualizadas primero en el siguiente frame
+    if(primerJugadorParaActualizar == Jugador::JUGADOR1){
+        primerJugadorParaActualizar = Jugador::JUGADOR2;
+    } else {
+        primerJugadorParaActualizar = Jugador::JUGADOR1;
+    }
+}
+
+void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &efectos, int &contadorCelebracion, Personaje &ganador){
+    
+    sf::RenderWindow * ventana = VentanaPrincipal::unicaInstancia();
+
+    // PRIMER PASO: solo se recibe entrada si se cierra la ventana
+    while(const std::optional evento = ventana->pollEvent()){
+        if(evento->is<sf::Event::Closed>()){
+            ventana->close();
+            exit(EXIT_SUCCESS);
+        }
+    }
+
+    // SEGUNDO PASO: ACTUALIZAR PERSONAJES Y EFECTOS
+
+    std::list<std::shared_ptr<Animacion>> nuevosEfectos;
+
+    actualizarPersonajesEfectosGuisEscenarioVentana(efectos, nuevosEfectos);
+
+    for(std::shared_ptr<Animacion> &efecto : nuevosEfectos){
+        efectos.push_back(efecto);
+    }
+
+    // TERCER PASO: no se comprueban colisiones porque se supone que ya se ha terminado esta ronda. En su lugar, se
+    // comprueba si el personaje puede celebrar y se le dice que celebre
+
+    // Si el contador de celebración aún no ha llegado a cero, se disminuye
+    if(contadorCelebracion > 0){
+        contadorCelebracion--;
+    }
+
+    // Si ya ha llegado a cero, se le dice al personaje que celebre y se reproduce la canción de fin de ronda
+    else if (ganador.getEstado() != EstadoPersonaje::CELEBRANDO){
+        ganador.cambiarEstado(EstadoPersonaje::CELEBRANDO);
+        ReproductorDeMusica::unicaInstancia()->reproducirCancionFinRonda();
+        if(personajeJugador1.getPuntosDeVida() > 0) GUIJugador1.ganarRonda();
+        else GUIJugador2.ganarRonda();
+    }
+    // Si ya se le ha dicho que celebre, se oscurece el rectángulo si ha terminado de celebrar
+    else if(ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() && !ReproductorDeMusica::unicaInstancia()->estaReproduciendo()) {
+        sf::Color nuevoColor(rectanguloOscuro.getFillColor());
+        nuevoColor.a+=5;
+        rectanguloOscuro.setFillColor(nuevoColor);
+    }
+
+    // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
+
+    ventana->clear(sf::Color(100,100,100));
+    escenario.dibujarFondo(*ventana,sf::RenderStates::Default);
+    ventana->draw(personajeJugador1);
+    ventana->draw(personajeJugador2);
+
+    for(auto iter = efectos.begin(); iter != efectos.end(); iter++){
+        ventana->draw(**iter);
+    }
+
+    escenario.dibujarFrente(*ventana,sf::RenderStates::Default);
+
+    ventana->draw(GUIJugador1);
+    ventana->draw(GUIJugador2);
+
+    ventana->draw(rectanguloOscuro);
+    
+    ventana->display();
+}
+
+void Combate::comenzar(){
 
     // En esta lista hay efectos como objetos voladores o efectos de golpe
     std::list<std::shared_ptr<Animacion>> efectos;
@@ -95,194 +383,12 @@ void Combate::comenzar(){
             // Este es un momento especial en el que al menos uno de los personajes está preparando su súper
             // ataque, por lo que todo se pone oscuro y el tiempo se para por un momento
             if(personajeJugador1.getEstado() == EstadoPersonaje::PREPARANDO_SUPER || personajeJugador2.getEstado() == EstadoPersonaje::PREPARANDO_SUPER){
-
-                // Se actualizan solo los personajes preparando súper
-
-                if(personajeJugador1.getEstado() == EstadoPersonaje::PREPARANDO_SUPER){
-                    std::list<std::shared_ptr<Animacion>> nuevosEfectos;
-
-                    personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
-
-                    for(const std::shared_ptr<Animacion> &efecto : nuevosEfectos){
-                        efectos.push_back(efecto);
-                    }
-                }
-
-                if(personajeJugador2.getEstado() == EstadoPersonaje::PREPARANDO_SUPER){
-                    std::list<std::shared_ptr<Animacion>> nuevosEfectos;
-
-                    personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectos);
-
-                    for(const std::shared_ptr<Animacion> &efecto : nuevosEfectos){
-                        efectos.push_back(efecto);
-                    }
-                }
                 
-                // No se actualiza el escenario para dar el efecto de que se ha parado el tiempo
-
-                VentanaPrincipal::actualizar();
-                GUIJugador1.actualizar();
-                GUIJugador2.actualizar();
-
-                ventana->clear(sf::Color(100,100,120));
-
-                // Se dibuja todo como de costumbre (menos los personajes que están preparando súper)
-                escenario.dibujarFondo(*ventana,sf::RenderStates::Default);
-
-                if(personajeJugador1.getEstado() != EstadoPersonaje::PREPARANDO_SUPER)
-                    ventana->draw(personajeJugador1);
-                if(personajeJugador2.getEstado() != EstadoPersonaje::PREPARANDO_SUPER)
-                    ventana->draw(personajeJugador2);
+                actualizarFramePreparandoSuper(efectos);
                 
-                for(std::list<std::shared_ptr<Animacion>>::iterator iter = efectos.begin(); iter != efectos.end(); iter++){
-                    ventana->draw(**iter);
-                }
-
-                // Se dibuja un rectángulo oscuro encima
-                sf::RectangleShape rectanguloOscuro(sf::Vector2f(VENTANA_ANCHURA,VENTANA_ALTURA));
-                rectanguloOscuro.setPosition({0,0});
-                rectanguloOscuro.setFillColor(sf::Color(0,0,0,100));
-                ventana->draw(rectanguloOscuro);
-
-                // Se dibujan los personajes preparando súper
-                if(personajeJugador1.getEstado() == EstadoPersonaje::PREPARANDO_SUPER)
-                    ventana->draw(personajeJugador1);
-                if(personajeJugador2.getEstado() == EstadoPersonaje::PREPARANDO_SUPER)
-                    ventana->draw(personajeJugador2);
-
-                escenario.dibujarFrente(*ventana,sf::RenderStates::Default);
-
-                ventana->draw(GUIJugador1);
-                ventana->draw(GUIJugador2);
-
-                ventana->display();
             } else {
 
-                // PRIMER PASO: RECIBIR ENTRADA DEL TECLADO O DE LOS MANDOS
-                // En este paso se actualizan los valores booleanos de los personajes, que
-                // indican si una acción está siendo realizada o no. Se comprueba si se han terminado
-                // de mostrar los dos carteles del principio del combate y entonces se puede comenzar a
-                // jugar (en realidad el segundo cartel, el de "¡A pelear!" deja de bloquear el movimiento
-                // de los personajes cuando se agranda a su máximo tamaño)
-
-                if(!cartelTodoListo->haTerminado()){
-                    cartelTodoListo->actualizar(efectos);
-                } else if(!cartelAPelear->haTerminado()){
-                    cartelAPelear->actualizar(efectos);
-                }
-
-                while(const std::optional evento = ventana->pollEvent()){
-                    if(evento->is<sf::Event::Closed>()){
-                        ventana->close();
-                        exit(EXIT_SUCCESS);
-                    } else {
-                        std::pair<Jugador,Accion> par = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
-
-                        Personaje& personajeElegido = par.first == Jugador::JUGADOR1 ? personajeJugador1 : personajeJugador2;
-
-                        if((dynamic_cast<AnimacionAgrandable*>(cartelAPelear.get()))->haTerminadoDeAgrandarse()){
-                            if(evento->is<sf::Event::KeyPressed>() || evento->is<sf::Event::JoystickButtonPressed>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) > UMBRAL_JOYSTICK)){
-                                personajeElegido.realizarAccion(par.second);
-                            } else if(evento->is<sf::Event::KeyReleased>() || evento->is<sf::Event::JoystickButtonReleased>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK)){
-                                personajeElegido.detenerAccion(par.second);
-                            }
-                        }
-
-                    }
-                }
-
-                // SEGUNDO PASO: ACTUALIZAR PERSONAJES, EFECTOS, GUIS, ESCENARIO Y VENTANA
-
-                std::list<std::shared_ptr<Animacion>> nuevosEfectos;
-
-                if(primerJugadorParaActualizar == Jugador::JUGADOR1){
-                    personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
-                    personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectos);
-                } else {
-                    personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectos);
-                    personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
-                }
-
-                for(auto iter = efectos.begin(); iter != efectos.end();){
-                    if((*iter)->haTerminado()){
-                        iter = efectos.erase(iter);
-                    } else {
-                        (*iter)->actualizar(nuevosEfectos);
-                        iter++;
-                    }
-                }
-
-                GUIJugador1.actualizar();
-                GUIJugador2.actualizar();
-
-                escenario.actualizar(personajeJugador1,personajeJugador2,efectos);
-
-                VentanaPrincipal::actualizar();
-
-                // TERCER PASO: COMPROBAR COLISIONES.
-
-                if(primerJugadorParaActualizar == Jugador::JUGADOR1){
-                    efectos.push_back(personajeJugador2.getAnimacionSegunEstado(personajeJugador2.getEstado()));
-
-                    personajeJugador1.comprobarColisiones(efectos,nuevosEfectos);
-
-                    efectos.pop_back();
-
-                    efectos.push_back(personajeJugador1.getAnimacionSegunEstado(personajeJugador1.getEstado()));
-                    personajeJugador2.comprobarColisiones(efectos,nuevosEfectos);
-
-                    efectos.pop_back();
-                } else {
-                    efectos.push_back(personajeJugador1.getAnimacionSegunEstado(personajeJugador1.getEstado()));
-                    personajeJugador2.comprobarColisiones(efectos,nuevosEfectos);
-
-                    efectos.pop_back();
-
-                    efectos.push_back(personajeJugador2.getAnimacionSegunEstado(personajeJugador2.getEstado()));
-
-                    personajeJugador1.comprobarColisiones(efectos,nuevosEfectos);
-
-                    efectos.pop_back();
-                }
-
-                for(auto iter = nuevosEfectos.begin(); iter != nuevosEfectos.end();iter++){
-                    efectos.push_back(*iter);
-                }
-
-                // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
-
-                ventana->clear(sf::Color(100,100,120));
-                escenario.dibujarFondo(*ventana,sf::RenderStates::Default);
-                ventana->draw(personajeJugador1);
-                ventana->draw(personajeJugador2);
-
-                for(auto iter = efectos.begin(); iter != efectos.end(); iter++){
-                    ventana->draw(**iter);
-                }
-
-                escenario.dibujarFrente(*ventana,sf::RenderStates::Default);
-
-                ventana->draw(GUIJugador1);
-                ventana->draw(GUIJugador2);
-
-                if(!cartelTodoListo->haTerminado()){
-                    ventana->draw(*cartelTodoListo);
-                } else if (!cartelAPelear->haTerminado()){
-                    ventana->draw(*cartelAPelear);
-                }
-
-                // Lo último que se dibuja es el rectángulo que cubre el combate
-                ventana->draw(rectanguloOscuro);
-                
-                ventana->display();
-
-                // Ahora que ha terminado el frame le damos la vuelta al jugador que será
-                // actualizado primero en el siguiente frame
-                if(primerJugadorParaActualizar == Jugador::JUGADOR1){
-                    primerJugadorParaActualizar = Jugador::JUGADOR2;
-                } else {
-                    primerJugadorParaActualizar = Jugador::JUGADOR1;
-                }
+                actualizarFrameNormal(efectos);
             }
 
             // El juego se duerme hasta que dé tiempo a dibujar el siguiente frame, teniendo en cuenta
@@ -321,81 +427,7 @@ void Combate::comenzar(){
 
             sf::Clock reloj;
 
-            // PRIMER PASO: solo se recibe entrada si se cierra la ventana
-            while(const std::optional evento = ventana->pollEvent()){
-                if(evento->is<sf::Event::Closed>()){
-                    ventana->close();
-                    exit(EXIT_SUCCESS);
-                }
-            }
-
-            // SEGUNDO PASO: ACTUALIZAR PERSONAJES Y EFECTOS
-
-            std::list<std::shared_ptr<Animacion>> nuevosEfectos;
-
-            personajeJugador1.actualizar(personajeJugador2.getPosicion(),nuevosEfectos);
-            personajeJugador2.actualizar(personajeJugador1.getPosicion(),nuevosEfectos);
-
-            for(auto iter = nuevosEfectos.begin(); iter != nuevosEfectos.end();iter++){
-                efectos.push_back(*iter);
-            }
-
-            for(auto iter = efectos.begin(); iter != efectos.end();){
-                if((*iter)->haTerminado()){
-                    iter = efectos.erase(iter);
-                } else {
-                    (*iter)->actualizar(nuevosEfectos);
-                    iter++;
-                }
-            }
-
-            GUIJugador1.actualizar();
-            GUIJugador2.actualizar();
-
-            escenario.actualizar(personajeJugador1,personajeJugador2,efectos);
-
-            VentanaPrincipal::actualizar();
-
-            // TERCER PASO: no se comprueban colisiones porque se supone que ya se ha terminado esta ronda. En su lugar, se
-            // comprueba si el personaje puede celebrar y se le dice que celebre
-
-            // Si el contador de celebración aún no ha llegado a cero, se disminuye
-            if(contadorCelebracion > 0){
-                contadorCelebracion--;
-            } 
-            // Si ya ha llegado a cero, se le dice al personaje que celebre y se reproduce la canción de fin de ronda
-            else if (ganador.getEstado() != EstadoPersonaje::CELEBRANDO){
-                ganador.cambiarEstado(EstadoPersonaje::CELEBRANDO);
-                ReproductorDeMusica::unicaInstancia()->reproducirCancionFinRonda();
-                if(personajeJugador1.getPuntosDeVida() > 0) GUIJugador1.ganarRonda();
-                else GUIJugador2.ganarRonda();
-            }
-            // Si ya se le ha dicho que celebre, se oscurece el rectángulo si ha terminado de celebrar
-            else if(ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() && !ReproductorDeMusica::unicaInstancia()->estaReproduciendo()) {
-                sf::Color nuevoColor(rectanguloOscuro.getFillColor());
-                nuevoColor.a+=5;
-                rectanguloOscuro.setFillColor(nuevoColor);
-            }
-
-            // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
-
-            ventana->clear(sf::Color(100,100,100));
-            escenario.dibujarFondo(*ventana,sf::RenderStates::Default);
-            ventana->draw(personajeJugador1);
-            ventana->draw(personajeJugador2);
-
-            for(auto iter = efectos.begin(); iter != efectos.end(); iter++){
-                ventana->draw(**iter);
-            }
-
-            escenario.dibujarFrente(*ventana,sf::RenderStates::Default);
-
-            ventana->draw(GUIJugador1);
-            ventana->draw(GUIJugador2);
-
-            ventana->draw(rectanguloOscuro);
-            
-            ventana->display();
+            actualizarFrameCelebracion(efectos,contadorCelebracion,ganador);
 
             sf::sleep(sf::seconds(1.f/NUMERO_FPS) - reloj.reset());
         }

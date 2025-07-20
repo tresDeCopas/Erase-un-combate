@@ -59,6 +59,27 @@ class Combate{
         // de rondas ganadas de cada GUI de personaje)
         void resetear();
 
+        // Actualiza un frame del combate, pero solo cuando al menos uno de los personajes está preparando
+        // su súper ataque (el fondo se oscurece y nadie se puede mover)
+        void actualizarFramePreparandoSuper(std::list<std::shared_ptr<Animacion>> &efectos);
+
+        // Actualiza un frame completamente normal y corriente del combate
+        void actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efectos);
+
+        // Actualiza un frame pero solo cuando uno de los personajes está KO y el otro celebra. Se encarga de actualizar contadorCelebracion
+        void actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &efectos, int &contadorCelebracion, Personaje &ganador);
+
+        // TODO
+        // void actualizarFrameEmpate(int &contadorCelebracion);
+
+        // Sé que el nombre es largo de cojones pero no se me ocurre otra cosa mejor. Actualiza como su propio nombre indica
+        // los dos personajes, los efectos, las GUIs, el escenario y la ventana. No comprueba colisiones, y no inserta nuevos
+        // efectos en la lista de efectos (los efectos nuevos se quedan en nuevosEfectos hasta que se vayan a meter luego)
+        void actualizarPersonajesEfectosGuisEscenarioVentana(std::list<std::shared_ptr<Animacion>> &efectos, std::list<std::shared_ptr<Animacion>> &nuevosEfectos);
+
+        // Procesa los eventos generados en la ventana actual e informa a los personajes para que se muevan
+        void recibirEntrada();
+
     public:
 
         // Construye el combate en base a los nombres de los personajes
