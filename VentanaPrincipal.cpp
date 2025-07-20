@@ -5,6 +5,7 @@ sf::RenderWindow * VentanaPrincipal::ventanaPrincipal = nullptr;
 int VentanaPrincipal::zoom = 1;
 int VentanaPrincipal::potenciaVibracion = 0;
 int VentanaPrincipal::contadorVibracion = 0;
+bool VentanaPrincipal::vibracionActivada = false;
 
 sf::RenderWindow * VentanaPrincipal::unicaInstancia()
 {
@@ -60,5 +61,6 @@ void VentanaPrincipal::actualizar(){
 }
 
 void VentanaPrincipal::vibrar(int potenciaVibracion){
-    VentanaPrincipal::potenciaVibracion = potenciaVibracion;
+    if(vibracionActivada)
+        VentanaPrincipal::potenciaVibracion = potenciaVibracion;
 }
