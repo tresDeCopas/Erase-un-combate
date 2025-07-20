@@ -2,6 +2,7 @@
 #include "ContenedorDeRecursos.hpp"
 #include "Bitacora.hpp"
 #include "Utilidades.hpp"
+#include "IndicacionesSobreAnimacion.hpp"
 #include <SFML/Audio.hpp>
 #include <fstream>
 #include <iostream>
@@ -52,9 +53,6 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
     // En esta variable se guarda el número de rectángulos de la animación actual
     int numeroRectangulos;
-
-    // En esta variable se guarda el sonido que se reproducirá en cada animación
-    sf::Sound sonido;
 
     // Abrimos cada fichero del directorio
     for(const auto & entrada : std::filesystem::directory_iterator("ficheros/personajes")){
@@ -156,40 +154,76 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: número de frames: " + std::to_string(contadorFrame));
 
-            // Nos saltamos dos líneas, y ahora puede haber información sobre los sonidos o no
+            // Nos saltamos dos líneas, y ahora leemos información sobre los sonidos
             std::getline(fichero,linea);
             std::getline(fichero,linea);
 
             std::shared_ptr<Animacion> anim;
 
-            if(util::separarString(linea,':')[0] == "Sonido"){
+            sf::Sound sonido;
 
-                bool repetirSonido = util::separarString(linea,':')[1] == "repetir";
+            bool repetirSonido = false;
+            
+            std::set<int> framesConSonido;
+
+            std::map<int,sf::Vector2f> framesConMovimiento;
+
+            std::map<int,IndicacionesSobreAnimacion> framesConAnimaciones;
+
+            if(util::separarString(linea,':')[1] != "sin sonido"){
+
+                repetirSonido = util::separarString(linea,':')[1] == "repetir";
 
                 sonido.setBuffer(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener("sonidos/"+nombrePersonaje+"/"+nombreEstado+".wav"));
 
                 // Avanzamos de línea para conseguir la lista de frames
                 std::getline(fichero,linea);
 
-                std::set<int> framesConSonido;
-
                 for(std::string s : util::separarString(linea,',')){
                     framesConSonido.insert(std::stoi(s));
                 }
-
-                anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
-                                                  ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
-                                                  util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,sonido,framesConSonido,repetirSonido));
-
-                // Nos saltamos dos líneas otra vez para salir de este estado
-                std::getline(fichero,linea);
-                std::getline(fichero,linea);
-
-            } else {
-                anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
-                                                  ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
-                                                  util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo));
             }
+
+            // Nos saltamos dos líneas para comprobar los movimientos
+            std::getline(fichero,linea);
+            std::getline(fichero,linea);
+
+            // Nos saltamos la línea que dice "Movimiento:"
+            std::getline(fichero,linea);
+
+            while(linea != ""){
+                elementosSeparados = util::separarString(linea,',');
+
+                framesConMovimiento[std::stoi(elementosSeparados[0])] = sf::Vector2f(std::stof(elementosSeparados[1]),std::stof(elementosSeparados[2]));
+            }
+
+            // Saltamos una línea para poder extraer las animaciones
+            std::getline(fichero,linea);
+
+            // Saltamos la línea que dice "Efectos:"
+            std::getline(fichero,linea);
+
+            while(linea != SECUENCIA_DELIMITADORA_FICHERO){
+                elementosSeparados = util::separarString(linea,',');
+
+                IndicacionesSobreAnimacion indicaciones;
+
+                indicaciones.rutaAnimacion = "sprites/efectos/" + elementosSeparados[1];
+                indicaciones.posicionInicial = sf::Vector2f(std::stof(elementosSeparados[2]), std::stof(elementosSeparados[3]));
+
+                if(elementosSeparados.size() == 6){
+                    indicaciones.velocidadInicial = sf::Vector2f(std::stof(elementosSeparados[4]), std::stof(elementosSeparados[5]));
+                }
+            }
+
+            // Finalmente, saltamos una línea y debería haber información sobre el siguiente estado,
+            // o SECUENCIA_FIN_FICHERO si ha terminado el fichero
+            std::getline(fichero,linea);
+
+            anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
+                                                  ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/"+nombrePersonaje+"/"+nombreEstado+".png"),
+                                                  util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,framesConSonido,framesConMovimiento,
+                                                  framesConAnimaciones,sonido,repetirSonido));
 
             animaciones.insert(std::pair<EstadoPersonaje,std::shared_ptr<Animacion>>(util::stringAEstadoPersonaje(nombreEstado),anim));
 

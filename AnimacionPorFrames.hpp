@@ -4,6 +4,7 @@
 #include "Enums.hpp"
 #include "Hitbox.hpp"
 #include "Animacion.hpp"
+#include "IndicacionesSobreAnimacion.hpp"
 #include <SFML/Graphics.hpp>
 #include <list>
 #include <map>
@@ -36,6 +37,12 @@ private:
     // Indica qué frames deben hacer sonar el sonido de la animación
     std::set<int> framesConSonido;
 
+    // Indica qué frames tienen movimiento
+    std::map<int,sf::Vector2f> framesConMovimiento;
+
+    // Indica qué frames hacen aparecer animaciones adicionales
+    std::map<int,IndicacionesSobreAnimacion> framesConAnimaciones;
+
     // Indica si el sonido se debe repetir cada vez que vuelva a salir el frame o si una vez se
     // termine el bucle no hay que repetirlo
     bool repetirSonido;
@@ -51,11 +58,9 @@ private:
     bool primerFrame;
 
 public:
-    // Constructor sin sonido
-    AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int, std::list<Hitbox>> hitboxes, std::map<int, int> rectanguloCorrespondiente);
 
-    // Constructor con sonido
-    AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int, std::list<Hitbox>> hitboxes, std::map<int, int> rectanguloCorrespondiente, sf::Sound sonido, std::set<int> framesConSonido, bool repetirSonido);
+    // Constructor de la hostia que podría ser más corto pero nose
+    AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente, std::set<int> framesConSonido, std::map<int,sf::Vector2f> framesConMovimiento, std::map<int,IndicacionesSobreAnimacion> framesConAnimaciones, sf::Sound sonido, bool repetirSonido);
 
     // Actualiza la animación (avanza un frame)
     virtual void actualizar();

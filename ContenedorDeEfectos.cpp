@@ -166,13 +166,15 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
                 sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
 
                 anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
-                                                util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,sonido,framesConSonido,repetirSonido));
+                                                util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,std::set<int>(),std::map<int,sf::Vector2f>(),
+                                                std::map<int,IndicacionesSobreAnimacion>(),sonido,repetirSonido));
 
             } else {
                 sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
 
                 anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
-                                                util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo));
+                                                util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,std::set<int>(),std::map<int,sf::Vector2f>(),
+                                                std::map<int,IndicacionesSobreAnimacion>(),sf::Sound(),false));
             }
 
         } else {
