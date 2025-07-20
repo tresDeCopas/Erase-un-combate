@@ -194,6 +194,9 @@ const int MAX_ATAQUE_MEDIO = 6;
 // Valor que tiene que alcanzar contadorTumbado para que se levante un personaje
 const int MAX_CONTADOR_TUMBADO = VENTANA_FPS;
 
+// Valor inicial del contador de celebración. Al llegar a 0, el personaje que acaba de ganar celebra
+const int MAX_CONTADOR_CELEBRACION = VENTANA_FPS*3;
+
 /*
     CONSTANTES PARA LA GUI DE PERSONAJE
 */

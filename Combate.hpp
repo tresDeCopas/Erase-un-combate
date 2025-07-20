@@ -30,6 +30,9 @@ class Combate{
         // Escenario para el combate
         //Escenario escenario;
 
+        // Rectángulo negro que aparece antes de que empiece el combate y entre rondas
+        sf::RectangleShape rectanguloOscuro;
+
         // Ronda actual
         int numeroRonda;
 
