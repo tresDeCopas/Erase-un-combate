@@ -242,15 +242,19 @@ void Combate::actualizarPersonajesEfectosGuisEscenarioVentana(std::list<std::sha
 // Aquí la ejecución se bifurca en dos hilos que se ejecutarán a la vez o a lo mejor no, quién sabe. El caso
 // es que así tarda menos digo yo, ley de Amdahl ley de Moore ley de Gustaffson transistores power wall ya
 // me entiendes
+
+    sf::Vector2f posicionJugador1(personajeJugador1.getPosicion());
+    sf::Vector2f posicionJugador2(personajeJugador2.getPosicion());
+
 #pragma omp parallel num_threads(2)
     {
 #pragma omp sections
         {
 #pragma omp section
-            personajeJugador1.actualizar(personajeJugador2.getPosicion(), nuevosEfectos);
+            personajeJugador1.actualizar(posicionJugador2, nuevosEfectos);
 
 #pragma omp section
-            personajeJugador2.actualizar(personajeJugador1.getPosicion(), nuevosEfectosAux);
+            personajeJugador2.actualizar(posicionJugador1, nuevosEfectosAux);
         }
     }
 

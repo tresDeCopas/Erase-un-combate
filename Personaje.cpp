@@ -606,6 +606,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         case EstadoPersonaje::ATAQUE_NORMAL_1:
         case EstadoPersonaje::ATAQUE_NORMAL_2:
         case EstadoPersonaje::ATAQUE_NORMAL_3:
+        case EstadoPersonaje::ATAQUE_ESPECIAL:
         case EstadoPersonaje::ATAQUE_AEREO:
         case EstadoPersonaje::ATAQUE_AGACHADO:
         case EstadoPersonaje::ATAQUE_SUPER:
@@ -615,9 +616,19 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         case EstadoPersonaje::GOLPEADO_PEQUE:
         case EstadoPersonaje::GOLPEADO_MEDIO:
         case EstadoPersonaje::BLOQUEANDO:
+        case EstadoPersonaje::ESQUIVE_SUPER:
+        case EstadoPersonaje::CELEBRANDO:
+        case EstadoPersonaje::LEVANTANDOSE:
+        case EstadoPersonaje::PREPARANDO_SUPER:
+        case EstadoPersonaje::SALTANDO_BAJANDO:
+        case EstadoPersonaje::SALTANDO_SUBIENDO:
             break;
         
-        default:
+        case EstadoPersonaje::AGACHADO:
+        case EstadoPersonaje::ANDANDO_ACERCANDOSE:
+        case EstadoPersonaje::ANDANDO_ALEJANDOSE:
+        case EstadoPersonaje::QUIETO:
+        case EstadoPersonaje::TOCANDO_SUELO:
             if((animaciones.at(estado)->getPosicion().x < posicionEnemigo.x && !mirandoDerecha) ||
                 (animaciones.at(estado)->getPosicion().x > posicionEnemigo.x && mirandoDerecha)){
                     mirandoDerecha = !mirandoDerecha;
@@ -753,6 +764,7 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
         switch(estado){
             case EstadoPersonaje::SALTANDO_SUBIENDO:
             case EstadoPersonaje::SALTANDO_BAJANDO:
+            case EstadoPersonaje::ATAQUE_AEREO:
                 // Si estamos saltando y el enemigo también (su hurtbox elegida está por encima
                 // del suelo), y además estamos saltando hacia él, es como que nos chocamos y nos
                 // dejamos de mover
