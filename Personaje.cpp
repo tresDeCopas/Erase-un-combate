@@ -118,6 +118,13 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
     // Según el estado, se hace una cosa u otra
     switch(estado){
+    case EstadoPersonaje::TOCANDO_SUELO:
+        if(animaciones[estado]->haTerminado())
+            cambiarEstado(EstadoPersonaje::QUIETO);
+        
+        // No se pone break porque el estado TOCANDO_SUELO es como si fuera el estado QUIETO
+        // pero con un poco más de paripé para hacerlo más realista todo
+
     case EstadoPersonaje::QUIETO:
 
         pararMovimiento();
@@ -234,7 +241,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             velY = 0;
             levantarPolvo(efectosInsertados);
 
-            cambiarEstado(EstadoPersonaje::QUIETO);
+            cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
         }
         break;
 
