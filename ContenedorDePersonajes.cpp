@@ -101,7 +101,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
             while(util::separarString(linea,':')[0] == "Rectangulo"){
 
-                Bitacora::unicaInstancia()->escribir("Juan Cuesta: rect�ngulo " + std::to_string(numeroRectangulos) + ".");
+                Bitacora::unicaInstancia()->escribir("Juan Cuesta: rectángulo " + std::to_string(numeroRectangulos) + ".");
 
                 // Lista de hitboxes para este rect�ngulo
                 std::list<Hitbox> listaHitboxes;
@@ -133,6 +133,9 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                 std::getline(fichero,linea);
                 numeroRectangulos++;
             }
+
+            if(nombreEstado == "ataque-agachado")
+                Bitacora::unicaInstancia()->escribir("Juan Cuesta: las hitboxes con daño de este estado serán de ataque bajo");
 
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: finalmente, se apuntan los frames.");
 
