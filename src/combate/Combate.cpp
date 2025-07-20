@@ -159,23 +159,17 @@ void Combate::recibirEntradaPlayerVSPlayerOffline()
         }
         else
         {
-            std::pair<Jugador, Accion> par = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
+            InfoEvento infoEvento = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
 
             // Puede ser que la acción sea inválida, hay que comprobar que el jugador no es NADIE
-            if(par.first != Jugador::NADIE){
+            if(infoEvento.jugador != Jugador::NADIE){
                 
-                Personaje &personajeElegido = par.first == Jugador::JUGADOR1 ? personajeJugador1 : personajeJugador2;
+                Personaje &personajeElegido = infoEvento.jugador == Jugador::JUGADOR1 ? personajeJugador1 : personajeJugador2;
 
                 if ((dynamic_cast<AnimacionAgrandable *>(cartelTodoListo.get()))->haTerminado())
                 {
-                    if (evento->is<sf::Event::KeyPressed>() || evento->is<sf::Event::JoystickButtonPressed>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) > UMBRAL_JOYSTICK))
-                    {
-                        personajeElegido.realizarAccion(par.second);
-                    }
-                    else if (evento->is<sf::Event::KeyReleased>() || evento->is<sf::Event::JoystickButtonReleased>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK))
-                    {
-                        personajeElegido.detenerAccion(par.second);
-                    }
+                    if(infoEvento.realizada) personajeElegido.realizarAccion(infoEvento.accion);
+                    else personajeElegido.detenerAccion(infoEvento.accion);
                 }
             }
         }
@@ -195,27 +189,21 @@ void Combate::recibirEntradaPlayerVSBot()
         }
         else
         {
-            std::pair<Jugador, Accion> par = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
+            InfoEvento infoEvento = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
 
             // Si se pulsa una tecla que no es del jugador 1 da igual, se comprueba la siguiente tecla
-            if(par.first != Jugador::JUGADOR1)
+            if(infoEvento.jugador != Jugador::JUGADOR1)
                 continue;
 
-            if ((dynamic_cast<AnimacionAgrandable *>(cartelAPelear.get()))->haTerminadoDeAgrandarse())
+            if ((dynamic_cast<AnimacionAgrandable *>(cartelTodoListo.get()))->haTerminado())
             {
-                if (evento->is<sf::Event::KeyPressed>() || evento->is<sf::Event::JoystickButtonPressed>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) > UMBRAL_JOYSTICK))
-                {
-                    personajeJugador1.realizarAccion(par.second);
-                }
-                else if (evento->is<sf::Event::KeyReleased>() || evento->is<sf::Event::JoystickButtonReleased>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK))
-                {
-                    personajeJugador1.detenerAccion(par.second);
-                }
+                if(infoEvento.realizada) personajeJugador1.realizarAccion(infoEvento.accion);
+                else personajeJugador1.detenerAccion(infoEvento.accion);
             }
         }
     }
 
-    if ((dynamic_cast<AnimacionAgrandable *>(cartelAPelear.get()))->haTerminadoDeAgrandarse()){
+    if ((dynamic_cast<AnimacionAgrandable *>(cartelTodoListo.get()))->haTerminado()){
         if(rand()%2 == 0){
             personajeJugador2.realizarAccion(Accion::ATACAR);
         } else {
@@ -265,24 +253,18 @@ void Combate::recibirEntradaPlayerVSPlayerOnline()
         }
         else
         {
-            std::pair<Jugador, Accion> par = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
+            InfoEvento infoEvento = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
 
             // No merece la pena prestarle atención: se han usado las teclas del otro jugador
-            if ((par.first == Jugador::JUGADOR1 && !conector->isLider()) || (par.first == Jugador::JUGADOR2 && conector->isLider()))
+            if ((infoEvento.jugador == Jugador::JUGADOR1 && !conector->isLider()) || (infoEvento.jugador == Jugador::JUGADOR2 && conector->isLider()))
             {
                 continue;
             }
 
-            if ((dynamic_cast<AnimacionAgrandable *>(cartelAPelear.get()))->haTerminadoDeAgrandarse())
+            if ((dynamic_cast<AnimacionAgrandable *>(cartelTodoListo.get()))->haTerminado())
             {
-                if (evento->is<sf::Event::KeyPressed>() || evento->is<sf::Event::JoystickButtonPressed>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) > UMBRAL_JOYSTICK))
-                {
-                    accionesRealizadas.insert(par.second);
-                }
-                else if (evento->is<sf::Event::KeyReleased>() || evento->is<sf::Event::JoystickButtonReleased>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK))
-                {
-                    accionesDetenidas.insert(par.second);
-                }
+                if(infoEvento.realizada) accionesRealizadas.insert(infoEvento.accion);
+                else accionesDetenidas.insert(infoEvento.accion);
             }
         }
     }

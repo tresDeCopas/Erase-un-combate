@@ -79,10 +79,10 @@ bool GestorDeControles::conectarMando(Jugador j, Control c){
     return true;
 }
 
-std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(std::optional<sf::Event> evento)
+InfoEvento GestorDeControles::comprobarEvento(std::optional<sf::Event> evento)
 {
-    // Este es el par que va a ser devuelto (empieza vacío)
-    std::pair<Jugador,Accion> pair(Jugador::NADIE,Accion::NADA);
+    // Este es el InfoEvento que va a ser devuelto (empieza vacío)
+    InfoEvento infoEvento{Jugador::NADIE, Accion::NADA, false};
 
     if(evento->is<sf::Event::JoystickButtonPressed>() || evento->is<sf::Event::JoystickButtonReleased>()){
         // Alguien ha pulsado un botón de mando (el botón da igual, todos
@@ -91,17 +91,21 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(std::optional<sf::E
         // por lo que el control 3 es el mando 0 y así sucesivamente
 
         Control control;
+        unsigned int boton;
         if(evento->is<sf::Event::JoystickButtonPressed>()) {
             control = static_cast<Control>(evento->getIf<sf::Event::JoystickButtonPressed>()->joystickId+2);
+            boton = evento->getIf<sf::Event::JoystickButtonPressed>()->button;
         } else {
             control = static_cast<Control>(evento->getIf<sf::Event::JoystickButtonReleased>()->joystickId+2);
+            boton = evento->getIf<sf::Event::JoystickButtonReleased>()->button;
         }
 
 
-        pair.first = controlAJugador[control];
-        if(pair.first != Jugador::NADIE){
-            // Si el control es de alguien, se actualiza el par
-            pair.second = Accion::ATACAR;
+        infoEvento.jugador = controlAJugador[control];
+        if(infoEvento.jugador != Jugador::NADIE){
+            if(boton == MANDO_BOTON_ATACAR) infoEvento.accion = Accion::ATACAR;
+            else infoEvento.accion = Accion::NADA;
+            infoEvento.realizada = evento->is<sf::Event::JoystickButtonPressed>();
         } else {
             // Si el control no está asignado a un jugador, se comprueba si ninguno tiene mando
             Jugador jugadorTecladoIzq = controlAJugador[Control::TECLADO_IZQUIERDA];
@@ -126,8 +130,8 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(std::optional<sf::E
 
         // Se saca el jugador correspondiente al mando. Si hay jugador,
         // se hacen cosas
-        pair.first = controlAJugador[control];
-        if(pair.first != Jugador::NADIE){
+        infoEvento.jugador = controlAJugador[control];
+        if(infoEvento.jugador != Jugador::NADIE){
 
             // Se saca la posición del joystick de antemano
             float posicionJoystick = evento->getIf<sf::Event::JoystickMoved>()->position;
@@ -140,19 +144,23 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(std::optional<sf::E
                 case sf::Joystick::Axis::R:
                 case sf::Joystick::Axis::PovX:
 
-                    if(posicionJoystick > UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA]){
-                        pair.second = Accion::DERECHA;
-                        jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA] = true;
-                    } else if(posicionJoystick < -UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::IZQUIERDA]){
-                        pair.second = Accion::IZQUIERDA;
-                        jugadorRealizandoAccionJoystick[pair.first][Accion::IZQUIERDA] = true;
+                    if(posicionJoystick > UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::DERECHA]){
+                        infoEvento.accion = Accion::DERECHA;
+                        jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::DERECHA] = true;
+                        infoEvento.realizada = true;
+                    } else if(posicionJoystick < -UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::IZQUIERDA]){
+                        infoEvento.accion = Accion::IZQUIERDA;
+                        jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::IZQUIERDA] = true;
+                        infoEvento.realizada = true;
                     } else if (std::abs(posicionJoystick) < UMBRAL_JOYSTICK){
-                        if(jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA]){
-                            pair.second = Accion::DERECHA;
-                            jugadorRealizandoAccionJoystick[pair.first][Accion::DERECHA] = false;
-                        } else if(jugadorRealizandoAccionJoystick[pair.first][Accion::IZQUIERDA]){
-                            pair.second = Accion::IZQUIERDA;
-                            jugadorRealizandoAccionJoystick[pair.first][Accion::IZQUIERDA] = false;
+                        if(jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::DERECHA]){
+                            infoEvento.accion = Accion::DERECHA;
+                            jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::DERECHA] = false;
+                            infoEvento.realizada = false;
+                        } else if(jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::IZQUIERDA]){
+                            infoEvento.accion = Accion::IZQUIERDA;
+                            jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::IZQUIERDA] = false;
+                            infoEvento.realizada = false;
                         }
                     }
                     break;
@@ -165,19 +173,23 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(std::optional<sf::E
                     posicionJoystick = -posicionJoystick;
 
                 case sf::Joystick::Axis::PovY:
-                    if(evento->getIf<sf::Event::JoystickMoved>()->position < -UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO]){
-                        pair.second = Accion::ABAJO;
-                        jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO] = true;
-                    } else if(evento->getIf<sf::Event::JoystickMoved>()->position > UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[pair.first][Accion::ARRIBA]){
-                        pair.second = Accion::ARRIBA;
-                        jugadorRealizandoAccionJoystick[pair.first][Accion::ARRIBA] = true;
-                    } else if (std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK){
-                        if(jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO]){
-                            pair.second = Accion::ABAJO;
-                            jugadorRealizandoAccionJoystick[pair.first][Accion::ABAJO] = false;
-                        } else if(jugadorRealizandoAccionJoystick[pair.first][Accion::ARRIBA]){
-                            pair.second = Accion::ARRIBA;
-                            jugadorRealizandoAccionJoystick[pair.first][Accion::ARRIBA] = false;
+                    if(posicionJoystick < -UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::ABAJO]){
+                        infoEvento.accion = Accion::ABAJO;
+                        jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::ABAJO] = true;
+                        infoEvento.realizada = true;
+                    } else if(posicionJoystick > UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::ARRIBA]){
+                        infoEvento.accion = Accion::ARRIBA;
+                        jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::ARRIBA] = true;
+                        infoEvento.realizada = true;
+                    } else if (std::abs(posicionJoystick) < UMBRAL_JOYSTICK){
+                        if(jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::ABAJO]){
+                            infoEvento.accion = Accion::ABAJO;
+                            jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::ABAJO] = false;
+                            infoEvento.realizada = false;
+                        } else if(jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::ARRIBA]){
+                            infoEvento.accion = Accion::ARRIBA;
+                            jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::ARRIBA] = false;
+                            infoEvento.realizada = false;
                         }
                     }
                     break;
@@ -198,9 +210,10 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(std::optional<sf::E
             scancode = evento->getIf<sf::Event::KeyReleased>()->scancode;
         }
 
-        if(scancode == TECLA_SALIDA)
-            pair.second = Accion::ESCAPE;
-        else {
+        if(scancode == TECLA_SALIDA){
+            infoEvento.accion = Accion::ESCAPE;
+            infoEvento.realizada = evento->is<sf::Event::KeyPressed>();
+        } else {
             // Si es otra tecla, hay que ver si es una de las que nos interesa
             if(teclaAControlYAccion.count(scancode)){
                 // Si es una tecla que tenemos registrada, se comprueba su control y su acción
@@ -208,19 +221,20 @@ std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(std::optional<sf::E
                 Accion a = teclaAControlYAccion[scancode].second;
 
                 // Se asigna el personaje y la acción
-                pair.first = controlAJugador[c];
-                pair.second = a;
+                infoEvento.jugador = controlAJugador[c];
+                infoEvento.accion = a;
+                infoEvento.realizada = evento->is<sf::Event::KeyPressed>();
             }
         }
     }
 
     // Si el personaje es NADIE, la acción sí o sí tiene que ser NADA y viceversa
-    if(pair.first == Jugador::NADIE){
-        pair.second = Accion::NADA;
-    } else if(pair.second == Accion::NADA){
-        pair.first = Jugador::NADIE;
+    if(infoEvento.jugador == Jugador::NADIE){
+        infoEvento.accion = Accion::NADA;
+    } else if(infoEvento.accion == Accion::NADA){
+        infoEvento.jugador = Jugador::NADIE;
     }
 
     // Después de este pifostio devolvemos el par
-    return pair;
+    return infoEvento;
 }

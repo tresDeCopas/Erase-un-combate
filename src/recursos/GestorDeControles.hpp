@@ -6,6 +6,21 @@
 #include <map>
 #include <vector>
 
+// Este struct informa sobre los detalles de un evento que ha sucedido y que permiten
+// conocer qué ha ocurrido en el evento y quién lo ha hecho
+struct InfoEvento
+{
+    // Jugador con el que está relacionado este evento
+    Jugador jugador;
+
+    // Acción con la que está relacionado este evento
+    Accion accion;
+
+    // Indica si la acción fue realizada (se pulsó un botón, por ejemplo)
+    // o se dejó de realizar (se soltó un botón, por ejemplo)
+    bool realizada;
+};
+
 /*
     Clase que se encarga de la correspondencia entre jugadores y controles,
     además de indicar qué significan las teclas y botones que se pulsan
@@ -41,7 +56,7 @@ class GestorDeControles
     public:
 
         // Dado un evento, devuelve el jugador y la acción que está haciendo
-        std::pair<Jugador,Accion> comprobarEvento(std::optional<sf::Event> evento);
+        InfoEvento comprobarEvento(std::optional<sf::Event> evento);
 
         // NUNCA SE COPIA UN SINGLETON
         GestorDeControles(GestorDeControles &otro) = delete;

@@ -70,6 +70,12 @@ constexpr int NUMERO_CONTROLES = 10;
 // un joystick sin drift ni defectos es 100
 constexpr double UMBRAL_JOYSTICK = 50;
 
+// Código asignado al botón de mando usado para atacar
+constexpr unsigned int MANDO_BOTON_ATACAR = 0;
+
+// Código asignado al botón de mando usado para saltar
+constexpr unsigned int MANDO_BOTON_SALTAR = 2;
+
 // Tecla para salir del juego
 constexpr sf::Keyboard::Scancode TECLA_SALIDA = sf::Keyboard::Scancode::Escape;
 

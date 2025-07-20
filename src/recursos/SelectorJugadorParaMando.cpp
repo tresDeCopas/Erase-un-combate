@@ -62,27 +62,84 @@ Jugador SelectorJugadorParaMando::decidirJugador(Control c)
     sonidoAparecer.play();
     ReproductorDeMusica::unicaInstancia()->reproducir("musica/selector-mando.ogg");
 
-    while(rectanguloOscuro.getFillColor() != COLOR_FINAL_RECTANGULO_OSCURO_SELECTOR_MANDOS){
+    // while(rectanguloOscuro.getFillColor() != COLOR_FINAL_RECTANGULO_OSCURO_SELECTOR_MANDOS){
 
+    //     // Se prepara un reloj para ver cuánto tiempo pasa entre frames
+    //     sf::Clock reloj;
+
+    //     // Se comprueba solo el evento de cerrar la ventana
+    //     while (const std::optional evento = ventana->pollEvent())
+    //     {
+    //         if (evento->is<sf::Event::Closed>())
+    //         {
+    //             exit(EXIT_SUCCESS);
+    //         }
+    //     }
+
+    //     // Se aproxima el color del rectángulo del fondo al color final
+    //     rectanguloOscuro.setFillColor(util::aproximarColor(rectanguloOscuro.getFillColor(),COLOR_FINAL_RECTANGULO_OSCURO_SELECTOR_MANDOS,0.8));
+
+    //     // Se dibujan las cosas
+    //     ventana->clear();
+    //     ventana->draw(spriteFondo);
+    //     ventana->draw(rectanguloOscuro);
+    //     ventana->display();
+
+    //     // El juego se duerme hasta que dé tiempo a dibujar el siguiente frame, teniendo en cuenta
+    //     // que se deben dibujar 60 frames por segundo y que cada frame además necesita un tiempo
+    //     // previo de preparación para actualizar y dibujar y tal
+    //     sf::sleep(sf::seconds(1.f / NUMERO_FPS) - reloj.reset());
+    // }
+
+    // Los sprites usados para mostrar qué jugador se ha seleccionado
+    // se van haciendo más opacos con el tiempo
+    spriteJugador1.setColor(sf::Color(255,255,255,0));
+    spriteJugador2.setColor(sf::Color(255,255,255,0));
+
+    while (!jugadorDecidido && ventana->isOpen())
+    {
         // Se prepara un reloj para ver cuánto tiempo pasa entre frames
         sf::Clock reloj;
 
-        // Se comprueba solo el evento de cerrar la ventana
+        // Se comprueban los eventos como de costumbre
         while (const std::optional evento = ventana->pollEvent())
         {
             if (evento->is<sf::Event::Closed>())
             {
                 exit(EXIT_SUCCESS);
             }
+            else if (evento->is<sf::Event::JoystickButtonPressed>())
+            {
+                jugadorDecidido = true;
+            }
+            else if (evento->is<sf::Event::JoystickMoved>() &&
+                     (evento->getIf<sf::Event::JoystickMoved>()->axis == sf::Joystick::Axis::PovX ||
+                      evento->getIf<sf::Event::JoystickMoved>()->axis == sf::Joystick::Axis::X ||
+                      evento->getIf<sf::Event::JoystickMoved>()->axis == sf::Joystick::Axis::R))
+            {
+
+                if (!joystickMovido && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) > UMBRAL_JOYSTICK)
+                {
+                    joystickMovido = true;
+                    jugadorSeleccionado = (jugadorSeleccionado == Jugador::JUGADOR1 ? Jugador::JUGADOR2 : Jugador::JUGADOR1);
+                    sonidoCambiarSeleccion.play();
+                }
+                else if (joystickMovido && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK)
+                {
+                    joystickMovido = false;
+                }
+            }
         }
 
-        // Se aproxima el color del rectángulo del fondo al color final
-        rectanguloOscuro.setFillColor(util::aproximarColor(rectanguloOscuro.getFillColor(),COLOR_FINAL_RECTANGULO_OSCURO_SELECTOR_MANDOS,0.8));
+        // Se pone más claro el sprite de selección de jugador
+        spriteJugador1.setColor(util::aproximarColor(spriteJugador1.getColor(),sf::Color::White,0.8));
+        spriteJugador2.setColor(util::aproximarColor(spriteJugador2.getColor(),sf::Color::White,0.8));
 
         // Se dibujan las cosas
         ventana->clear();
         ventana->draw(spriteFondo);
-        ventana->draw(rectanguloOscuro);
+        //ventana->draw(rectanguloOscuro);
+        ventana->draw(jugadorSeleccionado == Jugador::JUGADOR1 ? spriteJugador1 : spriteJugador2);
         ventana->display();
 
         // El juego se duerme hasta que dé tiempo a dibujar el siguiente frame, teniendo en cuenta
@@ -90,47 +147,6 @@ Jugador SelectorJugadorParaMando::decidirJugador(Control c)
         // previo de preparación para actualizar y dibujar y tal
         sf::sleep(sf::seconds(1.f / NUMERO_FPS) - reloj.reset());
     }
-
-
-    // while (!jugadorDecidido && ventana->isOpen())
-    // {
-
-    //     // Se comprueban los eventos como de costumbre
-    //     while (const std::optional evento = ventana->pollEvent())
-    //     {
-    //         if (evento->is<sf::Event::Closed>())
-    //         {
-    //             exit(EXIT_SUCCESS);
-    //         }
-    //         else if (evento->is<sf::Event::JoystickButtonPressed>())
-    //         {
-    //             jugadorDecidido = true;
-    //         }
-    //         else if (evento->is<sf::Event::JoystickMoved>() &&
-    //                  (evento->getIf<sf::Event::JoystickMoved>()->axis == sf::Joystick::Axis::PovX ||
-    //                   evento->getIf<sf::Event::JoystickMoved>()->axis == sf::Joystick::Axis::X ||
-    //                   evento->getIf<sf::Event::JoystickMoved>()->axis == sf::Joystick::Axis::R))
-    //         {
-
-    //             if (!joystickMovido && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) > UMBRAL_JOYSTICK)
-    //             {
-    //                 joystickMovido = true;
-    //                 jugadorSeleccionado = (jugadorSeleccionado == Jugador::JUGADOR1 ? Jugador::JUGADOR2 : Jugador::JUGADOR1);
-    //                 sonidoCambiarSeleccion.play();
-    //             }
-    //             else if (joystickMovido && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK)
-    //             {
-    //                 joystickMovido = false;
-    //             }
-    //         }
-    //     }
-
-    //     // Se dibujan las cosas
-    //     ventana->clear();
-    //     ventana->draw(spriteFondo);
-    //     ventana->draw(jugadorSeleccionado == Jugador::JUGADOR1 ? spriteJugador1 : spriteJugador2);
-    //     ventana->display();
-    // }
 
     sonidoDesaparecer.play();
 

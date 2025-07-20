@@ -91,9 +91,9 @@ Seleccion MenuPrincipal::comenzar(){
             if(evento->is<sf::Event::Closed>()){
                 exit(EXIT_SUCCESS);
             } else if(!selectorPulsado) {
-                std::pair<Jugador,Accion> par = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
-                if((evento->is<sf::Event::JoystickButtonPressed>() || evento->is<sf::Event::KeyPressed>() || evento->is<sf::Event::JoystickMoved>())){
-                    if(par.second == Accion::ARRIBA){
+                InfoEvento infoEvento = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
+                if(infoEvento.realizada){
+                    if(infoEvento.accion == Accion::ARRIBA){
                         ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-principal/cambiar-seleccion.ogg");
                         switch(seleccionActual){
                             case Seleccion::MODO_HISTORIA:
@@ -106,7 +106,7 @@ Seleccion MenuPrincipal::comenzar(){
                                 seleccionActual = Seleccion::BATALLA_VS;
                                 break;
                         }
-                    } else if (par.second == Accion::ABAJO){
+                    } else if (infoEvento.accion == Accion::ABAJO){
                         ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-principal/cambiar-seleccion.ogg");
                         switch(seleccionActual){
                             case Seleccion::MODO_HISTORIA:
@@ -119,7 +119,7 @@ Seleccion MenuPrincipal::comenzar(){
                                 seleccionActual = Seleccion::MODO_HISTORIA;
                                 break;
                         }
-                    } else if (par.second == Accion::ATACAR){
+                    } else if (infoEvento.accion == Accion::ATACAR){
                         ReproductorDeMusica::unicaInstancia()->detener();
                         ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-principal/seleccionar.ogg");
                         std::shared_ptr<Animacion> anim;
