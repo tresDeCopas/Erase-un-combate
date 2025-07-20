@@ -48,7 +48,7 @@ void AnimacionConGravedad::actualizar()
 
     velocidad.y += GRAVEDAD;
 
-    if (sprite.getPosition().y > VENTANA_ALTURA)
+    if (sprite.getPosition().y+std::min(sprite.getTextureRect().height,sprite.getTextureRect().width)/2.0 > VENTANA_ALTURA)
     {
         if(!haChocado) {
             haChocado = true;
@@ -57,11 +57,16 @@ void AnimacionConGravedad::actualizar()
             sprite.setTextureRect(rectangulo);
         }
 
-        velocidad.y /= -1.2;
-        
-        sprite.setPosition(sprite.getPosition().x,VENTANA_ALTURA);
+        velocidad.y /= -2;
+        if(velocidad.y > -1) velocidad.y = 0;
 
-    } else if (sprite.getPosition().x > VENTANA_ANCHURA)
+        velocidadGiro = velocidad.x*2;
+
+        velocidad.x /= 1.2;
+        
+        sprite.setPosition(sprite.getPosition().x,VENTANA_ALTURA-std::min(sprite.getTextureRect().height,sprite.getTextureRect().width)/2.0);
+
+    } else if (sprite.getPosition().x+std::min(sprite.getTextureRect().height,sprite.getTextureRect().width)/2.0 > VENTANA_ANCHURA)
     {
         if(!haChocado) {
             haChocado = true;
@@ -70,10 +75,11 @@ void AnimacionConGravedad::actualizar()
             sprite.setTextureRect(rectangulo);
         }
 
-        if(velocidad.x > 0) velocidad.x/=-1.5;
+        if(velocidad.x > 0) velocidad.x/=-1.3;
         
-        sprite.setPosition(VENTANA_ANCHURA,sprite.getPosition().y);
-    } else if (sprite.getPosition().x < 0)
+        sprite.setPosition(VENTANA_ANCHURA-std::min(sprite.getTextureRect().height,sprite.getTextureRect().width)/2.0,sprite.getPosition().y);
+
+    } else if (sprite.getPosition().x-std::min(sprite.getTextureRect().height,sprite.getTextureRect().width)/2.0 < 0)
     {
         if(!haChocado) {
             haChocado = true;
@@ -82,12 +88,12 @@ void AnimacionConGravedad::actualizar()
             sprite.setTextureRect(rectangulo);
         }
 
-        if(velocidad.x < 0) velocidad.x/=-1.5;
+        if(velocidad.x < 0) velocidad.x/=-1.3;
         
-        sprite.setPosition(0,sprite.getPosition().y);
+        sprite.setPosition(std::min(sprite.getTextureRect().height,sprite.getTextureRect().width)/2.0,sprite.getPosition().y);
     }
 
-    if(haChocado){
+    if(velocidad.y == 0){
         contadorParpadeo++;
     }
 
