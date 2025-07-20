@@ -22,6 +22,10 @@ sf::RenderWindow * VentanaPrincipal::unicaInstancia()
     return ventanaPrincipal;
 }
 
+VentanaPrincipal::~VentanaPrincipal(){
+    if(ventanaPrincipal != nullptr) delete ventanaPrincipal;
+}
+
 void VentanaPrincipal::aumentarZoom(){
     zoom++;
     ventanaPrincipal->setSize(sf::Vector2u(VENTANA_ANCHURA * zoom,VENTANA_ALTURA * zoom));

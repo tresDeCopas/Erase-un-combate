@@ -167,7 +167,7 @@ void AnimacionPorFrames::resetear(){
 }
 
 std::shared_ptr<Animacion> AnimacionPorFrames::clonar(){
-    return std::shared_ptr<Animacion>(new AnimacionPorFrames(*this));
+    return std::make_shared<AnimacionPorFrames>(*this);
 }
 
 std::list<Hitbox> AnimacionPorFrames::getHitboxes(){

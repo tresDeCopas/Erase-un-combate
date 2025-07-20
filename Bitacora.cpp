@@ -29,6 +29,8 @@ Bitacora::Bitacora(){
 
 Bitacora::~Bitacora(){
     ficheroBitacora.close();
+    if(bitacora != nullptr)
+        delete bitacora;
 }
 
 void Bitacora::escribir(std::string cosillas)

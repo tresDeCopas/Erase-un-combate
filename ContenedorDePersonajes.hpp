@@ -14,6 +14,7 @@ class ContenedorDePersonajes
 {
     private:
         ContenedorDePersonajes(){}
+        ~ContenedorDePersonajes();
 
         static ContenedorDePersonajes * contenedorDePersonajes;
 

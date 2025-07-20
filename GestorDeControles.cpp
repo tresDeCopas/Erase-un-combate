@@ -9,8 +9,12 @@ GestorDeControles * GestorDeControles::gestorDeControles = nullptr;
 GestorDeControles * GestorDeControles::unicaInstancia()
 {
     if(gestorDeControles == nullptr)
-        gestorDeControles = new GestorDeControles;
+        gestorDeControles = new GestorDeControles();
     return gestorDeControles;
+}
+
+GestorDeControles::~GestorDeControles(){
+    if(gestorDeControles != nullptr) delete gestorDeControles;
 }
 
 GestorDeControles::GestorDeControles()

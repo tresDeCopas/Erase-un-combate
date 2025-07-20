@@ -17,6 +17,10 @@ ContenedorDePersonajes * ContenedorDePersonajes::unicaInstancia()
     return contenedorDePersonajes;
 }
 
+ContenedorDePersonajes::~ContenedorDePersonajes(){
+    if(contenedorDePersonajes != nullptr) delete contenedorDePersonajes;
+}
+
 Personaje ContenedorDePersonajes::obtenerPersonaje(std::string nombre){
     // Se obtiene el personaje y se devuelve por valor, copiándolo todo
     return personajes.at(nombre);
@@ -216,10 +220,10 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
             // o SECUENCIA_FIN_FICHERO si ha terminado el fichero
             std::getline(fichero,linea);
 
-            std::shared_ptr<AnimacionPorFrames> anim(new AnimacionPorFrames(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
+            std::shared_ptr<AnimacionPorFrames> anim = std::make_shared<AnimacionPorFrames>(0,0,PERSONAJE_PLANTILLA_ORIGEN.x,PERSONAJE_PLANTILLA_ORIGEN.y,numeroRectangulos,
                                                      ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/personajes/"+nombrePersonaje+"/"+nombreEstado+".png"),
                                                      util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,framesConSonido,framesConMovimiento,
-                                                     framesConAnimaciones,rutaSonido,repetirSonido));
+                                                     framesConAnimaciones,rutaSonido,repetirSonido);
 
             animaciones.insert(std::pair<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>>(util::stringAEstadoPersonaje(nombreEstado),anim));
 

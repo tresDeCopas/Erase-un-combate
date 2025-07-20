@@ -11,6 +11,10 @@ ReproductorDeMusica * ReproductorDeMusica::unicaInstancia()
     return reproductorDeMusica;
 }
 
+ReproductorDeMusica::~ReproductorDeMusica(){
+    if(reproductorDeMusica != nullptr) delete reproductorDeMusica;
+}
+
 ReproductorDeMusica::ReproductorDeMusica(){
     volumenActual = VOLUMEN_MAXIMO_MUSICA/2;
 

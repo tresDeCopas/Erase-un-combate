@@ -265,7 +265,7 @@ const int CONTADOR_VIBRACION_MAX = 2;
 */
 
 // El puerto utilizado por el líder para aceptar conexiones de invitados
-const int NUMERO_PUERTO = 21021;
+const unsigned short NUMERO_PUERTO = 21107;
 
 // Bit que indica que el otro jugador se ha movido a la izquierda
 const uint8_t BIT_IZQUIERDA = 1;

@@ -19,6 +19,10 @@ ContenedorDeEfectos * ContenedorDeEfectos::unicaInstancia()
     return contenedorDeEfectos;
 }
 
+ContenedorDeEfectos::~ContenedorDeEfectos(){
+    if(contenedorDeEfectos != nullptr) delete contenedorDeEfectos;
+}
+
 std::shared_ptr<Animacion> ContenedorDeEfectos::obtenerEfecto(std::string nombre){
 
     if(animaciones.count(nombre) == 0){
@@ -176,9 +180,9 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
                 }
             }
 
-            anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
+            anim = std::make_shared<AnimacionPorFrames>(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
                                             util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,std::set<int>(),std::map<int,sf::Vector2f>(),
-                                            std::map<int,IndicacionesSobreAnimacion>(),rutaSonido,repetirSonido));
+                                            std::map<int,IndicacionesSobreAnimacion>(),rutaSonido,repetirSonido);
             
 
         } else if(tipoAnimacion == "gravedad"){
@@ -217,7 +221,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
             }
 
             // Esto es feísimo y tendría que mirármelo
-            anim = std::shared_ptr<Animacion>(new AnimacionConGravedad(textura,sf::Vector2f(0,0),sf::Vector2f(0,0),0,rutaSonido));
+            anim = std::make_shared<AnimacionConGravedad>(textura,sf::Vector2f(0,0),sf::Vector2f(0,0),0,rutaSonido);
             if(hitboxValida) ((AnimacionConGravedad*)anim.get())->setHitbox(hitbox);
 
         } else if (tipoAnimacion == "agrandable"){
@@ -240,7 +244,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
                 exit(EXIT_FAILURE);
             }
             
-            anim = std::shared_ptr<Animacion>(new AnimacionAgrandable(framesEspera,textura,rutaSonido));
+            anim = std::make_shared<AnimacionAgrandable>(framesEspera,textura,rutaSonido);
         }
 
         animaciones.insert(std::pair<std::string,std::shared_ptr<Animacion>>(nombreEfecto,anim));

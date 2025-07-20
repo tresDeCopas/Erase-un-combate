@@ -11,8 +11,12 @@ SelectorJugadorParaMando * SelectorJugadorParaMando::selectorJugadorParaMando = 
 SelectorJugadorParaMando * SelectorJugadorParaMando::unicaInstancia()
 {
     if(selectorJugadorParaMando == nullptr)
-        selectorJugadorParaMando = new SelectorJugadorParaMando;
+        selectorJugadorParaMando = new SelectorJugadorParaMando();
     return selectorJugadorParaMando;
+}
+
+SelectorJugadorParaMando::~SelectorJugadorParaMando(){
+    if(selectorJugadorParaMando != nullptr) delete selectorJugadorParaMando;
 }
 
 SelectorJugadorParaMando::SelectorJugadorParaMando() : 

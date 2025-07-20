@@ -14,6 +14,8 @@ class SelectorJugadorParaMando {
         // El constructor es privado porque la clase es Singleton
         SelectorJugadorParaMando();
 
+        ~SelectorJugadorParaMando();
+
         // La única instancia
         static SelectorJugadorParaMando * selectorJugadorParaMando;
 

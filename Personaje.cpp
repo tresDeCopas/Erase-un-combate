@@ -21,7 +21,7 @@ Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames
     this->animaciones = animaciones;
     estado = EstadoPersonaje::QUIETO;
     mirandoDerecha = true;
-    shader = std::shared_ptr<sf::Shader>(new sf::Shader());
+    shader = std::make_shared<sf::Shader>();
     if(!shader->loadFromFile("shaders/blendColor.frag",sf::Shader::Type::Fragment)){
         Bitacora::unicaInstancia()->escribir("ERROR: no se pudo cargar el shader");
         exit(EXIT_FAILURE);

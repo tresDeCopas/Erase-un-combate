@@ -1,21 +1,24 @@
 #include <assert.h>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <SFML/System.hpp>
 #include "Bitacora.hpp"
 
 // Las variables estáticas para implementar Singleton se inicializan nulas
-template <class Recurso, class Identificador>
-ContenedorDeTexturas * ContenedorDeRecursos<Recurso,Identificador>::contenedorDeTexturas = nullptr;
+template <class Identificador>
+ContenedorDeTexturas * ContenedorDeRecursos<sf::Texture,Identificador>::contenedorDeTexturas = nullptr;
 
-template <class Recurso, class Identificador>
-ContenedorDeSonidos * ContenedorDeRecursos<Recurso,Identificador>::contenedorDeSonidos = nullptr;
+template <class Identificador>
+ContenedorDeSonidos * ContenedorDeRecursos<sf::SoundBuffer,Identificador>::contenedorDeSonidos = nullptr;
 
-template <class Recurso, class Identificador>
-ContenedorDeFuentes * ContenedorDeRecursos<Recurso,Identificador>::contenedorDeFuentes = nullptr;
+template <class Identificador>
+ContenedorDeFuentes * ContenedorDeRecursos<sf::Font,Identificador>::contenedorDeFuentes = nullptr;
 
 template <class Recurso, class Identificador>
 void ContenedorDeRecursos<Recurso,Identificador>::cargar(Identificador id, const std::string& rutaFichero){
     // Los punteros únicos son mejores que los normales porque se borran solos cuando
     // se salen del scope este como le llaman (cuando se acaba la funcion o el if{} ya me entiendes)
-    std::unique_ptr<Recurso> recurso(new Recurso());
+    std::unique_ptr<Recurso> recurso = std::make_unique<Recurso>();
 
     // Se intenta cargar el recurso. Si no es posible, se escribe en la bitácora y se va todo a la mi3rda
     if(!recurso->loadFromFile(rutaFichero)){
@@ -49,26 +52,26 @@ Recurso& ContenedorDeRecursos<Recurso,Identificador>::obtener(Identificador id){
     return *(encontrado -> second);
 }
 
-template <class Recurso, class Identificador>
-ContenedorDeTexturas * ContenedorDeRecursos<Recurso,Identificador>::unicaInstanciaTexturas()
+template <class Identificador>
+ContenedorDeTexturas * ContenedorDeRecursos<sf::Texture,Identificador>::unicaInstancia()
 {
     if(contenedorDeTexturas == nullptr)
-        contenedorDeTexturas = new ContenedorDeTexturas;
+        contenedorDeTexturas = new ContenedorDeTexturas();
     return contenedorDeTexturas;
 }
 
-template <class Recurso, class Identificador>
-ContenedorDeSonidos * ContenedorDeRecursos<Recurso,Identificador>::unicaInstanciaSonidos()
+template <class Identificador>
+ContenedorDeSonidos * ContenedorDeRecursos<sf::SoundBuffer,Identificador>::unicaInstancia()
 {
     if(contenedorDeSonidos == nullptr)
-        contenedorDeSonidos = new ContenedorDeSonidos;
+        contenedorDeSonidos = new ContenedorDeSonidos();
     return contenedorDeSonidos;
 }
 
-template <class Recurso, class Identificador>
-ContenedorDeFuentes * ContenedorDeRecursos<Recurso,Identificador>::unicaInstanciaFuentes()
+template <class Identificador>
+ContenedorDeFuentes * ContenedorDeRecursos<sf::Font,Identificador>::unicaInstancia()
 {
     if(contenedorDeFuentes == nullptr)
-        contenedorDeFuentes = new ContenedorDeFuentes;
+        contenedorDeFuentes = new ContenedorDeFuentes();
     return contenedorDeFuentes;
 }

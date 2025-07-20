@@ -15,6 +15,7 @@ class ContenedorDeEfectos
 {
     private:
         ContenedorDeEfectos(){}
+        ~ContenedorDeEfectos();
 
         static ContenedorDeEfectos * contenedorDeEfectos;
 

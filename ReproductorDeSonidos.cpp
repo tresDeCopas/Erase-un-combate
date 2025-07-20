@@ -16,6 +16,10 @@ ReproductorDeSonidos::ReproductorDeSonidos(){
     volumenActual = VOLUMEN_MAXIMO_SONIDOS;
 }
 
+ReproductorDeSonidos::~ReproductorDeSonidos(){
+    if(reproductorDeSonidos != nullptr) delete reproductorDeSonidos;
+}
+
 void ReproductorDeSonidos::reproducir(std::string sonido)
 {
     // Primero se crea el sonido si no existe

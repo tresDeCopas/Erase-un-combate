@@ -17,7 +17,7 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
     GUIJugador1(personajeJugador1,true), GUIJugador2(personajeJugador2,false),
     escenario(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/escenarios/"+nombreEscenario+"/fondo.png"),
               ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/escenarios/"+nombreEscenario+"/frente.png"),
-              ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/escenarios/"+nombreEscenario+"/suelo.png")), lider(lider),
+              ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/escenarios/"+nombreEscenario+"/suelo.png")), lider(lider), direccionIP(direccionIP),
     cartelTodoListo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-todo-listo")),
     cartelAPelear(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-a-pelear")){
 
@@ -26,7 +26,7 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
     rectanguloOscuro.setOutlineThickness(0);
     rectanguloOscuro.setFillColor(sf::Color::Black);
 
-    if(lider){
+    /*if(lider){
         if(listener.listen(NUMERO_PUERTO) != sf::Socket::Status::Done){
             // TODO: por cada exit hacer que se ponga algo en la bitácora
             exit(1);
@@ -38,6 +38,25 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
     } else if (direccionIP != sf::IpAddress(0,0,0,0)){
         if(socket.connect(direccionIP,NUMERO_PUERTO) != sf::Socket::Status::Done){
             exit(1);
+        }
+    }*/
+
+    if(direccionIP != sf::IpAddress(0,0,0,0)){
+        if(socket.bind(NUMERO_PUERTO) != sf::Socket::Status::Done)
+            exit(1);
+        
+        if(lider){
+            std::cout << "Recibiendo mensaje...\n";
+            
+            sf::Packet paquete;
+            unsigned short puerto = NUMERO_PUERTO;
+            socket.receive(paquete,this->direccionIP,puerto);
+        } else {
+            std::cout << "Enviando mensaje...\n";
+
+            sf::Packet paquete;
+            unsigned short puerto = NUMERO_PUERTO;
+            socket.send(paquete,direccionIP,puerto);
         }
     }
 
@@ -207,18 +226,20 @@ void Combate::recibirEntradaOnline(){
     // Se crea un paquete para recibir datos
     sf::Packet paqueteRecibido;
 
+    unsigned short puerto = NUMERO_PUERTO;
+
     if(lider){
         // El lider es el que envía primero
-        while(socket.send(paqueteEnviado) != sf::Socket::Status::Done);
-        if(socket.receive(paqueteRecibido) != sf::Socket::Status::Done){
+        while(socket.send(paqueteEnviado,direccionIP.value(),puerto) != sf::Socket::Status::Done);
+        if(socket.receive(paqueteRecibido,direccionIP,puerto) != sf::Socket::Status::Done){
             exit(1);
         }
     } else {
         // El invitado envía después
-        if(socket.receive(paqueteRecibido) != sf::Socket::Status::Done){
+        if(socket.receive(paqueteRecibido,direccionIP,puerto) != sf::Socket::Status::Done){
             exit(1);
         }
-        while(socket.send(paqueteEnviado) != sf::Socket::Status::Done);
+        while(socket.send(paqueteEnviado,direccionIP.value(),puerto) != sf::Socket::Status::Done);
     }
 
     paqueteRecibido >> accionesRealizadas >> accionesDetenidas;
@@ -328,7 +349,7 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
         cartelAPelear->actualizar(efectos);
     }
 
-    if(socket.getRemoteAddress().has_value())
+    if(socket.getLocalPort() != 0)
         recibirEntradaOnline();
     else
         recibirEntradaOffline();

@@ -19,6 +19,8 @@ class ReproductorDeMusica
         // Constructor privado para que sea más Singleton
         ReproductorDeMusica();
 
+        ~ReproductorDeMusica();
+
         // Única instancia
         static ReproductorDeMusica * reproductorDeMusica;
 

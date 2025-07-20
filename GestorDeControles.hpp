@@ -17,6 +17,8 @@ class GestorDeControles
         // El constructor es privado porque la clase es Singleton
         GestorDeControles();
 
+        ~GestorDeControles();
+
         // La única instancia
         static GestorDeControles * gestorDeControles;
 

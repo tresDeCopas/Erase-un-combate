@@ -139,7 +139,7 @@ void AnimacionConGravedad::setHitbox(Hitbox hitbox){
 }
 
 std::shared_ptr<Animacion> AnimacionConGravedad::clonar(){
-    return std::shared_ptr<Animacion>(new AnimacionConGravedad(*this));
+    return std::make_shared<AnimacionConGravedad>(*this);
 }
 
 void AnimacionConGravedad::chocar(Hitbox hitbox){

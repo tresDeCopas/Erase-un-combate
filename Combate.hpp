@@ -43,10 +43,12 @@ class Combate{
         bool lider;
 
         // Permite comunicarse con el otro ordenador
-        sf::TcpSocket socket;
+        //sf::TcpSocket socket;
+        sf::UdpSocket socket;
+        std::optional<sf::IpAddress> direccionIP;
 
         // Permite aceptar conexiones en caso de que seamos el líder
-        sf::TcpListener listener;
+        //sf::TcpListener listener;
 
         // Cartel que aparece al principio de la ronda en el que pone "¿Todo listo?"
         std::shared_ptr<Animacion> cartelTodoListo;

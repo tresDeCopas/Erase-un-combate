@@ -53,9 +53,9 @@ class ContenedorDeRecursos
         void operator=(const ContenedorDeRecursos &) = delete;
 
         // Métodos Singleton para obtener la única instancia
-        static ContenedorDeTexturas * unicaInstanciaTexturas();
-        static ContenedorDeSonidos * unicaInstanciaSonidos();
-        static ContenedorDeFuentes * unicaInstanciaFuentes();
+        static ContenedorDeTexturas * unicaInstancia();
+        static ContenedorDeSonidos * unicaInstancia();
+        static ContenedorDeFuentes * unicaInstancia();
 
 };
 

@@ -79,7 +79,7 @@ bool AnimacionAgrandable::haTerminadoDeAgrandarse(){
 }
 
 std::shared_ptr<Animacion> AnimacionAgrandable::clonar(){
-    return std::shared_ptr<Animacion>(new AnimacionAgrandable(*this));
+    return std::make_shared<AnimacionAgrandable>(*this);
 }
 
 void AnimacionAgrandable::draw(sf::RenderTarget& target, sf::RenderStates states) const{

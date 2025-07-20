@@ -12,6 +12,8 @@ class VentanaPrincipal {
         // Constructor por defecto vacío
         VentanaPrincipal();
 
+        ~VentanaPrincipal();
+
         // Única instancia
         static sf::RenderWindow * ventanaPrincipal;
 
