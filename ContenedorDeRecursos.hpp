@@ -61,7 +61,8 @@ class ContenedorDeRecursos
 // ContenedorDeRecursos.cpp, así que no queda otra, tenemos que hacerlo al revés. También hay
 // que cambiar la extensión del .cpp a cualquier otra cosa (por ejemplo, .tpp) para que no se
 // compile, ya que lo normal es que los .cpp contengan la cabecera encima, pero como este es
-// al revés pues no se compila y se deja aquí debajo que está muy bien puesto
+// al revés pues no se compila y se deja aquí debajo que está muy bien puesto. Además la cosa se
+// lía aún más y también he tenido que poner un cpp, así que tenemos un hpp, tpp y cpp dios santo
 
 #include "ContenedorDeRecursos.tpp"
 

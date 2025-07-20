@@ -1,18 +1,4 @@
-#include <assert.h>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/System.hpp>
 #include "Bitacora.hpp"
-
-// Las variables estáticas para implementar Singleton se inicializan nulas
-template <class Recurso, class Identificador>
-ContenedorDeTexturas * ContenedorDeRecursos<Recurso,Identificador>::contenedorDeTexturas = nullptr;
-
-template <class Recurso, class Identificador>
-ContenedorDeSonidos * ContenedorDeRecursos<Recurso,Identificador>::contenedorDeSonidos = nullptr;
-
-template <class Recurso, class Identificador>
-ContenedorDeFuentes * ContenedorDeRecursos<Recurso,Identificador>::contenedorDeFuentes = nullptr;
 
 template <class Recurso, class Identificador>
 void ContenedorDeRecursos<Recurso,Identificador>::cargar(Identificador id, const std::string& rutaFichero){
@@ -50,28 +36,4 @@ Recurso& ContenedorDeRecursos<Recurso,Identificador>::obtener(Identificador id){
     // usa el asterisco para decir que vamos a devolver el propio objeto (en realidad
     // devolvemos una referencia, el objeto real está en memoria dinámica)
     return *(encontrado -> second);
-}
-
-template <>
-ContenedorDeTexturas * ContenedorDeTexturas::unicaInstancia()
-{
-    if(contenedorDeTexturas == nullptr)
-        contenedorDeTexturas = new ContenedorDeTexturas();
-    return contenedorDeTexturas;
-}
-
-template <>
-ContenedorDeSonidos * ContenedorDeSonidos::unicaInstancia()
-{
-    if(contenedorDeSonidos == nullptr)
-        contenedorDeSonidos = new ContenedorDeSonidos();
-    return contenedorDeSonidos;
-}
-
-template <>
-ContenedorDeFuentes * ContenedorDeFuentes::unicaInstancia()
-{
-    if(contenedorDeFuentes == nullptr)
-        contenedorDeFuentes = new ContenedorDeFuentes();
-    return contenedorDeFuentes;
 }
