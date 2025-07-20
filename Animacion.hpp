@@ -14,24 +14,24 @@
 */
 class Animacion : public sf::Drawable {
     protected:
-        // Sprite para la animaci�n
+        // Sprite para la animación
         sf::Sprite sprite;
 
-        // Sonido para la animaci�n
+        // Sonido para la animación
         sf::Sound sonido;
 
     public:
 
-        // Actualiza la animaci�n (avanza un frame)
+        // Actualiza la animación (avanza un frame)
         virtual void actualizar() = 0;
 
-        // Resetea la animaci�n al estado inicial
+        // Resetea la animación al estado inicial
         virtual void resetear() = 0;
 
         // Le da la vuelta al sprite
         virtual void voltear();
 
-        // Coloca el sprite en la posici�n indicada con respecto a la esquina superior
+        // Coloca el sprite en la posición indicada con respecto a la esquina superior
         // izquierda de la ventana
         void setPosicion(float x, float y);
         void setPosicion(sf::Vector2f posicion);
@@ -39,7 +39,7 @@ class Animacion : public sf::Drawable {
         // Establece la rotación del sprite en grados centígrados
         void setRotacion(double angulo);
 
-        // Devuelve la posici�n actual del sprite (teniendo en cuenta el origen, sea cual sea)
+        // Devuelve la posición actual del sprite (teniendo en cuenta el origen, sea cual sea)
         sf::Vector2f getPosicion();
 
         // Devuelve la posición de la esquina superior izquierda del sprite (es decir, no tiene en
@@ -49,14 +49,14 @@ class Animacion : public sf::Drawable {
         // Devuelve una lista con las hitboxes
         virtual std::list<Hitbox> getHitboxes() = 0;
 
-        // Mueve la posici�n del sprite con respecto a la posici�n actual
+        // Mueve la posición del sprite con respecto a la posición actual
         void mover(float x, float y);
         void mover(sf::Vector2f diferencia);
 
-        // Determina si una animaci�n ha terminado
+        // Determina si una animación ha terminado
         virtual bool haTerminado() = 0;
 
-        // Devuelve un clon de la animaci�n
+        // Devuelve un clon de la animación
         virtual std::shared_ptr<Animacion> clonar() = 0;
 
         // Indica a la animación que acaba de chocar contra una hitbox (SE SUPONE QUE

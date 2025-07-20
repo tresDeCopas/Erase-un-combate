@@ -69,13 +69,13 @@ void AnimacionPorFrames::voltear(){
     // Al escalar el eje X por -1 se le da la vuelta muy guay todo pero no es suficiente
     sprite.scale(-1,1);
 
-    // Tambi�n hay que voltear las hitboxes
+    // También hay que voltear las hitboxes
     for(auto const &[entero, listaHitboxes] : hitboxes){
         std::list<Hitbox> nuevaLista;
 
         for(Hitbox hitbox : listaHitboxes){
 
-            // Esto se explicar�a mejor con un dibujito pero bueno
+            // Esto se explicaría mejor con un dibujito pero bueno
             int puntoCentral = sprite.getTextureRect().width/2;
 
             int derecha = hitbox.getRectangulo().left+hitbox.getRectangulo().width;
@@ -109,8 +109,6 @@ bool AnimacionPorFrames::haTerminado(){
 
 void AnimacionPorFrames::resetear(){
 
-    // Para que se muestre el primer frame hay que colocar el conteo de frames en una posici�n m�s all� del l�mite,
-    // de lo contrario se saltar� el primer frame siempre
     switch(tipoBucle){
         case TipoBucle::NORMAL:
         case TipoBucle::PING_PONG:

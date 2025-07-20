@@ -5,8 +5,8 @@
 #include <iostream>
 #include <list>
 
-// Al usar initializer lists o como se diga en espa�olo me evito que se creen los
-// personajes usando el constructor vac�o para nada (porque se queja el g++ m�s que nada)
+// Al usar initializer lists o como se diga en españolo me evito que se creen los
+// personajes usando el constructor vacío para nada (porque se queja el g++ más que nada)
 Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, std::string nombreEscenario) :
     personajeJugador1(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ1)),
     personajeJugador2(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ2)){

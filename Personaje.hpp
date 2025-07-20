@@ -9,7 +9,7 @@
 #include <memory>
 
 /*
-    Esta clase define las cualidades de un personaje gen�rico, pudiendo ser
+    Esta clase define las cualidades de un personaje genérico, pudiendo ser
     utilizada por todos los posibles personajes al ser estos lo suficientemente
     parecidos como para compartir clase
 */
@@ -26,10 +26,10 @@ class Personaje : public sf::Drawable {
         // Velocidad en el eje X
         float velX;
 
-        // Verdadero si el personaje est� mirando hacia la derecha (el enemigo est� a la derecha)
+        // Verdadero si el personaje está mirando hacia la derecha (el enemigo está a la derecha)
         bool mirandoDerecha;
 
-        // Jugador al que est� asociado el personaje
+        // Jugador al que está asociado el personaje
         Jugador jugador;
 
         // Estado en el que se encuentra el personaje
@@ -58,27 +58,27 @@ class Personaje : public sf::Drawable {
         // Construye el personaje
         Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones);
 
-        // Indica que se est� pulsando un bot�n
+        // Indica que se está pulsando un botón
         void realizarAccion(Accion accion);
 
-        // Indica que se ha soltado un bot�n
+        // Indica que se ha soltado un botón
         void detenerAccion(Accion accion);
 
-        // Actualiza la posici�n del personaje y dem�s seg�n los botones que est�n pulsados
+        // Actualiza la posición del personaje y demás según los botones que están pulsados
         virtual void actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_ptr<Animacion>> &efectosInsertados);
 
-        // Comprueba si la hitbox del personaje ha colisionado con alg�n ataque enemigo y
+        // Comprueba si la hitbox del personaje ha colisionado con algún ataque enemigo y
         // reacciona de forma adecuada
         virtual void comprobarColisiones(std::list<std::shared_ptr<Animacion>> &animaciones, std::list<std::shared_ptr<Animacion>> &efectosInsertados);
 
         // Devuelve los puntos de vida actuales
         int getPuntosDeVida();
 
-        // Establece la posici�n del personaje
+        // Establece la posición del personaje
         void setPosicion(float x, float y);
         void setPosicion(sf::Vector2f posicion);
 
-        // Devuelve la posici�n del personaje
+        // Devuelve la posición del personaje
         sf::Vector2f getPosicion();
 
         // Devuelve el estado actual del personaje

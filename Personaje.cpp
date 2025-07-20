@@ -82,7 +82,7 @@ void Personaje::moverseDerecha(){
 }
 
 void Personaje::pararMovimiento(){
-    // Si la velocidad es tan baja que se podr�a decir que es cero, termina
+    // Si la velocidad es tan baja que se podría decir que es cero, termina
     // directamente para no entrar en un bucle
     if(std::abs(velX) < UMBRAL_FLOAT) return;
 

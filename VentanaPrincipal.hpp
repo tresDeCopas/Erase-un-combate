@@ -9,7 +9,7 @@
 */
 class VentanaPrincipal {
     private:
-        // Constructor por defecto vac�o
+        // Constructor por defecto vacío
         VentanaPrincipal();
 
         // Única instancia
@@ -25,7 +25,7 @@ class VentanaPrincipal {
         static int contadorVibracion;
 
     public:
-        // Devuelve la �nica instancia
+        // Devuelve la única instancia
         static sf::RenderWindow * unicaInstancia();
 
         // Aumenta el zoom en 100% con respecto al zoom actual (de 100% a 200%, luego 300%...)

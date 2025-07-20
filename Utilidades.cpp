@@ -2,8 +2,6 @@
 
 namespace util{
 
-    // Dado un string de entrada y un car�cter separador, corta el string original en substrings y
-    // los devuelve en forma de vector (sin incluir el car�cter separador)
     std::vector<std::string> separarString(std::string string, char separador){
 
         std::stringstream stringstream(string);
@@ -19,7 +17,6 @@ namespace util{
         return vectorParaDevolver;
     }
 
-    // Dado un string, devuelve el tipo de bucle correspondiente
     TipoBucle stringATipoBucle(std::string string){
         if(string == "normal")
             return TipoBucle::NORMAL;
@@ -31,7 +28,6 @@ namespace util{
         return TipoBucle::SIN_BUCLE;
     }
 
-    // Dado un string, devuelve el estado de personaje correspondiente
     EstadoPersonaje stringAEstadoPersonaje(std::string string){
         if(string == "quieto")
             return EstadoPersonaje::QUIETO;
@@ -77,8 +73,6 @@ namespace util{
         return EstadoPersonaje::QUIETO;
     }
 
-    // Dados dos rectángulos, calcula el centro del subrectángulo que resulta de la intersección
-    // de ambos rectángulos
     sf::Vector2f centroDeInterseccion(sf::IntRect r1, sf::IntRect r2){
         
         int izquierda = std::max(r1.left, r2.left);
@@ -90,7 +84,6 @@ namespace util{
         return sf::Vector2f(izquierda + (derecha - izquierda)/2, arriba + (abajo-arriba)/2);
     }
 
-    // Devuelve un número real en el rango [0,1)
     double realAleatorio(){
         return ((double)rand()) / RAND_MAX;
     }

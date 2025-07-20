@@ -34,7 +34,7 @@ class ContenedorDeEfectos
         // NUNCA SE ASIGNA UN SINGLETON
         void operator=(const ContenedorDeEfectos &) = delete;
 
-        // Devuelve la �nica instancia
+        // Devuelve la única instancia
         static ContenedorDeEfectos * unicaInstancia();
 
 };

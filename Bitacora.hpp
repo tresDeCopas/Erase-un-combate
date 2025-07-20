@@ -5,27 +5,27 @@
 #include <string>
 
 /*
-    Esta clase gestiona una bit�cora que informa de cosas
-    importantes que pasan en la ejecuci�n del programa
+    Esta clase gestiona una bitácora que informa de cosas
+    importantes que pasan en la ejecución del programa
 */
 
 class Bitacora
 {
 private:
-    // El propio fichero de bit�cora
+    // El propio fichero de bitácora
     std::ofstream ficheroBitacora;
 
     Bitacora();
     ~Bitacora();
 
-    // �nica instancia
+    // Única instancia
     static Bitacora *bitacora;
 
 public:
     // Se escriben cosas en el fichero de bitácora terminando con un fin de línea
     void escribir(std::string cosillas);
 
-    // Se comprueba si la tarjeta gr�fica tiene lo que hay que tener
+    // Se comprueba si la tarjeta gráfica tiene lo que hay que tener
     void comprobarGrafica();
 
     // NUNCA SE COPIA UN SINGLETON
@@ -34,7 +34,7 @@ public:
     // NUNCA SE ASIGNA UN SINGLETON
     void operator=(const Bitacora &) = delete;
 
-    // Devuelve la �nica instancia de la bit�cora
+    // Devuelve la única instancia de la bitácora
     static Bitacora *unicaInstancia();
 };
 

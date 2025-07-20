@@ -8,7 +8,7 @@
 #include <map>
 
 /*
-    Clase que se encarga de reproducir m�sica para que el
+    Clase que se encarga de reproducir música para que el
     resto de clases no se tengan que preocupar de eso
 */
 class ReproductorDeMusica
@@ -26,16 +26,16 @@ class ReproductorDeMusica
 
     public:
 
-        // Reproduce la canci�n dado su identificador
+        // Reproduce la canción dado su identificador
         void reproducir(std::string cancion);
 
-        // Detiene por completo la reproducci�n de la canci�n
+        // Detiene por completo la reproducción de la canción
         void detener();
 
-        // Devuelve el volumen de la canci�n actual
+        // Devuelve el volumen de la canción actual
         float obtenerVolumen();
 
-        // Establece el nuevo volumen para la canci�n actual y las siguientes
+        // Establece el nuevo volumen para la canción actual y las siguientes
         void establecerVolumen(float nuevoVolumen);
 
         // NUNCA SE COPIA UN SINGLETON
@@ -44,7 +44,7 @@ class ReproductorDeMusica
         // NUNCA SE ASIGNA UN SINGLETON
         void operator=(const ReproductorDeMusica &) = delete;
 
-        // Devuelve la �nica instancia
+        // Devuelve la única instancia
         static ReproductorDeMusica * unicaInstancia();
 
 };
