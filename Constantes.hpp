@@ -139,6 +139,12 @@ const int NUM_PARTICULAS_GOLPEADO_GRANDE = 7;
 // Cómo de desplazada está la animación del polvo en el eje X con respecto al centro del personaje
 const int OFFSET_POLVO = 15;
 
+// Cuánto se agrandan o disminuyen las animaciones agrandables cada frame
+const double TASA_CRECIMIENTO_ANIMACION_AGRANDABLE = 0.1;
+
+// Posición de los carteles que aparecen durante los combates (los de "¿Todo listo?" y tal)
+const sf::Vector2f POSICION_CARTELES = sf::Vector2f(VENTANA_ANCHURA/2, VENTANA_ALTURA/3);
+
 /*
     CONSTANTES PARA LOS PERSONAJES
 */

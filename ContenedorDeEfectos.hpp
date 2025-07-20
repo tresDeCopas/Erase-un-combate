@@ -22,7 +22,9 @@ class ContenedorDeEfectos
 
     public:
 
-        // Devuelve una copia del efecto pedido
+        // Devuelve una copia del efecto pedido. El nombre es el nombre del fichero sin extensión
+        // y sin incluir directorios. Por ejemplo, "bloqueado" para el círculo azul que aparece al
+        // bloquear un ataque
         std::shared_ptr<Animacion> obtenerEfecto(std::string nombre);
 
         // Carga todos los efectos, sacados de varios ficheros en la misma carpeta

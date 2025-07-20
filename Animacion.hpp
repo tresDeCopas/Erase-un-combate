@@ -23,8 +23,8 @@ class Animacion : public sf::Drawable {
     public:
 
         // Actualiza la animación (avanza un frame), reproduciendo el sonido si es necesario. En nuevasAnimaciones
-        // se insertan las nuevas animaciones que serán introducidas, y en movimiento se indica si la animación se moverá
-        virtual void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones, sf::Vector2f &movimiento) = 0;
+        // se insertan las nuevas animaciones que serán introducidas
+        virtual void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones) = 0;
 
         // Resetea la animación al estado inicial
         virtual void resetear() = 0;

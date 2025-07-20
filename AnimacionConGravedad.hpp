@@ -32,7 +32,7 @@ public:
     AnimacionConGravedad(sf::Texture &textura, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, std::string rutaSonido);
 
     // Actualiza la animación
-    void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones, sf::Vector2f &movimiento);
+    void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones);
 
     // Resetea la animación al estado inicial
     void resetear();
