@@ -18,6 +18,7 @@ sf::RenderWindow * VentanaPrincipal::unicaInstancia()
         ventanaPrincipal->setVerticalSyncEnabled(true);
 
         aumentarZoom();
+        aumentarZoom();
     }
     return ventanaPrincipal;
 }
