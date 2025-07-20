@@ -74,7 +74,7 @@ void Personaje::moverseDerecha(){
 }
 
 void Personaje::pararMovimiento(){
-    // Si la velocidad es tan baja que se podría decir que es cero, termina
+    // Si la velocidad es tan baja que se podrï¿½a decir que es cero, termina
     // directamente para no entrar en un bucle
     if(std::abs(velX) < UMBRAL_FLOAT) return;
 
@@ -93,7 +93,7 @@ void Personaje::pararMovimiento(){
 
 void Personaje::actualizar(sf::Vector2f posicionEnemigo){
 
-    // Según el estado, se hace una cosa u otra
+    // Segï¿½n el estado, se hace una cosa u otra
     switch(estado){
     case EstadoPersonaje::QUIETO:
 
@@ -237,16 +237,31 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
             accionesRealizadas[Accion::ATACAR] = false;
         }
         break;
+    
+    case EstadoPersonaje::GOLPEADO_PEQUE:
+        if(!animaciones[estado]->haTerminado()){
+            if(mirandoDerecha) velX-=2;
+            else velX+=2;
+        } else {
+            cambiarEstado(EstadoPersonaje::QUIETO);
+        }
 
+        break;
     }
 
-    // Se comprueba si el enemigo está a la derecha o a la izquierda
+    // Se comprueba si el enemigo estÃ¡ a la derecha o a la izquierda y se voltea el
+    // sprite segÃºn sea necesario. Si el personaje estÃ¡ atacando o recibiendo un golpe,
+    // estÃ¡ demasiado ocupado como para ir volteÃ¡ndose
     if(estado != EstadoPersonaje::ATAQUE_NORMAL_1 &&
        estado != EstadoPersonaje::ATAQUE_NORMAL_2 &&
        estado != EstadoPersonaje::ATAQUE_NORMAL_3 &&
        estado != EstadoPersonaje::ATAQUE_AEREO &&
        estado != EstadoPersonaje::ATAQUE_AGACHADO &&
-       estado != EstadoPersonaje::ATAQUE_SUPER){
+       estado != EstadoPersonaje::ATAQUE_SUPER &&
+       estado != EstadoPersonaje::GOLPEADO_BAJO &&
+       estado != EstadoPersonaje::GOLPEADO_PEQUE &&
+       estado != EstadoPersonaje::GOLPEADO_MEDIO &&
+       estado != EstadoPersonaje::GOLPEADO_GRANDE){
         if((animaciones[estado]->getPosicion().x < posicionEnemigo.x && !mirandoDerecha) ||
            (animaciones[estado]->getPosicion().x > posicionEnemigo.x && mirandoDerecha)){
             mirandoDerecha = !mirandoDerecha;
@@ -258,7 +273,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
 
     animaciones[estado]->actualizar();
 
-    // Una vez se hace todo, se aumenta la velocidad según se vea
+    // Una vez se hace todo, se aumenta la velocidad segÃºn se vea
     animaciones[estado]->mover(velX,velY);
 
     // Si el personaje se sale por la derecha, no dejar que pase
