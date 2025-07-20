@@ -5,14 +5,14 @@
 #include "Bitacora.hpp"
 
 // Las variables estáticas para implementar Singleton se inicializan nulas
-template <class Identificador>
-ContenedorDeTexturas * ContenedorDeRecursos<sf::Texture,Identificador>::contenedorDeTexturas = nullptr;
+template <class Recurso, class Identificador>
+ContenedorDeTexturas * ContenedorDeRecursos<Recurso,Identificador>::contenedorDeTexturas = nullptr;
 
-template <class Identificador>
-ContenedorDeSonidos * ContenedorDeRecursos<sf::SoundBuffer,Identificador>::contenedorDeSonidos = nullptr;
+template <class Recurso, class Identificador>
+ContenedorDeSonidos * ContenedorDeRecursos<Recurso,Identificador>::contenedorDeSonidos = nullptr;
 
-template <class Identificador>
-ContenedorDeFuentes * ContenedorDeRecursos<sf::Font,Identificador>::contenedorDeFuentes = nullptr;
+template <class Recurso, class Identificador>
+ContenedorDeFuentes * ContenedorDeRecursos<Recurso,Identificador>::contenedorDeFuentes = nullptr;
 
 template <class Recurso, class Identificador>
 void ContenedorDeRecursos<Recurso,Identificador>::cargar(Identificador id, const std::string& rutaFichero){
@@ -52,24 +52,24 @@ Recurso& ContenedorDeRecursos<Recurso,Identificador>::obtener(Identificador id){
     return *(encontrado -> second);
 }
 
-template <class Identificador>
-ContenedorDeTexturas * ContenedorDeRecursos<sf::Texture,Identificador>::unicaInstancia()
+template <>
+ContenedorDeTexturas * ContenedorDeTexturas::unicaInstancia()
 {
     if(contenedorDeTexturas == nullptr)
         contenedorDeTexturas = new ContenedorDeTexturas();
     return contenedorDeTexturas;
 }
 
-template <class Identificador>
-ContenedorDeSonidos * ContenedorDeRecursos<sf::SoundBuffer,Identificador>::unicaInstancia()
+template <>
+ContenedorDeSonidos * ContenedorDeSonidos::unicaInstancia()
 {
     if(contenedorDeSonidos == nullptr)
         contenedorDeSonidos = new ContenedorDeSonidos();
     return contenedorDeSonidos;
 }
 
-template <class Identificador>
-ContenedorDeFuentes * ContenedorDeRecursos<sf::Font,Identificador>::unicaInstancia()
+template <>
+ContenedorDeFuentes * ContenedorDeFuentes::unicaInstancia()
 {
     if(contenedorDeFuentes == nullptr)
         contenedorDeFuentes = new ContenedorDeFuentes();
