@@ -10,11 +10,11 @@ sf::RenderWindow * VentanaPrincipal::unicaInstancia()
 {
     if(ventanaPrincipal==nullptr){
         ventanaPrincipal = new sf::RenderWindow(sf::VideoMode(VENTANA_ANCHURA, VENTANA_ALTURA), VENTANA_NOMBRE, VENTANA_ESTILO);
-        ventanaPrincipal->setFramerateLimit(VENTANA_FPS);
+        // ventanaPrincipal->setFramerateLimit(VENTANA_FPS);
         // Se desactiva lo de que si mantienes pulsada una tecla se vuelve a pulsar muchas veces
         // porque que pereza
         ventanaPrincipal->setKeyRepeatEnabled(false);
-        ventanaPrincipal->setVerticalSyncEnabled(true);
+        // ventanaPrincipal->setVerticalSyncEnabled(true);
 
         aumentarZoom();
     }
