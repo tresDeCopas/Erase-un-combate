@@ -40,11 +40,9 @@ AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX
 
 void AnimacionPorFrames::actualizar() {
 
-    if(!sonidoYaReproducido && framesConSonido.count(frameActual)) sonido.play();
-
     if(tipoBucle == TipoBucle::NORMAL){
         frameActual++;
-        if(frameActual >= rectanguloCorrespondiente.size()) {
+        if(frameActual >= (int)rectanguloCorrespondiente.size()) {
             frameActual = 0;
             if(!repetirSonido) sonidoYaReproducido = true;
         }
@@ -55,9 +53,11 @@ void AnimacionPorFrames::actualizar() {
         }
         else frameActual--;
     } else if (tipoBucle == TipoBucle::SIN_BUCLE){
-        if(frameActual < rectanguloCorrespondiente.size()-1)
+        if(frameActual < (int)rectanguloCorrespondiente.size()-1)
             frameActual++;
     }
+
+    if(!sonidoYaReproducido && framesConSonido.count(frameActual)) sonido.play();
 
     sprite.setTextureRect(sf::IntRect(rectanguloCorrespondiente[frameActual]*sprite.getTextureRect().width,0,sprite.getTextureRect().width,sprite.getTextureRect().height));
 }
@@ -97,11 +97,25 @@ void AnimacionPorFrames::setTipoBucle(TipoBucle tipoBucle){
 }
 
 bool AnimacionPorFrames::haTerminado(){
-    return tipoBucle == TipoBucle::SIN_BUCLE && frameActual == rectanguloCorrespondiente.size()-1;
+    return tipoBucle == TipoBucle::SIN_BUCLE && frameActual == (int)rectanguloCorrespondiente.size()-1;
 }
 
 void AnimacionPorFrames::resetear(){
-    frameActual = 0;
+
+    // Para que se muestre el primer frame hay que colocar el conteo de frames en una posición más allá del límite,
+    // de lo contrario se saltará el primer frame siempre
+    switch(tipoBucle){
+        case TipoBucle::NORMAL:
+        case TipoBucle::PING_PONG:
+        case TipoBucle::SIN_BUCLE:
+            frameActual = -1;
+            break;
+
+        case TipoBucle::AL_REVES:
+            frameActual = rectanguloCorrespondiente.size();
+            break;
+    }
+
     numRepeticionesActual = 0;
     pingPongHaciaDelante = true;
     sonidoYaReproducido = false;
