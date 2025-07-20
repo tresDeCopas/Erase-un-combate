@@ -1,0 +1,38 @@
+#ifndef __ANIMACION_HPP__
+#define __ANIMACION_HPP__
+
+#include <SFML/Graphics.hpp>
+
+/*
+    Clase abstracta para cualquier tipo de animaciones
+*/
+class Animacion {
+    protected:
+        // Sprite para la animación
+        sf::Sprite sprite;
+
+    public:
+
+        // Actualiza la animación (avanza un frame)
+        virtual void actualizar() = 0;
+
+        // Resetea la animación al estado inicial
+        virtual void resetear() = 0;
+
+        // Coloca el sprite en la posición indicada con respecto a la esquina superior
+        // izquierda de la ventana
+        void setPosicion(float x, float y);
+        void setPosicion(sf::Vector2f posicion);
+
+        // Devuelve la posición actual del sprite
+        sf::Vector2f getPosicion();
+
+        // Mueve la posición del sprite con respecto a la posición actual
+        void mover(float x, float y);
+        void mover(sf::Vector2f diferencia);
+
+        // Las clases que heredan de sf::Drawable deben implementar draw
+        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+};
+
+#endif // __ANIMACION_HPP__
