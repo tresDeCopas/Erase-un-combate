@@ -24,7 +24,7 @@ class Animacion : public sf::Drawable {
         virtual void resetear() = 0;
 
         // Le da la vuelta al sprite
-        void voltear();
+        virtual void voltear();
 
         // Coloca el sprite en la posición indicada con respecto a la esquina superior
         // izquierda de la ventana
@@ -37,6 +37,9 @@ class Animacion : public sf::Drawable {
         // Mueve la posición del sprite con respecto a la posición actual
         void mover(float x, float y);
         void mover(sf::Vector2f diferencia);
+
+        // Determina si una animación ha terminado
+        virtual bool haTerminado() = 0;
 
         // Devuelve un clon de la animación
         virtual Animacion * clonar() = 0;
