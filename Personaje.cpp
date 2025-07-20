@@ -350,7 +350,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             animaciones.at(estado)->setPosicion(animaciones.at(estado)->getPosicion().x,ALTURA_SUELO);
             levantarPolvo(efectosInsertados);
 
-            cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
+            //cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
         } else {
             // Le ha pillado en el suelo
             pararMovimiento();
