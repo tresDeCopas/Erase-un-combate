@@ -39,6 +39,14 @@ int Personaje::getPuntosDeVida(){
     return puntosDeVida;
 }
 
+void Personaje::setPuntosDeVida(int puntosDeVida){
+    this->puntosDeVida = puntosDeVida;
+}
+
+void Personaje::setMedidorSuper(int medidorSuper){
+    this->medidorSuper = medidorSuper;
+}
+
 void Personaje::setPosicion(float x, float y){
     animaciones.at(estado)->setPosicion(x,y);
 }
