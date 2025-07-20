@@ -2,6 +2,7 @@
 #define __ANIMACION_HPP__
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 /*
     Clase abstracta para cualquier tipo de animaciones
@@ -10,6 +11,9 @@ class Animacion : public sf::Drawable {
     protected:
         // Sprite para la animación
         sf::Sprite sprite;
+
+        // Sonido para la animación
+        sf::Sound sonido;
 
     public:
 

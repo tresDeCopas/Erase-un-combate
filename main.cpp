@@ -11,7 +11,7 @@ int main(){
     ContenedorDePersonajes::unicaInstancia()->cargarTodosLosPersonajes();
 
 
-    Combate combate("juan-cuesta", "juan-cuesta", "Prueba");
+    Combate combate("juan-cuesta-sin-casco", "juan-cuesta-con-casco", "Prueba");
 
     combate.comenzar();
 }

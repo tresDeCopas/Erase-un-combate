@@ -33,13 +33,27 @@ class AnimacionPorFrames : public Animacion {
         // Correspondencia entre frame y rectángulo (por ejemplo, frame 0 rectángulo 0, o frame 5 rectángulo 2)
         std::map<int,int> rectanguloCorrespondiente;
 
+        // Indica qué frames deben hacer sonar el sonido de la animación
+        std::set<int> framesConSonido;
+
+        // Indica si el sonido se debe repetir cada vez que vuelva a salir el frame o si una vez se
+        // termine el bucle no hay que repetirlo
+        bool repetirSonido;
+
+        // Si repetirSonido está a false, indica si el sonido ya se ha reproducido durante todo un bucle,
+        // por lo que habría que resetear la animación para que volviera a sonar
+        bool sonidoYaReproducido;
+
         // Número de frame actual
         unsigned int frameActual;
 
     public:
 
-        // Constructor
+        // Constructor sin sonido
         AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente);
+
+        // Constructor con sonido
+        AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente, sf::Sound sonido, std::set<int> framesConSonido, bool repetirSonido);
 
         // Actualiza la animación (avanza un frame)
         virtual void actualizar();

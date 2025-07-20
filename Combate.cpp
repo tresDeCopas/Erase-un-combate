@@ -48,7 +48,7 @@ void Combate::comenzar(){
         personajeJugador1.actualizar(personajeJugador2.getPosicion());
         personajeJugador2.actualizar(personajeJugador1.getPosicion());
 
-        ventana->clear();
+        ventana->clear(sf::Color(100,100,100));
         ventana->draw(personajeJugador1);
         ventana->draw(personajeJugador2);
         // ventana->draw(escenario);
