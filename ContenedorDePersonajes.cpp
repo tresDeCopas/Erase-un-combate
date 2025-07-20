@@ -36,27 +36,27 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 {
     Bitacora::unicaInstancia()->escribir("Juan Cuesta: Siguiente punto del día: registro de personajes en el listado oficial. Emilio, apunta, voy a dictarte los personajes en orden descendente de aparición.");
 
-    // En esta variable se van a poner datos del fichero línea a línea
-    std::string linea;
-
-    // En esta variable se van a meter elementos separados en base a un string dado
-    std::vector<std::string> elementosSeparados;
-
-    // En esta variable se guarda el nombre del personaje actual
-    std::string nombrePersonaje;
-
-    // En esta variable se guarda el nombre del estado actual
-    std::string nombreEstado;
-
-    // En esta variable se guarda el nombre del tipo de bucle usado para la animación actual
-    std::string nombreBucle;
-
-    // En esta variable se guarda el número de rectángulos de la animación actual
-    int numeroRectangulos;
-
     // Abrimos cada fichero del directorio
     for (const std::filesystem::directory_entry &entrada : std::filesystem::directory_iterator("ficheros/personajes"))
     {
+        // En esta variable se van a poner datos del fichero línea a línea
+        std::string linea;
+
+        // En esta variable se van a meter elementos separados en base a un string dado
+        std::vector<std::string> elementosSeparados;
+
+        // En esta variable se guarda el nombre del personaje actual
+        std::string nombrePersonaje;
+
+        // En esta variable se guarda el nombre del estado actual
+        std::string nombreEstado;
+
+        // En esta variable se guarda el nombre del tipo de bucle usado para la animación actual
+        std::string nombreBucle;
+
+        // En esta variable se guarda el número de rectángulos de la animación actual
+        int numeroRectangulos;
+        
         // Se abre el fichero con información del personaje actual
         std::ifstream fichero(entrada.path());
 
@@ -75,7 +75,6 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
         }
         else
         {
-            // Bitacora::unicaInstancia()->escribir("Emilio: Listo señor Juan.");
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: registrando personaje " + nombrePersonaje + ".");
         }
 
@@ -86,7 +85,6 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
         while (linea != SECUENCIA_FIN_FICHERO)
         {
-
             // Se obtiene el nombre del estado
             nombreEstado = util::separarString(linea, ':')[1];
 
@@ -106,9 +104,6 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
             while (util::separarString(linea, ':')[0] == "Rectangulo")
             {
-
-                // Bitacora::unicaInstancia()->escribir("Juan Cuesta: rectángulo " + std::to_string(numeroRectangulos) + ".");
-
                 // Lista de hitboxes para este rectángulo
                 std::list<Hitbox> listaHitboxes;
 
@@ -145,8 +140,6 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
             if (nombreEstado == "ataque-agachado")
                 Bitacora::unicaInstancia()->escribir("Juan Cuesta: las hitboxes con daño de este estado serán de ataque bajo");
 
-            // Bitacora::unicaInstancia()->escribir("Juan Cuesta: finalmente, se apuntan los frames.");
-
             // Ahora sacamos la correspondencia de frames y rectángulos
             std::getline(fichero, linea);
 
@@ -157,13 +150,10 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
             for (std::string rectanguloString : util::separarString(linea, ','))
             {
-
                 frameARectangulo[contadorFrame] = std::stoi(rectanguloString);
 
                 contadorFrame++;
             }
-
-            // Bitacora::unicaInstancia()->escribir("Juan Cuesta: número de frames: " + std::to_string(contadorFrame));
 
             // Nos saltamos dos líneas, y ahora leemos información sobre los sonidos
             std::getline(fichero, linea);

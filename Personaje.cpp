@@ -551,7 +551,11 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     case EstadoPersonaje::AGACHADO:
         pararMovimiento();
 
-        if(!accionesRealizadas[Accion::ABAJO]){
+        if(realizarAtaqueEspecial){
+            ataqueEspecial.resetear();
+            cambiarEstado(EstadoPersonaje::ATAQUE_ESPECIAL);
+        }
+        else if(!accionesRealizadas[Accion::ABAJO]){
             cambiarEstado(EstadoPersonaje::QUIETO);
         } else if (accionesRealizadas[Accion::ATACAR]){
             cambiarEstado(EstadoPersonaje::ATAQUE_AGACHADO);
@@ -680,7 +684,8 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
 
     // Si el personaje está en un estado en el que no puede ser golpeado, no hace falta comprobar nada
     switch(estado){
-        case EstadoPersonaje::GOLPEADO_MEDIO:
+        // Bueno este case lo voy a quitar para que se puedan hacer combos
+        // case EstadoPersonaje::GOLPEADO_MEDIO:
         case EstadoPersonaje::GOLPEADO_BAJANDO:
         case EstadoPersonaje::GOLPEADO_SUBIENDO:
         case EstadoPersonaje::PREPARANDO_SUPER:
@@ -810,18 +815,6 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
         // los ataques medios y pequeños se pueden esquivar
         switch(estado){
 
-            // En situaciones en las que no se puede golpear otra vez (si el personaje está en
-            // alguno de estos estados, se debería haber detenido la ejecución de esta función antes)
-            case EstadoPersonaje::GOLPEADO_MEDIO:
-            case EstadoPersonaje::GOLPEADO_BAJANDO:
-            case EstadoPersonaje::GOLPEADO_SUBIENDO:
-            case EstadoPersonaje::PREPARANDO_SUPER:
-            case EstadoPersonaje::ESQUIVE_SUPER:
-            case EstadoPersonaje::TUMBADO:
-            case EstadoPersonaje::LEVANTANDOSE:
-            case EstadoPersonaje::CELEBRANDO:
-                break;
-
             // Atacando o sin moverse al revés del enemigo (todo te pega)
             case EstadoPersonaje::GOLPEADO_PEQUE:
             case EstadoPersonaje::QUIETO:
@@ -925,6 +918,11 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
                 } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
                     // Se le baja la vida igualmente
                 }
+                break;
+            
+            // En situaciones en las que no se puede golpear otra vez (si el personaje está en
+            // algun otro estado, se debería haber detenido la ejecución de esta función antes)
+            default:
                 break;
         }
     }

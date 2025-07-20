@@ -189,7 +189,7 @@ const float ALTURA_SUELO = VENTANA_ALTURA - 10;
 const float IMPULSO_GOLPE_PEQUE = 1;
 
 // Impulso inicial en el eje X al recibir un golpe mediano
-const float IMPULSO_GOLPE_MEDIO = 5;
+const float IMPULSO_GOLPE_MEDIO = 3;
 
 // Impulso inicial en los ejes X e Y al recibir un golpe grande
 const float IMPULSO_X_GOLPE_GRANDE = 7;
