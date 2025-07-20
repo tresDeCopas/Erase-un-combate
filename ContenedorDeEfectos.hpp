@@ -18,12 +18,12 @@ class ContenedorDeEfectos
 
         static ContenedorDeEfectos * contenedorDeEfectos;
 
-        std::map<std::string, Animacion*> animaciones;
+        std::map<std::string, std::shared_ptr<Animacion>> animaciones;
 
     public:
 
         // Devuelve una copia del efecto pedido
-        Animacion* obtenerEfecto(std::string nombre);
+        std::shared_ptr<Animacion> obtenerEfecto(std::string nombre);
 
         // Carga todos los efectos, sacados de varios ficheros en la misma carpeta
         void cargarTodosLosEfectos();

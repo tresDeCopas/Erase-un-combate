@@ -36,7 +36,7 @@ class Personaje : public sf::Drawable {
         EstadoPersonaje estado;
 
         // Animaci�n del personaje seg�n el estado
-        std::map<EstadoPersonaje,Animacion*> animaciones;
+        std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones;
 
         // Indica qu� acciones est�n siendo realizadas
         std::map<Accion,bool> accionesRealizadas;
@@ -53,7 +53,7 @@ class Personaje : public sf::Drawable {
     public:
 
         // Construye el personaje
-        Personaje(std::map<EstadoPersonaje,Animacion*> animaciones);
+        Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones);
 
         // Indica que se est� pulsando un bot�n
         void realizarAccion(Accion accion);
@@ -66,7 +66,7 @@ class Personaje : public sf::Drawable {
 
         // Comprueba si la hitbox del personaje ha colisionado con alg�n ataque enemigo y
         // reacciona de forma adecuada
-        virtual void comprobarColisiones(std::list<Animacion*> &animaciones, std::list<Animacion*> &efectosInsertados);
+        virtual void comprobarColisiones(std::list<std::shared_ptr<Animacion>> &animaciones, std::list<std::shared_ptr<Animacion>> &efectosInsertados);
 
         // Devuelve los puntos de vida actuales
         int getPuntosDeVida();
@@ -85,10 +85,10 @@ class Personaje : public sf::Drawable {
         void setJugador(Jugador jugador);
 
         // Devuelve el mapa de animaciones
-        std::map<EstadoPersonaje,Animacion*> getAnimaciones();
+        std::map<EstadoPersonaje,std::shared_ptr<Animacion>> getAnimaciones();
 
         // Establece el mapa de animaciones
-        void setAnimaciones(std::map<EstadoPersonaje,Animacion*> animaciones);
+        void setAnimaciones(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones);
 
         // Cambia el estado
         void cambiarEstado(EstadoPersonaje estadoNuevo);

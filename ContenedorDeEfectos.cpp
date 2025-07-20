@@ -17,7 +17,7 @@ ContenedorDeEfectos * ContenedorDeEfectos::unicaInstancia()
     return contenedorDeEfectos;
 }
 
-Animacion* ContenedorDeEfectos::obtenerEfecto(std::string nombre){
+std::shared_ptr<Animacion> ContenedorDeEfectos::obtenerEfecto(std::string nombre){
     // Es importante copiar la animación al trabajar con punteros
     return animaciones.at(nombre)->clonar();
 }
@@ -143,7 +143,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
         std::getline(fichero,linea);
         std::getline(fichero,linea);
 
-        Animacion * anim;
+        std::shared_ptr<Animacion> anim;
 
         if(util::separarString(linea,':')[0] == "Sonido"){
 
@@ -162,17 +162,17 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
             sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
 
-            anim = new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
-                                          util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,sonido,framesConSonido,repetirSonido);
+            anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
+                                              util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo,sonido,framesConSonido,repetirSonido));
 
         } else {
             sf::Texture& textura = ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/efectos/"+nombreEfecto+".png");
 
-            anim = new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
-                                            util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo);
+            anim = std::shared_ptr<Animacion>(new AnimacionPorFrames(0,0,textura.getSize().x/numeroRectangulos/2,textura.getSize().y/2,numeroRectangulos, textura,
+                                              util::stringATipoBucle(nombreBucle),0,hitboxes,frameARectangulo));
         }
 
-        animaciones.insert(std::pair<std::string,Animacion*>(nombreEfecto,anim));
+        animaciones.insert(std::pair<std::string,std::shared_ptr<Animacion>>(nombreEfecto,anim));
 
         Bitacora::unicaInstancia()->escribir("Juan Cuesta: se termin� de cargar la animación para el efecto " + nombreEfecto + ".\n");
     }

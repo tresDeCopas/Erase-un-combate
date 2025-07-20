@@ -129,8 +129,8 @@ void AnimacionPorFrames::resetear(){
     primerFrame = true;
 }
 
-Animacion * AnimacionPorFrames::clonar(){
-    return new AnimacionPorFrames(*this);
+std::shared_ptr<Animacion> AnimacionPorFrames::clonar(){
+    return std::shared_ptr<Animacion>(new AnimacionPorFrames(*this));
 }
 
 std::list<Hitbox> AnimacionPorFrames::getHitboxes(){
