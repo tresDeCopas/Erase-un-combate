@@ -30,13 +30,13 @@ class Hitbox {
         Hitbox(sf::IntRect rectangulo, int fuerzaAtaque, bool bajo);
 
         // Devuelve el rectángulo
-        sf::IntRect getRectangulo();
+        sf::IntRect getRectangulo() const;
 
         // Devuelve la fuerza de ataque
-        int getFuerzaAtaque();
+        int getFuerzaAtaque() const;
 
         // Devuelve si el ataque es bajo
-        bool esAtaqueBajo();
+        bool esAtaqueBajo() const;
 
 };
 

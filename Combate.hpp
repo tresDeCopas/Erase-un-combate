@@ -36,6 +36,10 @@ class Combate{
         // Ronda actual
         int numeroRonda;
 
+        // Indica qué jugador se debe actualizar primero en el turno actual. Esto sirve para que no sea
+        // siempre el primer jugador el que se actualiza primero, causando situaciones raras e injustas
+        Jugador primerJugadorParaActualizar;
+
     public:
 
         // Construye el combate en base a los nombres de los personajes

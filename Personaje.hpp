@@ -90,7 +90,7 @@ class Personaje : public sf::Drawable {
 
         // Comprueba si la hitbox del personaje ha colisionado con algún ataque enemigo y
         // reacciona de forma adecuada
-        virtual void comprobarColisiones(std::list<std::shared_ptr<Animacion>> &animaciones, std::list<std::shared_ptr<Animacion>> &efectosInsertados);
+        virtual void comprobarColisiones(const std::list<std::shared_ptr<Animacion>> &animaciones, std::list<std::shared_ptr<Animacion>> &efectosInsertados);
 
         // Devuelve los puntos de vida actuales
         int getPuntosDeVida();
