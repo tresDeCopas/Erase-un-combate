@@ -1,7 +1,10 @@
 #include "AnimacionPorFrames.hpp"
+#include "AnimacionConGravedad.hpp"
 #include "Constantes.hpp"
+#include "ContenedorDeEfectos.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <typeinfo>
 
 AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX, int origenY, int numRectangulos, sf::Texture &textura, TipoBucle tipoBucle, int numRepeticionesTotal, std::map<int,std::list<Hitbox>> hitboxes, std::map<int,int> rectanguloCorrespondiente, std::set<int> framesConSonido, std::map<int,sf::Vector2f> framesConMovimiento, std::map<int,IndicacionesSobreAnimacion> framesConAnimaciones, sf::Sound sonido, bool repetirSonido) {
 
@@ -25,7 +28,7 @@ AnimacionPorFrames::AnimacionPorFrames(int posicionX, int posicionY, int origenX
     resetear();
 }
 
-void AnimacionPorFrames::actualizar() {
+void AnimacionPorFrames::actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones, sf::Vector2f &movimiento) {
 
     if(tipoBucle == TipoBucle::NORMAL){
         if(!primerFrame) frameActual++;
@@ -47,7 +50,25 @@ void AnimacionPorFrames::actualizar() {
     // Ya seguro que no es el primer frame
     primerFrame = false;
 
+    // Se reproduce el sonido si es necesario
     if(!sonidoYaReproducido && framesConSonido.count(frameActual)) sonido.play();
+
+    // Se actualiza el movimiento si es necesario
+    if(framesConMovimiento.count(frameActual)) movimiento = framesConMovimiento[frameActual];
+
+    // Se actualizan las nuevas animaciones si es necesario
+    if(framesConAnimaciones.count(frameActual)){
+        std::shared_ptr<Animacion> anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto(framesConAnimaciones[frameActual].rutaAnimacion);
+
+        sf::Vector2f posicionAnimacion(getPosicionEsqSupIzq());
+
+        posicionAnimacion.x+=framesConAnimaciones[frameActual].posicionInicial.x;
+        posicionAnimacion.y+=framesConAnimaciones[frameActual].posicionInicial.y;
+
+        if(std::string(typeid(*anim).name()) == "AnimacionConGravedad"){
+            ((AnimacionConGravedad*)(anim.get()))->setVelocidad(framesConAnimaciones[frameActual].velocidadInicial);
+        }
+    }
 
     sprite.setTextureRect(sf::IntRect(rectanguloCorrespondiente[frameActual]*sprite.getTextureRect().width,0,sprite.getTextureRect().width,sprite.getTextureRect().height));
 }

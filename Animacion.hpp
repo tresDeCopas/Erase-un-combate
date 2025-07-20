@@ -22,8 +22,9 @@ class Animacion : public sf::Drawable {
 
     public:
 
-        // Actualiza la animación (avanza un frame)
-        virtual void actualizar() = 0;
+        // Actualiza la animación (avanza un frame), reproduciendo el sonido si es necesario. En nuevasAnimaciones
+        // se insertan las nuevas animaciones que serán introducidas, y en movimiento se indica si la animación se moverá
+        virtual void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones, sf::Vector2f &movimiento) = 0;
 
         // Resetea la animación al estado inicial
         virtual void resetear() = 0;
@@ -38,6 +39,9 @@ class Animacion : public sf::Drawable {
 
         // Establece la rotación del sprite en grados centígrados
         void setRotacion(double angulo);
+
+        // Establece el color de la animación
+        void setColor(sf::Color color);
 
         // Devuelve la posición actual del sprite (teniendo en cuenta el origen, sea cual sea)
         sf::Vector2f getPosicion();

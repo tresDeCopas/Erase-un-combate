@@ -3,8 +3,10 @@
 #include "Constantes.hpp"
 #include "Utilidades.hpp"
 #include "ContenedorDeEfectos.hpp"
+#include "ContenedorDePersonajes.hpp"
 #include "AnimacionConGravedad.hpp"
 #include "VentanaPrincipal.hpp"
+#include "Bitacora.hpp"
 #include <iostream>
 
 Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones){
@@ -12,9 +14,16 @@ Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animac
     velY = 0;
     velX = 0;
     contadorTumbado = 0;
+    contadorBlanco = 0;
     this->animaciones = animaciones;
     estado = EstadoPersonaje::QUIETO;
     mirandoDerecha = true;
+    shader = std::shared_ptr<sf::Shader>(new sf::Shader());
+    if(!shader->loadFromFile("shaders/blendColor.frag",sf::Shader::Type::Fragment)){
+        Bitacora::unicaInstancia()->escribir("ERROR: no se pudo cargar el shader");
+        exit(EXIT_FAILURE);
+    }
+
 }
 
 void Personaje::realizarAccion(Accion accion){
@@ -66,6 +75,10 @@ void Personaje::cambiarEstado(EstadoPersonaje estadoNuevo){
 
 void Personaje::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(*(animaciones.at(estado)),states);
+    if(contadorBlanco > 0) {
+        states.shader = shader.get();
+        target.draw(*(animaciones.at(estado)),states);
+    }
 }
 
 void Personaje::moverseIzquierda(){
@@ -167,7 +180,9 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
                 cambiarEstado(EstadoPersonaje::ANDANDO_ALEJANDOSE);
         }
         else if (accionesRealizadas[Accion::ATACAR]){
-            cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
+            contadorBlanco = 255;
+            cambiarEstado(EstadoPersonaje::PREPARANDO_SUPER);
+            //cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
         }
 
         break;
@@ -454,6 +469,22 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             cambiarEstado(EstadoPersonaje::AGACHADO);
         }
         break;
+    
+    case EstadoPersonaje::PREPARANDO_SUPER:
+        pararMovimiento();
+
+        if(animaciones[estado]->haTerminado()){
+            cambiarEstado(EstadoPersonaje::ATAQUE_SUPER);
+        }
+        break;
+    
+    case EstadoPersonaje::ATAQUE_SUPER:
+        pararMovimiento();
+
+        if(animaciones[estado]->haTerminado()){
+            cambiarEstado(EstadoPersonaje::QUIETO);
+        }
+        break;
     }
 
     // Se comprueba si el enemigo está a la derecha o a la izquierda y se voltea el
@@ -485,7 +516,10 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             break;
     }
 
-    animaciones[estado]->actualizar();
+    sf::Vector2f movimiento;
+    animaciones[estado]->actualizar(efectosInsertados,movimiento);
+    velX+=movimiento.x;
+    velY+=movimiento.y;
 
     // Una vez se hace todo, se aumenta la velocidad según se vea
     animaciones[estado]->mover(velX,velY);
@@ -499,6 +533,13 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         animaciones[estado]->setPosicion(0,animaciones[estado]->getPosicion().y);
         if(estado == EstadoPersonaje::GOLPEADO_BAJANDO || estado == EstadoPersonaje::GOLPEADO_SUBIENDO || estado == EstadoPersonaje::TUMBADO) velX *= -1;
         else velX = 0;
+    }
+
+    shader->setUniform("amount",contadorBlanco/255.f);
+
+    if(contadorBlanco > 0) {
+        contadorBlanco-=3;
+        if(contadorBlanco < 0) contadorBlanco = 0;
     }
 }
 

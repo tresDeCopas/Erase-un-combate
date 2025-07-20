@@ -17,6 +17,10 @@ void Animacion::setRotacion(double angulo){
     sprite.setRotation(angulo);
 }
 
+void Animacion::setColor(sf::Color color){
+    sprite.setColor(color);
+}
+
 sf::Vector2f Animacion::getPosicion(){
     return sprite.getPosition();
 }

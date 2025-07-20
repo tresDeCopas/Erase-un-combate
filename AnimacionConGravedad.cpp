@@ -41,7 +41,7 @@ AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, Hitbox hitbox, 
     resetear();
 }
 
-void AnimacionConGravedad::actualizar()
+void AnimacionConGravedad::actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones, sf::Vector2f &movimiento)
 {
     sprite.move(velocidad);
     sprite.rotate(velocidadGiro);

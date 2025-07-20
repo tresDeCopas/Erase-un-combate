@@ -33,11 +33,18 @@ class Personaje : public sf::Drawable {
         // tu personaje se levanta y el contador vuelve a cero
         int contadorTumbado;
 
+        // Sirve para que el personaje se vuelva blanco al transformarse para su ataque súper,
+        // siendo su máximo 255 (completamente blanco) y su mínimo 0 (normal)
+        int contadorBlanco;
+
         // Jugador al que está asociado el personaje
         Jugador jugador;
 
         // Estado en el que se encuentra el personaje
         EstadoPersonaje estado;
+
+        // Shader que hace que el personaje se ponga blanco al preparar el ataque súper
+        std::shared_ptr<sf::Shader> shader;
 
         // Animación del personaje según el estado
         std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones;
