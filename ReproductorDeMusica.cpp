@@ -12,7 +12,7 @@ ReproductorDeMusica * ReproductorDeMusica::unicaInstancia()
 }
 
 ReproductorDeMusica::ReproductorDeMusica(){
-    volumenActual = VOLUMEN_MAXIMO_MUSICA;
+    volumenActual = VOLUMEN_MAXIMO_MUSICA/2;
 
     if(!std::filesystem::is_directory("musica/combate")){
         Bitacora::unicaInstancia()->escribir("Juan Cuesta: Oye Emilio... he notado que el directorio musica/combate es más liviano de lo habitial, ¿no crees?");
