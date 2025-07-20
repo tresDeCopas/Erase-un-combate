@@ -2,6 +2,7 @@
 #include "ContenedorDeRecursos.hpp"
 #include "Bitacora.hpp"
 #include "Utilidades.hpp"
+#include "Enums.hpp"
 #include "IndicacionesSobreAnimacion.hpp"
 #include <SFML/Audio.hpp>
 #include <fstream>
@@ -26,7 +27,9 @@ ContenedorDePersonajes::~ContenedorDePersonajes()
 Personaje ContenedorDePersonajes::obtenerPersonaje(std::string nombre)
 {
     // Se obtiene el personaje y se devuelve por valor, copiándolo todo
-    return personajes.at(nombre);
+    Personaje nuevo(personajes.at(nombre));
+
+    return nuevo;
 }
 
 void ContenedorDePersonajes::cargarTodosLosPersonajes()
@@ -54,12 +57,14 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
     // Abrimos cada fichero del directorio
     for (const std::filesystem::directory_entry &entrada : std::filesystem::directory_iterator("ficheros/personajes"))
     {
-
         // Se abre el fichero con información del personaje actual
         std::ifstream fichero(entrada.path());
 
         // Aprovechando que tenemos la ruta del fichero podemos sacar el nombre del personaje
         nombrePersonaje = entrada.path().stem().string();
+
+        // Se prepara el vector de acciones para el ataque especial
+        std::vector<Accion> accionesAtaqueEspecial;
 
         if (!fichero.is_open())
         {
@@ -212,7 +217,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
             // Saltamos la línea que dice "Efectos:"
             std::getline(fichero, linea);
 
-            while (linea != SECUENCIA_DELIMITADORA_FICHERO)
+            while (linea != "" && linea != SECUENCIA_DELIMITADORA_FICHERO)
             {
                 elementosSeparados = util::separarString(linea, ',');
 
@@ -233,9 +238,25 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                 std::getline(fichero, linea);
             }
 
-            // Finalmente, saltamos una línea y debería haber información sobre el siguiente estado,
-            // o SECUENCIA_FIN_FICHERO si ha terminado el fichero
+            // Se salta una línea, puede que hayamos llegado al final de esta acción
+            // o puede que hayamos llegado a una línea en blanco porque después están
+            // las acciones para el ataque especial
             std::getline(fichero, linea);
+            
+            // Si el estado es ataque especial, se leen las acciones
+            if(nombreEstado == "ataque-especial"){
+                if(util::separarString(linea,':')[0] == "Acciones"){
+                    for(const std::string &s : util::separarString(util::separarString(linea,':')[1],',')){
+                        accionesAtaqueEspecial.push_back(util::stringAAccion(s));
+                    }
+                    std::getline(fichero, linea);
+                    std::getline(fichero, linea);
+                } else {
+                    Bitacora::unicaInstancia()->escribir("Emilio: Señor Juan, no me pregunte por qué, pero este ataque especial no tiene teclas asociadas.");
+                    Bitacora::unicaInstancia()->escribir("Juan Cuesta: Esto es inaudito, vamos. Se suspende la junta.");
+                    exit(EXIT_FAILURE);
+                }
+            }
 
             std::shared_ptr<AnimacionPorFrames> anim = std::make_shared<AnimacionPorFrames>(0, 0, PERSONAJE_PLANTILLA_ORIGEN.x, PERSONAJE_PLANTILLA_ORIGEN.y, numeroRectangulos,
                                                                                             ContenedorDeTexturas::unicaInstancia()->obtener("sprites/personajes/" + nombrePersonaje + "/" + nombreEstado + ".png"),
@@ -247,7 +268,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: se terminó de cargar la animación para el estado " + nombreEstado + ".\n");
         }
 
-        personajes.insert(std::pair<std::string, Personaje>(nombrePersonaje, Personaje(animaciones, nombrePersonaje)));
+        personajes.insert(std::pair<std::string, Personaje>(nombrePersonaje, Personaje(animaciones, nombrePersonaje, accionesAtaqueEspecial)));
 
         Bitacora::unicaInstancia()->escribir("Juan Cuesta: concluye la inserción del personaje " + nombrePersonaje + ".\n");
     }

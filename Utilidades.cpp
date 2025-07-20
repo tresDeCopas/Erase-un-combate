@@ -1,5 +1,6 @@
 #include "Utilidades.hpp"
 #include "Constantes.hpp"
+#include "Bitacora.hpp"
 
 namespace util{
 
@@ -80,6 +81,22 @@ namespace util{
             return EstadoPersonaje::CELEBRANDO;
 
         return EstadoPersonaje::QUIETO;
+    }
+
+    Accion stringAAccion(const std::string &string){
+        if(string == "ARRIBA")
+            return Accion::ARRIBA;
+        if(string == "ABAJO")
+            return Accion::ABAJO;
+        if(string == "DERECHA")
+            return Accion::DERECHA;
+        if(string == "IZQUIERDA")
+            return Accion::IZQUIERDA;
+        if(string == "ATACAR")
+            return Accion::ATACAR;
+        
+        Bitacora::unicaInstancia()->escribir("Juan Cuesta: a ver, ¿cuántas veces lo tengo que decir? En la función stringAAccion solo se deben pasar acciones válidas, y " + string + " no lo es. Esta gente no se lee las circulares...");
+        exit(EXIT_FAILURE);
     }
 
     sf::Vector2f centroDeInterseccion(sf::IntRect r1, sf::IntRect r2){

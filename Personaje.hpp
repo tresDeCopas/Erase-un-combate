@@ -84,14 +84,17 @@ class Personaje : public sf::Drawable {
 
     public:
 
-        // Construye el personaje
-        Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> animaciones, std::string nombre);
+        // Construye el personaje desde cero
+        Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> animaciones, std::string nombre, std::vector<Accion> accionesAtaqueEspecial);
 
         // Indica que se está pulsando un botón
         void realizarAccion(Accion accion);
 
         // Indica que se ha soltado un botón
         void detenerAccion(Accion accion);
+
+        // Realiza un clon del personaje para que las animaciones no se rayen
+        Personaje clonar();
 
         // Actualiza la posición del personaje y demás según los botones que están pulsados
         virtual void actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_ptr<Animacion>> &efectosInsertados);

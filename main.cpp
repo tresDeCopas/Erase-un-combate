@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
     ContenedorDeEfectos::unicaInstancia()->cargarTodosLosEfectos();
 
     if(argc == 1){
-        Combate combate("juan-cuesta-sin-casco", "juan-cuesta-con-casco", "fachada");
+        Combate combate("juan-cuesta-sin-casco", "juan-cuesta-sin-casco", "fachada");
         combate.comenzar();
     } else {
         Combate combate("juan-cuesta-sin-casco", "juan-cuesta-con-casco", "fachada", sf::IpAddress(std::atoi(argv[1]),std::atoi(argv[2]),std::atoi(argv[3]),std::atoi(argv[4])), std::stoi(argv[5]));

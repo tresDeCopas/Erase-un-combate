@@ -36,6 +36,7 @@ Bitacora::~Bitacora(){
 void Bitacora::escribir(std::string cosillas)
 {
     ficheroBitacora << cosillas << "\n";
+    ficheroBitacora.flush();
     if(DEBUG)
         std::cerr << cosillas << "\n";
 }

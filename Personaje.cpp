@@ -9,7 +9,9 @@
 #include "Bitacora.hpp"
 #include <iostream>
 
-Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> animaciones, std::string nombre){
+Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> animaciones, std::string nombre, std::vector<Accion> accionesAtaqueEspecial) :
+    ataqueEspecial(accionesAtaqueEspecial)
+{
     puntosDeVida = MAX_PUNTOS_DE_VIDA;
     medidorSuper = 0;
     velY = 0;
@@ -26,6 +28,27 @@ Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames
         Bitacora::unicaInstancia()->escribir("ERROR: no se pudo cargar el shader");
         exit(EXIT_FAILURE);
     }
+}
+
+Personaje Personaje::clonar() {
+
+    Personaje nuevo(*this);
+
+    // El shader se hace de nuevo
+    nuevo.shader = std::make_shared<sf::Shader>();
+    if(!nuevo.shader->loadFromFile("shaders/blendColor.frag",sf::Shader::Type::Fragment)){
+        Bitacora::unicaInstancia()->escribir("ERROR: no se pudo cargar el shader");
+        exit(EXIT_FAILURE);
+    }
+
+    // Se limpian las animaciones porque se van a hacer de nuevo
+    nuevo.animaciones.clear();
+
+    for(std::pair<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> par : this->animaciones){
+        nuevo.animaciones.insert({par.first,std::dynamic_pointer_cast<AnimacionPorFrames>(par.second->clonar())});
+    }
+
+    return nuevo;
 }
 
 void Personaje::realizarAccion(Accion accion){

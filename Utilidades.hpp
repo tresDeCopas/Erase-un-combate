@@ -24,6 +24,9 @@ namespace util{
     // Dado un string, devuelve el estado de personaje correspondiente
     EstadoPersonaje stringAEstadoPersonaje(std::string string);
 
+    // Dado un string, devuelve la acción correspondiente
+    Accion stringAAccion(const std::string &string);
+
     // Dados dos rectángulos, calcula el centro del subrectángulo que resulta de la intersección
     // de ambos rectángulos (en SFML 3 está la función findIntersection que te encuentra el rectángulo
     // de la intersección pero ya que hice esto pues lo voy a seguir utilizando porque le he cogido cariño)
