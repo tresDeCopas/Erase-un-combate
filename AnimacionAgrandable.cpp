@@ -9,7 +9,6 @@ AnimacionAgrandable::AnimacionAgrandable(int framesEspera, sf::Texture& textura,
     sprite.setScale({0.f,0.f});
 
     this->rutaSonido = rutaSonido;
-
 }
 
 void AnimacionAgrandable::actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones){
@@ -45,7 +44,7 @@ void AnimacionAgrandable::actualizar(std::list<std::shared_ptr<Animacion>> &nuev
 
     // 3: Disminuyendo. El sprite ha estado el tiempo que tenía que estar
     // sin cambiar de tamaño y ahora le toca hacerse más pequeño
-    else {
+    else if (framesEspera != -1){
         escalaActual-=TASA_CRECIMIENTO_ANIMACION_AGRANDABLE;
         if(escalaActual < 0.0) escalaActual = 0.0;
         sprite.setScale({escalaActual,escalaActual});
@@ -71,7 +70,8 @@ std::list<Hitbox> AnimacionAgrandable::getHitboxes(){
 }
 
 bool AnimacionAgrandable::haTerminado(){
-    return !seEstaAgrandando && escalaActual == 0;
+    if(framesEspera == -1) return !seEstaAgrandando && !ReproductorDeSonidos::unicaInstancia()->estaReproduciendo(rutaSonido);
+    else return !seEstaAgrandando && escalaActual == 0;
 }
 
 bool AnimacionAgrandable::haTerminadoDeAgrandarse(){

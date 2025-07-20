@@ -129,6 +129,9 @@ class Personaje : public sf::Drawable {
         // Establece el jugador asociado
         void setJugador(Jugador jugador);
 
+        // Devuelve el jugador que está controlando al personaje
+        Jugador getJugador();
+
         // Devuelve la animación de un estado
         std::shared_ptr<AnimacionPorFrames> getAnimacionSegunEstado(EstadoPersonaje estado);
 

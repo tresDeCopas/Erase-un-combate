@@ -45,6 +45,9 @@ class ReproductorDeSonidos
         // Establece el nuevo volumen para los efectos de sonido
         void setVolumen(float nuevoVolumen);
 
+        // Devuelve true si el efecto de sonido se está reproduciendo
+        bool estaReproduciendo(std::string sonido);
+
         // NUNCA SE COPIA UN SINGLETON
         ReproductorDeSonidos(ReproductorDeSonidos &otro) = delete;
 

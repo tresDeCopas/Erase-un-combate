@@ -47,13 +47,16 @@ class Combate{
         // Cartel que aparece al principio de la ronda en el que pone "¡A pelear!"
         std::shared_ptr<Animacion> cartelAPelear;
 
-        // Cartel que aparece al terminar una ronda en el que pone "¡Gana el jugador 1!"
-        std::shared_ptr<Animacion> cartelGanaJugador1;
+        // Cartel que aparece al terminar una ronda en el que pone "Jugador 1 gana"
+        std::shared_ptr<Animacion> cartelJugador1Gana;
 
-        // Cartel que aparece al terminar una ronda en el que pone "¡Gana el jugador 2!"
-        std::shared_ptr<Animacion> cartelGanaJugador2;
+        // Cartel que aparece al terminar una ronda en el que pone "Jugador 2 gana"
+        std::shared_ptr<Animacion> cartelJugador2Gana;
 
-        // Conector para jugar online (puede que sí puede que no)
+        // Cartel que aparece al terminar una ronda en el que pone "Empate"
+        std::shared_ptr<Animacion> cartelEmpate;
+
+        // Conector para jugar online
         std::optional<ConectorOnline> conector;
 
     private:

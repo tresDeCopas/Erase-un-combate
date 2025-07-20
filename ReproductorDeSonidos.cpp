@@ -44,6 +44,11 @@ float ReproductorDeSonidos::getVolumen()
 
 void ReproductorDeSonidos::setVolumen(float nuevoVolumen)
 {
-    volumenActual = (nuevoVolumen > VOLUMEN_MAXIMO_MUSICA ? VOLUMEN_MAXIMO_MUSICA : nuevoVolumen < 0 ? 0
-                                                                                                     : nuevoVolumen);
+    volumenActual = (nuevoVolumen > VOLUMEN_MAXIMO_MUSICA ? VOLUMEN_MAXIMO_MUSICA :
+                     nuevoVolumen < 0 ? 0 :
+                     nuevoVolumen);
+}
+
+bool ReproductorDeSonidos::estaReproduciendo(std::string sonido){
+    return sonidos.at(sonido).getStatus() == sf::SoundSource::Status::Playing;
 }

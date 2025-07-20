@@ -95,6 +95,10 @@ void Personaje::setJugador(Jugador jugador){
     this->jugador = jugador;
 }
 
+Jugador Personaje::getJugador(){
+    return this->jugador;
+}
+
 std::shared_ptr<AnimacionPorFrames> Personaje::getAnimacionSegunEstado(EstadoPersonaje estado){
     return animaciones.at(estado);
 }

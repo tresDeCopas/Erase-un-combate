@@ -18,7 +18,10 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
                                                                                                                                                                ContenedorDeTexturas::unicaInstancia()->obtener("sprites/escenarios/" + nombreEscenario + "/frente.png"),
                                                                                                                                                                ContenedorDeTexturas::unicaInstancia()->obtener("sprites/escenarios/" + nombreEscenario + "/suelo.png")),
                                                                                                                                                      cartelTodoListo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-todo-listo")),
-                                                                                                                                                     cartelAPelear(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-a-pelear"))
+                                                                                                                                                     cartelAPelear(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-a-pelear")),
+                                                                                                                                                     cartelJugador1Gana(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-jugador-1-gana")),
+                                                                                                                                                     cartelJugador2Gana(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-jugador-2-gana")),
+                                                                                                                                                     cartelEmpate(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-empate"))
 {
 
     rectanguloOscuro.setPosition({0, 0});
@@ -31,10 +34,15 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
     }
 
     personajeJugador1.setPosicion(VENTANA_ANCHURA / 3, ALTURA_SUELO);
+    personajeJugador1.setJugador(Jugador::JUGADOR1);
+    personajeJugador2.setJugador(Jugador::JUGADOR2);
     personajeJugador2.setPosicion(2 * VENTANA_ANCHURA / 3, ALTURA_SUELO);
 
     cartelTodoListo->setPosicion(POSICION_CARTELES);
     cartelAPelear->setPosicion(POSICION_CARTELES);
+    cartelJugador1Gana->setPosicion(POSICION_CARTELES);
+    cartelJugador2Gana->setPosicion(POSICION_CARTELES);
+    cartelEmpate->setPosicion(POSICION_CARTELES);
 }
 
 void Combate::resetear()
@@ -42,6 +50,9 @@ void Combate::resetear()
     // Los carteles se resetean
     cartelTodoListo->resetear();
     cartelAPelear->resetear();
+    cartelJugador1Gana->resetear();
+    cartelJugador2Gana->resetear();
+    cartelEmpate->resetear();
 
     // Los personajes vuelven a su posición
     personajeJugador1.setPosicion(VENTANA_ANCHURA / 3, ALTURA_SUELO);
@@ -388,7 +399,6 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
 
 void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &efectos, int &contadorCelebracion, Personaje &ganador)
 {
-
     sf::RenderWindow *ventana = VentanaPrincipal::unicaInstancia();
 
     // PRIMER PASO: solo se recibe entrada si se cierra la ventana
@@ -407,6 +417,15 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
 
     actualizarPersonajesEfectosGuisEscenarioVentana(efectos, nuevosEfectos);
 
+    // Se actualiza el cartel de personaje ganador si está celebrando
+    if(ganador.getEstado() == EstadoPersonaje::CELEBRANDO){
+        if(ganador.getJugador() == Jugador::JUGADOR1){
+            cartelJugador1Gana->actualizar(nuevosEfectos);
+        } else {
+            cartelJugador2Gana->actualizar(nuevosEfectos);
+        }
+    }
+
     for (std::shared_ptr<Animacion> &efecto : nuevosEfectos)
     {
         efectos.push_back(efecto);
@@ -424,14 +443,15 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
     else if (ganador.getEstado() == EstadoPersonaje::QUIETO)
     {
         ganador.cambiarEstado(EstadoPersonaje::CELEBRANDO);
-        ReproductorDeMusica::unicaInstancia()->reproducirCancionFinRonda();
+        // ReproductorDeMusica::unicaInstancia()->reproducirCancionFinRonda();
         if (personajeJugador1.getPuntosDeVida() > 0)
             GUIJugador1.ganarRonda();
         else
             GUIJugador2.ganarRonda();
     }
     // Si ya se le ha dicho que celebre, se oscurece el rectángulo si ha terminado de celebrar
-    else if (ganador.getEstado() == EstadoPersonaje::CELEBRANDO && ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() && !ReproductorDeMusica::unicaInstancia()->estaReproduciendo())
+    else if (ganador.getEstado() == EstadoPersonaje::CELEBRANDO && ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() &&
+             ((ganador.getJugador() == Jugador::JUGADOR1 && cartelJugador1Gana->haTerminado()) || ((ganador.getJugador() == Jugador::JUGADOR2 && cartelJugador2Gana->haTerminado()))))
     {
         sf::Color nuevoColor(rectanguloOscuro.getFillColor());
         nuevoColor.a += 5;
@@ -454,6 +474,14 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
 
     ventana->draw(GUIJugador1);
     ventana->draw(GUIJugador2);
+
+    if(ganador.getEstado() == EstadoPersonaje::CELEBRANDO){
+        if(ganador.getJugador() == Jugador::JUGADOR1){
+            ventana->draw(*cartelJugador1Gana);
+        } else {
+            ventana->draw(*cartelJugador2Gana);
+        }
+    }
 
     ventana->draw(rectanguloOscuro);
 
@@ -541,7 +569,6 @@ void Combate::comenzar()
         // haya celebrado su victoria y se haya terminado de reproducir la canción de fin de ronda)
         while (rectanguloOscuro.getFillColor().a != 255)
         {
-
             sf::Clock reloj;
 
             actualizarFrameCelebracion(efectos, contadorCelebracion, ganador);
