@@ -109,7 +109,7 @@ const float ALTURA_SUELO = VENTANA_ALTURA-20;
 const float IMPULSO_GOLPE_PEQUE = 1;
 
 // Impulso inicial al recibir un golpe mediano
-const float IMPULSO_GOLPE_MEDIO = 2;
+const float IMPULSO_GOLPE_MEDIO = 5;
 
 // Máximo daño que puede hacer un ataque pequeño
 const int MAX_ATAQUE_PEQUE = 3;

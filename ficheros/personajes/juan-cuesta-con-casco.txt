@@ -191,7 +191,7 @@ Hitboxes:
 51,29,27,71,0
 
 Frames:
-0,0,0,0
+0,0,0,0,0,0,0,0
 
 Sonido:No repetir
 0
