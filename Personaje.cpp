@@ -434,7 +434,8 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
                 movido = true;
             }
 
-            if(contadorTumbado >= MAX_CONTADOR_TUMBADO){
+            // Cuanto más dañado esté el personaje más le cuesta levantarse
+            if(contadorTumbado >= (MAX_CONTADOR_TUMBADO+(MAX_PUNTOS_DE_VIDA-puntosDeVida))){
                 contadorTumbado = 0;
                 cambiarEstado(EstadoPersonaje::LEVANTANDOSE);
             } else if (movido){
@@ -665,7 +666,7 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
                     cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
                 } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
                     velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
-                    if(hitboxElegidaEnemigo.esAtaqueBajo()){
+                    if(hitboxElegidaEnemigo.esAtaqueBajo() && puntosDeVida < MAX_PUNTOS_DE_VIDA/2){
                         velX/=2;
                         velY = IMPULSO_GOLPE_BAJO_MEDIO;
                         cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
@@ -690,10 +691,15 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
                         velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
                         cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
                     } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
-                        velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
-                        velX/=2;
-                        velY = IMPULSO_GOLPE_BAJO_MEDIO;
-                        cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+                        if(puntosDeVida < MAX_PUNTOS_DE_VIDA/2){
+                            velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                            velX/=2;
+                            velY = IMPULSO_GOLPE_BAJO_MEDIO;
+                            cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+                        } else {
+                            velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                            cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+                        }
                     }
                 } else {
                     if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){

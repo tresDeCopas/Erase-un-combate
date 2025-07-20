@@ -162,7 +162,7 @@ const float VELOCIDAD_ANDAR_MAX = 2.5;
 const float VELOCIDAD_ANDAR_AUMENTO = 0.3;
 
 // Velocidad que se consigue en el eje Y al saltar
-const float VELOCIDAD_SALTO = -7;
+const float VELOCIDAD_SALTO = -6;
 
 // Cuando un personaje GOLPEADO_BAJANDO choca el suelo con una velocidad menor a esta, pasa
 // a estar TIRADO

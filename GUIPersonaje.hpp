@@ -15,6 +15,9 @@ class GUIPersonaje : public sf::Drawable {
         // El personaje del que esta GUI muestra información
         Personaje& personaje;
 
+        // Indica si la GUI está en la parte izquierda o en la parte derecha de la pantalla
+        bool parteIzquierda;
+
         // Rectángulo que representa el medidor de vida en tiempo real (este
         // medidor muestra en todo momento la cantidad exacta de puntos de vida
         // del personaje)
@@ -51,7 +54,7 @@ class GUIPersonaje : public sf::Drawable {
     public:
 
         // Construye la GUI dada una referencia a un personaje
-        GUIPersonaje(Personaje &personaje);
+        GUIPersonaje(Personaje &personaje, bool parteIzquierda);
 
         // Actualiza la GUI en base a los datos del personaje (aprovechando que GUIPersonaje
         // es clase amiga (friend class) de Personaje, puede acceder a sus partes privadas
