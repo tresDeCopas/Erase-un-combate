@@ -56,6 +56,9 @@ class GUIPersonaje : public sf::Drawable {
         // frente son las marcas transparentes que hay en las barras de vida y súper))
         sf::Sprite spritePrincipalBase;
         sf::Sprite spritePrincipalFrente;
+
+        // Número de rondas ganadas
+        int rondasGanadas;
     
     public:
 
@@ -66,6 +69,12 @@ class GUIPersonaje : public sf::Drawable {
         // es clase amiga (friend class) de Personaje, puede acceder a sus partes privadas
         // sin preguntar ni nada, por lo que no hace falta pasar argumentos)
         void actualizar();
+
+        // Aumenta el recuento de rondas ganadas en uno
+        void ganarRonda();
+
+        // Devuelve el número de rondas ganadas
+        int getRondasGanadas();
 
         // Dibuja la GUI en pantalla
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
