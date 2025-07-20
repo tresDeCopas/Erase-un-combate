@@ -6,6 +6,7 @@
 #include "GUIPersonaje.hpp"
 #include "Escenario.hpp"
 #include "AnimacionAgrandable.hpp"
+#include <SFML/Network.hpp>
 
 /*
     Esta clase define un combate, formado por dos jugadores, cada
@@ -38,9 +39,14 @@ class Combate{
         // Ronda actual
         int numeroRonda;
 
-        // Indica qué jugador se debe actualizar primero en el turno actual. Esto sirve para que no sea
-        // siempre el primer jugador el que se actualiza primero, causando situaciones raras e injustas
-        Jugador primerJugadorParaActualizar;
+        // Indica si el jugador actual es el líder del combate
+        bool lider;
+
+        // Permite comunicarse con el otro ordenador
+        sf::TcpSocket socket;
+
+        // Permite aceptar conexiones en caso de que seamos el líder
+        sf::TcpListener listener;
 
         // Cartel que aparece al principio de la ronda en el que pone "¿Todo listo?"
         std::shared_ptr<Animacion> cartelTodoListo;
@@ -77,15 +83,20 @@ class Combate{
         // efectos en la lista de efectos (los efectos nuevos se quedan en nuevosEfectos hasta que se vayan a meter luego)
         void actualizarPersonajesEfectosGuisEscenarioVentana(std::list<std::shared_ptr<Animacion>> &efectos, std::list<std::shared_ptr<Animacion>> &nuevosEfectos);
 
-        // Procesa los eventos generados en la ventana actual e informa a los personajes para que se muevan
-        void recibirEntrada();
+        // Procesa los eventos generados en la ventana actual e informa a los personajes para que se muevan si se está jugando offline
+        void recibirEntradaOffline();
+
+        // Como recibirEntradaOffline() pero esta vez se sincroniza con el rival para mandarle la entrada y que nos mande su entrada
+        void recibirEntradaOnline();
 
     public:
 
         // Construye el combate en base a los nombres de los personajes
-        // y del escenario en el que se va a pelear. Lo demás es común a todos
-        // los combates
-        Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, std::string nombreEscenario);
+        // y del escenario en el que se va a pelear. También es necesario especificar la dirección IP del jugador
+        // contra el que se va a luchar. Por defecto es un string vacío, por lo que será un combate offline. Además, el booleano lider
+        // permite indicar si el jugador actual será el líder del combate (jugará en el lado izquierdo y su ordenador coordinará el combate)
+        // o si será el invitado (jugará en el lado derecho y su ordenador seguirá las órdenes del líder)
+        Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, std::string nombreEscenario, sf::IpAddress direccionIP = sf::IpAddress(0,0,0,0), bool lider = false);
 
         // Comienza el combate (la clase pasa a tomar el control de
         // la ventana principal hasta que termine el combate)

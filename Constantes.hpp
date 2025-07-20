@@ -261,6 +261,28 @@ const sf::Color COLOR_BARRA_SUPER(0,0,255);
 const int CONTADOR_VIBRACION_MAX = 2;
 
 /*
+    CONSTANTES PARA EL ONLINE
+*/
+
+// El puerto utilizado por el líder para aceptar conexiones de invitados
+const int NUMERO_PUERTO = 21021;
+
+// Bit que indica que el otro jugador se ha movido a la izquierda
+const uint8_t BIT_IZQUIERDA = 1;
+
+// Bit que indica que el otro jugador se ha movido a la derecha
+const uint8_t BIT_DERECHA = 2;
+
+// Bit que indica que el otro jugador se ha movido a la arriba
+const uint8_t BIT_ARRIBA = 4;
+
+// Bit que indica que el otro jugador se ha movido a la abajo
+const uint8_t BIT_ABAJO = 8;
+
+// Bit que indica que el otro jugador ha atacado
+const uint8_t BIT_ATAQUE = 16;
+
+/*
     CONSTANTES AUXILIARES PARA COSAS DE C++
 */
 

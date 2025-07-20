@@ -4,19 +4,20 @@
 #include "ContenedorDePersonajes.hpp"
 #include "ContenedorDeEfectos.hpp"
 #include "ReproductorDeMusica.hpp"
+#include "Utilidades.hpp"
 #include <omp.h>
 #include <iostream>
 #include <list>
 
 // Al usar initializer lists o como se diga en españolo me evito que se creen los
 // personajes usando el constructor vacío para nada (porque se queja el g++ más que nada)
-Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, std::string nombreEscenario) :
+Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, std::string nombreEscenario, sf::IpAddress direccionIP, bool lider) :
     personajeJugador1(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ1)),
     personajeJugador2(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ2)),
     GUIJugador1(personajeJugador1,true), GUIJugador2(personajeJugador2,false),
     escenario(ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/escenarios/"+nombreEscenario+"/fondo.png"),
               ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/escenarios/"+nombreEscenario+"/frente.png"),
-              ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/escenarios/"+nombreEscenario+"/suelo.png")),
+              ContenedorDeTexturas::unicaInstanciaTexturas()->obtener("sprites/escenarios/"+nombreEscenario+"/suelo.png")), lider(lider),
     cartelTodoListo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-todo-listo")),
     cartelAPelear(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-a-pelear")){
 
@@ -24,6 +25,20 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
     rectanguloOscuro.setSize(sf::Vector2f(VENTANA_ANCHURA,VENTANA_ALTURA));
     rectanguloOscuro.setOutlineThickness(0);
     rectanguloOscuro.setFillColor(sf::Color::Black);
+
+    if(lider){
+        if(listener.listen(NUMERO_PUERTO) != sf::Socket::Status::Done){
+            exit(1);
+        }
+        
+        if(listener.accept(socket) != sf::Socket::Status::Done){
+            exit(1);
+        }
+    } else if (direccionIP != sf::IpAddress(0,0,0,0)){
+        if(socket.connect(direccionIP,NUMERO_PUERTO) != sf::Socket::Status::Done){
+            exit(1);
+        }
+    }
 
     personajeJugador1.setPosicion(VENTANA_ANCHURA/3,ALTURA_SUELO);
     personajeJugador2.setPosicion(2*VENTANA_ANCHURA/3,ALTURA_SUELO);
@@ -125,7 +140,7 @@ void Combate::actualizarFramePreparandoSuper(std::list<std::shared_ptr<Animacion
     ventana->display();
 }
 
-void Combate::recibirEntrada(){
+void Combate::recibirEntradaOffline(){
 
     sf::RenderWindow * ventana = VentanaPrincipal::unicaInstancia();
 
@@ -146,6 +161,111 @@ void Combate::recibirEntrada(){
                 }
             }
         }
+    }
+}
+
+void Combate::recibirEntradaOnline(){
+
+    sf::RenderWindow * ventana = VentanaPrincipal::unicaInstancia();
+
+    // Estas son máscaras de bits donde se ponen las acciones que hacemos o dejamos
+    // de hacer. Será lo que se le mande al otro jugador por la red
+    uint8_t accionesRealizadas = 0;
+    uint8_t accionesDetenidas = 0;
+
+    while(const std::optional evento = ventana->pollEvent()){
+        if(evento->is<sf::Event::Closed>()){
+            ventana->close();
+            exit(EXIT_SUCCESS);
+        } else {
+            std::pair<Jugador,Accion> par = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
+
+            // No merece la pena prestarle atención: se han usado las teclas del otro jugador
+            if((par.first == Jugador::JUGADOR1 && !lider) || (par.first == Jugador::JUGADOR2 && lider)){
+                continue;
+            }
+
+            Personaje& personajeElegido = par.first == Jugador::JUGADOR1 ? personajeJugador1 : personajeJugador2;
+
+            if((dynamic_cast<AnimacionAgrandable*>(cartelAPelear.get()))->haTerminadoDeAgrandarse()){
+                if(evento->is<sf::Event::KeyPressed>() || evento->is<sf::Event::JoystickButtonPressed>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) > UMBRAL_JOYSTICK)){
+                    personajeElegido.realizarAccion(par.second);
+                    accionesRealizadas |= util::accionABit(par.second);
+                } else if(evento->is<sf::Event::KeyReleased>() || evento->is<sf::Event::JoystickButtonReleased>() || (evento->is<sf::Event::JoystickMoved>() && std::abs(evento->getIf<sf::Event::JoystickMoved>()->position) < UMBRAL_JOYSTICK)){
+                    personajeElegido.detenerAccion(par.second);
+                    accionesDetenidas |= util::accionABit(par.second);
+                }
+            }
+        }
+    }
+
+    // Se crea un paquete con las acciones realizadas y las acciones detenidas
+    sf::Packet paqueteEnviado;
+    paqueteEnviado << accionesRealizadas << accionesDetenidas;
+
+    // Se crea un paquete para recibir datos
+    sf::Packet paqueteRecibido;
+
+    if(lider){
+        // El lider es el que envía primero
+        while(socket.send(paqueteEnviado) != sf::Socket::Status::Done);
+        if(socket.receive(paqueteRecibido) != sf::Socket::Status::Done){
+            exit(1);
+        }
+    } else {
+        // El invitado envía después
+        if(socket.receive(paqueteRecibido) != sf::Socket::Status::Done){
+            exit(1);
+        }
+        while(socket.send(paqueteEnviado) != sf::Socket::Status::Done);
+    }
+
+    paqueteRecibido >> accionesRealizadas >> accionesDetenidas;
+
+    Personaje& personajeElegido = lider ? personajeJugador2 : personajeJugador1;
+
+    // Ahora se comprueba qué venía en el paquete
+
+    // Acciones realizadas
+    if(accionesRealizadas & BIT_ARRIBA){
+        personajeElegido.realizarAccion(Accion::ARRIBA);
+    }
+
+    if(accionesRealizadas & BIT_ABAJO){
+        personajeElegido.realizarAccion(Accion::ABAJO);
+    }
+
+    if(accionesRealizadas & BIT_IZQUIERDA){
+        personajeElegido.realizarAccion(Accion::IZQUIERDA);
+    }
+
+    if(accionesRealizadas & BIT_DERECHA){
+        personajeElegido.realizarAccion(Accion::DERECHA);
+    }
+
+    if(accionesRealizadas & BIT_ATAQUE){
+        personajeElegido.realizarAccion(Accion::ATACAR);
+    }
+
+    // Acciones detenidas
+    if(accionesDetenidas & BIT_ARRIBA){
+        personajeElegido.detenerAccion(Accion::ARRIBA);
+    }
+
+    if(accionesDetenidas & BIT_ABAJO){
+        personajeElegido.detenerAccion(Accion::ABAJO);
+    }
+
+    if(accionesDetenidas & BIT_IZQUIERDA){
+        personajeElegido.detenerAccion(Accion::IZQUIERDA);
+    }
+
+    if(accionesDetenidas & BIT_DERECHA){
+        personajeElegido.detenerAccion(Accion::DERECHA);
+    }
+
+    if(accionesDetenidas & BIT_ATAQUE){
+        personajeElegido.detenerAccion(Accion::ATACAR);
     }
 }
 
@@ -207,7 +327,10 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
         cartelAPelear->actualizar(efectos);
     }
 
-    recibirEntrada();
+    if(socket.getRemoteAddress() != sf::IpAddress(0,0,0,0))
+        recibirEntradaOnline();
+    else
+        recibirEntradaOffline();
 
     // SEGUNDO PASO: ACTUALIZAR PERSONAJES, EFECTOS, GUIS, ESCENARIO Y VENTANA
 
@@ -278,14 +401,6 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
     ventana->draw(rectanguloOscuro);
     
     ventana->display();
-
-    // Ahora que ha terminado el frame le damos la vuelta al jugador cuyas colisiones serán
-    // actualizadas primero en el siguiente frame
-    if(primerJugadorParaActualizar == Jugador::JUGADOR1){
-        primerJugadorParaActualizar = Jugador::JUGADOR2;
-    } else {
-        primerJugadorParaActualizar = Jugador::JUGADOR1;
-    }
 }
 
 void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &efectos, int &contadorCelebracion, Personaje &ganador){

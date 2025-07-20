@@ -31,6 +31,9 @@ namespace util{
 
     // Devuelve un número real en el rango [0,1)
     double realAleatorio();
+
+    // Dada una acción, devuelve el bit correspondiente
+    uint8_t accionABit(Accion accion);
 }
 
 #endif

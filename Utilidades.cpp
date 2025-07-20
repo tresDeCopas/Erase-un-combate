@@ -1,4 +1,5 @@
 #include "Utilidades.hpp"
+#include "Constantes.hpp"
 
 namespace util{
 
@@ -92,5 +93,51 @@ namespace util{
 
     double realAleatorio(){
         return ((double)rand()) / RAND_MAX;
+    }
+
+    uint8_t accionABit(Accion accion){
+        switch(accion){
+            case Accion::ARRIBA:
+                return BIT_ARRIBA;
+                break;
+            case Accion::ABAJO:
+                return BIT_ABAJO;
+                break;
+            case Accion::IZQUIERDA:
+                return BIT_IZQUIERDA;
+                break;
+            case Accion::DERECHA:
+                return BIT_DERECHA;
+                break;
+            case Accion::ATACAR:
+                return BIT_ATAQUE;
+                break;
+            default:
+                return 0;
+                break;
+        }
+    }
+
+    Accion bitAAccion(uint8_t bit){
+        switch(bit){
+            case BIT_ARRIBA:
+                return Accion::ARRIBA;
+                break;
+            case BIT_ABAJO:
+                return Accion::ABAJO;
+                break;
+            case BIT_IZQUIERDA:
+                return Accion::IZQUIERDA;
+                break;
+            case BIT_DERECHA:
+                return Accion::DERECHA;
+                break;
+            case BIT_ATAQUE:
+                return Accion::ATACAR;
+                break;
+            default:
+                return Accion::NADA;
+                break;
+        }
     }
 }
