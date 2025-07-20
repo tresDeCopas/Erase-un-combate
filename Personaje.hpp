@@ -20,6 +20,9 @@ class Personaje : public sf::Drawable {
         // Cantidad actual de puntos de vida
         int puntosDeVida;
 
+        // Nombre del personaje
+        std::string nombre;
+
         // Velocidad en el eje Y
         float velY;
 
@@ -67,7 +70,7 @@ class Personaje : public sf::Drawable {
     public:
 
         // Construye el personaje
-        Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones);
+        Personaje(std::map<EstadoPersonaje,std::shared_ptr<Animacion>> animaciones, std::string nombre);
 
         // Indica que se está pulsando un botón
         void realizarAccion(Accion accion);
