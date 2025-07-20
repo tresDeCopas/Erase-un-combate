@@ -140,7 +140,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
         }
         else if (accionesRealizadas[Accion::ATACAR]){
             cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
-            accionesRealizadas[Accion::ATACAR] = false;
         }
 
         break;
@@ -149,7 +148,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
 
         if (accionesRealizadas[Accion::ATACAR]){
             cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
-            accionesRealizadas[Accion::ATACAR] = false;
         } else if(accionesRealizadas[Accion::ARRIBA]){
             velY = VELOCIDAD_SALTO;
             accionesRealizadas[Accion::ARRIBA] = false;
@@ -174,7 +172,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
 
         if (accionesRealizadas[Accion::ATACAR]){
             cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
-            accionesRealizadas[Accion::ATACAR] = false;
         } else if(accionesRealizadas[Accion::ARRIBA]){
             velY = VELOCIDAD_SALTO;
             accionesRealizadas[Accion::ARRIBA] = false;
@@ -223,8 +220,32 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
 
         pararMovimiento();
 
-        if(animaciones[estado]->haTerminado())
+        if(animaciones[estado]->haTerminado()){
+            if(accionesRealizadas[Accion::ATACAR])
+                cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_2);
+            else
+                cambiarEstado(EstadoPersonaje::QUIETO);
+        }
+        break;
+    case EstadoPersonaje::ATAQUE_NORMAL_2:
+
+        pararMovimiento();
+
+        if(animaciones[estado]->haTerminado()){
+            if(accionesRealizadas[Accion::ATACAR])
+                cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_3);
+            else
+                cambiarEstado(EstadoPersonaje::QUIETO);
+        }
+        break;
+    case EstadoPersonaje::ATAQUE_NORMAL_3:
+
+        pararMovimiento();
+
+        if(animaciones[estado]->haTerminado()){
             cambiarEstado(EstadoPersonaje::QUIETO);
+            accionesRealizadas[Accion::ATACAR] = false;
+        }
         break;
 
     }
@@ -233,7 +254,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo){
     animaciones[estado]->mover(velX,velY);
 
     // Si el personaje se sale por la derecha, no dejar que pase
-    if(animaciones[estado]->getPosicion().x >= VENTANA_ANCHURA){
+    if(animaciones[estado]->getPosicion().x > VENTANA_ANCHURA-1){
         animaciones[estado]->setPosicion(VENTANA_ANCHURA-1,animaciones[estado]->getPosicion().y);
         velX = 0;
     } else if (animaciones[estado]->getPosicion().x < 0){
