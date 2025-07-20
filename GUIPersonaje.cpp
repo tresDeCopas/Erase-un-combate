@@ -70,7 +70,7 @@ GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaj
         spritePrincipalFrente.setTexture(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/gui/frente-derecha.png"));
 
         sf::Vector2f posicionGUI(POSICION_GUI_IZQUIERDA);
-        posicionGUI.x = VENTANA_ANCHURA - posicionGUI.x - spritePrincipalBase.getTextureRect().size.x;
+        posicionGUI.x = VENTANA_ANCHURA - posicionGUI.x - spritePrincipalBase.getTextureRect().size.x + 2; // 2 píxeles de la sombra que no cuentan
         spritePrincipalBase.setPosition(posicionGUI);
         spritePrincipalFrente.setPosition(posicionGUI);
     }

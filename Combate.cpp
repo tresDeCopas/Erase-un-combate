@@ -397,7 +397,7 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
     ventana->display();
 }
 
-void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &efectos, int &contadorCelebracion, Personaje &ganador)
+void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &efectos)
 {
     sf::RenderWindow *ventana = VentanaPrincipal::unicaInstancia();
 
@@ -418,12 +418,13 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
     actualizarPersonajesEfectosGuisEscenarioVentana(efectos, nuevosEfectos);
 
     // Se actualiza el cartel de personaje ganador si está celebrando
-    if(ganador.getEstado() == EstadoPersonaje::CELEBRANDO){
-        if(ganador.getJugador() == Jugador::JUGADOR1){
-            cartelJugador1Gana->actualizar(nuevosEfectos);
-        } else {
-            cartelJugador2Gana->actualizar(nuevosEfectos);
-        }
+    if(personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::CELEBRANDO){
+        cartelJugador1Gana->actualizar(nuevosEfectos);
+    } else if(personajeJugador2.getPuntosDeVida() > personajeJugador1.getPuntosDeVida() && personajeJugador2.getEstado() == EstadoPersonaje::CELEBRANDO){
+        cartelJugador2Gana->actualizar(nuevosEfectos);
+    // Si no, si los dos tienen la misma vida es porque ha habido empate
+    } else if(personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO) {
+        cartelEmpate->actualizar(nuevosEfectos);
     }
 
     for (std::shared_ptr<Animacion> &efecto : nuevosEfectos)
@@ -432,30 +433,35 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
     }
 
     // TERCER PASO: no se comprueban colisiones porque se supone que ya se ha terminado esta ronda. En su lugar, se
-    // comprueba si el personaje puede celebrar y se le dice que celebre
+    // comprueba si ha habido empate, o si el jugador que ha ganado está celebrando
+    if(personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida()){
+        if(cartelEmpate->haTerminado()){
+            sf::Color nuevoColor(rectanguloOscuro.getFillColor());
+            nuevoColor.a += 5;
+            rectanguloOscuro.setFillColor(nuevoColor);
+        }
+    } else {
 
-    // Si el contador de celebración aún no ha llegado a cero, se disminuye
-    if (contadorCelebracion > 0)
-    {
-        contadorCelebracion--;
-    }
-    // Si ya ha llegado a cero, se le dice al personaje que celebre y se reproduce la canción de fin de ronda
-    else if (ganador.getEstado() == EstadoPersonaje::QUIETO)
-    {
-        ganador.cambiarEstado(EstadoPersonaje::CELEBRANDO);
-        // ReproductorDeMusica::unicaInstancia()->reproducirCancionFinRonda();
-        if (personajeJugador1.getPuntosDeVida() > 0)
-            GUIJugador1.ganarRonda();
-        else
-            GUIJugador2.ganarRonda();
-    }
-    // Si ya se le ha dicho que celebre, se oscurece el rectángulo si ha terminado de celebrar
-    else if (ganador.getEstado() == EstadoPersonaje::CELEBRANDO && ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() &&
-             ((ganador.getJugador() == Jugador::JUGADOR1 && cartelJugador1Gana->haTerminado()) || ((ganador.getJugador() == Jugador::JUGADOR2 && cartelJugador2Gana->haTerminado()))))
-    {
-        sf::Color nuevoColor(rectanguloOscuro.getFillColor());
-        nuevoColor.a += 5;
-        rectanguloOscuro.setFillColor(nuevoColor);
+        Personaje& ganador = personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() ?  personajeJugador1 : personajeJugador2;
+        Personaje& perdedor = personajeJugador1.getPuntosDeVida() < personajeJugador2.getPuntosDeVida() ?  personajeJugador1 : personajeJugador2;
+
+        if (ganador.getEstado() == EstadoPersonaje::QUIETO && perdedor.getEstado() == EstadoPersonaje::TUMBADO)
+        {
+            ganador.cambiarEstado(EstadoPersonaje::CELEBRANDO);
+            // ReproductorDeMusica::unicaInstancia()->reproducirCancionFinRonda();
+            if (personajeJugador1.getPuntosDeVida() > 0)
+                GUIJugador1.ganarRonda();
+            else
+                GUIJugador2.ganarRonda();
+        }
+        // Si ya se le ha dicho que celebre, se oscurece el rectángulo si ha terminado de celebrar
+        else if (ganador.getEstado() == EstadoPersonaje::CELEBRANDO && ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() &&
+                ((ganador.getJugador() == Jugador::JUGADOR1 && cartelJugador1Gana->haTerminado()) || ((ganador.getJugador() == Jugador::JUGADOR2 && cartelJugador2Gana->haTerminado()))))
+        {
+            sf::Color nuevoColor(rectanguloOscuro.getFillColor());
+            nuevoColor.a += 5;
+            rectanguloOscuro.setFillColor(nuevoColor);
+        }
     }
 
     // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
@@ -475,12 +481,13 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
     ventana->draw(GUIJugador1);
     ventana->draw(GUIJugador2);
 
-    if(ganador.getEstado() == EstadoPersonaje::CELEBRANDO){
-        if(ganador.getJugador() == Jugador::JUGADOR1){
-            ventana->draw(*cartelJugador1Gana);
-        } else {
-            ventana->draw(*cartelJugador2Gana);
-        }
+    // Se dibuja el cartel que se tenga que dibujar
+    if(personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::CELEBRANDO){
+        ventana->draw(*cartelJugador1Gana);
+    } else if(personajeJugador2.getPuntosDeVida() > personajeJugador1.getPuntosDeVida() && personajeJugador2.getEstado() == EstadoPersonaje::CELEBRANDO){
+        ventana->draw(*cartelJugador2Gana);
+    } else if(personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO) {
+        ventana->draw(*cartelEmpate);
     }
 
     ventana->draw(rectanguloOscuro);
@@ -498,7 +505,6 @@ void Combate::comenzar()
     // repetir código porque virgen santisima qué por culo sería compactarlo todo
     while (GUIJugador1.getRondasGanadas() != 2 && GUIJugador2.getRondasGanadas() != 2)
     {
-
         // Se reproduce una canción de combate
         ReproductorDeMusica::unicaInstancia()->reproducirCancionCombate();
 
@@ -527,12 +533,10 @@ void Combate::comenzar()
             // ataque, por lo que todo se pone oscuro y el tiempo se para por un momento
             if (personajeJugador1.getEstado() == EstadoPersonaje::PREPARANDO_SUPER || personajeJugador2.getEstado() == EstadoPersonaje::PREPARANDO_SUPER)
             {
-
                 actualizarFramePreparandoSuper(efectos);
             }
             else
             {
-
                 actualizarFrameNormal(efectos);
             }
 
@@ -559,19 +563,13 @@ void Combate::comenzar()
         personajeJugador2.detenerAccion(Accion::DERECHA);
         personajeJugador2.detenerAccion(Accion::ATACAR);
 
-        // Se encuentra al jugador que ha ganado (no sé si puede haber empates)
-        Personaje &ganador = personajeJugador1.getPuntosDeVida() > 0 ? personajeJugador1 : personajeJugador2;
-
-        // Este contador disminuye en 1 cada frame y cuando llega a 0 se le indica al ganador que celebre
-        int contadorCelebracion = MAX_CONTADOR_CELEBRACION;
-
         // El bucle termina cuando el rectángulo que cubre la pantalla se oscurezca por completo (esto ocurre después de que el personaje ganador
         // haya celebrado su victoria y se haya terminado de reproducir la canción de fin de ronda)
         while (rectanguloOscuro.getFillColor().a != 255)
         {
             sf::Clock reloj;
 
-            actualizarFrameCelebracion(efectos, contadorCelebracion, ganador);
+            actualizarFrameCelebracion(efectos);
 
             sf::sleep(sf::seconds(1.f / NUMERO_FPS) - reloj.reset());
         }

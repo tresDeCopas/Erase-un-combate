@@ -71,11 +71,8 @@ class Combate{
         // Actualiza un frame completamente normal y corriente del combate
         void actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efectos);
 
-        // Actualiza un frame pero solo cuando uno de los personajes está KO y el otro celebra. Se encarga de actualizar contadorCelebracion
-        void actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &efectos, int &contadorCelebracion, Personaje &ganador);
-
-        // TODO
-        // void actualizarFrameEmpate(int &contadorCelebracion);
+        // Actualiza un frame cuando una ronda termina y uno de los personajes la gana o hay empate
+        void actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &efectos);
 
         // Sé que el nombre es largo de cojones pero no se me ocurre otra cosa mejor. Actualiza como su propio nombre indica
         // los dos personajes, los efectos, las GUIs, el escenario y la ventana. No comprueba colisiones, y no inserta nuevos
