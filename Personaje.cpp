@@ -482,6 +482,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         pararMovimiento();
 
         if(animaciones[estado]->haTerminado()){
+            contadorBlanco = 255;
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
         break;

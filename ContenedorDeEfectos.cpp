@@ -19,6 +19,12 @@ ContenedorDeEfectos * ContenedorDeEfectos::unicaInstancia()
 }
 
 std::shared_ptr<Animacion> ContenedorDeEfectos::obtenerEfecto(std::string nombre){
+
+    if(animaciones.count(nombre) == 0){
+        Bitacora::unicaInstancia()->escribir("ERROR: se ha pedido el efecto " + nombre + ", pero no existe");
+        exit(EXIT_FAILURE);
+    }
+
     // Es importante copiar la animación al trabajar con punteros
     return animaciones.at(nombre)->clonar();
 }
