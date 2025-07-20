@@ -614,103 +614,120 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
     }
 
     // Si sí que hubo golpe, depende ya de cómo le pille al personaje
-    switch(estado){
 
-        // En situaciones en las que no se puede golpear otra vez (si el personaje está en
-        // alguno de estos estados, se debería haber detenido la ejecución de esta función antes)
-        case EstadoPersonaje::GOLPEADO_MEDIO:
-        case EstadoPersonaje::GOLPEADO_BAJANDO:
-        case EstadoPersonaje::GOLPEADO_SUBIENDO:
-        case EstadoPersonaje::PREPARANDO_SUPER:
-        case EstadoPersonaje::TUMBADO:
-        case EstadoPersonaje::LEVANTANDOSE:
-        case EstadoPersonaje::CELEBRANDO:
-            break;
+    // El ataque súper es inesquivablemente mortal
+    if(hitboxElegidaEnemigo.getFuerzaAtaque() > MAX_ATAQUE_MEDIO){
+        velX = mirandoDerecha ? -IMPULSO_X_GOLPE_GRANDE : IMPULSO_X_GOLPE_GRANDE;
+        velY = IMPULSO_Y_GOLPE_GRANDE;
 
-        // En el suelo sin bloquear o en el aire (todo te pega)
-        case EstadoPersonaje::GOLPEADO_PEQUE:
-        case EstadoPersonaje::QUIETO:
-        case EstadoPersonaje::ANDANDO_ACERCANDOSE:
-        case EstadoPersonaje::ATAQUE_NORMAL_1:
-        case EstadoPersonaje::ATAQUE_NORMAL_2:
-        case EstadoPersonaje::ATAQUE_NORMAL_3:
-        case EstadoPersonaje::ATAQUE_AGACHADO:
-        case EstadoPersonaje::TOCANDO_SUELO:
-        case EstadoPersonaje::SALTANDO_SUBIENDO:
-        case EstadoPersonaje::SALTANDO_BAJANDO:
-        case EstadoPersonaje::ATAQUE_AEREO:
+        cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+    } else {
 
-            if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
-                velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
-                cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
-            } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
-                velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
-                if(hitboxElegidaEnemigo.esAtaqueBajo()){
-                    velX/=2;
-                    velY = IMPULSO_GOLPE_BAJO_MEDIO;
-                    cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+        // Si no es súper, ahora sí que depende de cómo esté el personaje, pues
+        // los ataques medios y pequeños se pueden esquivar
+        switch(estado){
+
+            // En situaciones en las que no se puede golpear otra vez (si el personaje está en
+            // alguno de estos estados, se debería haber detenido la ejecución de esta función antes)
+            case EstadoPersonaje::GOLPEADO_MEDIO:
+            case EstadoPersonaje::GOLPEADO_BAJANDO:
+            case EstadoPersonaje::GOLPEADO_SUBIENDO:
+            case EstadoPersonaje::PREPARANDO_SUPER:
+            case EstadoPersonaje::TUMBADO:
+            case EstadoPersonaje::LEVANTANDOSE:
+            case EstadoPersonaje::CELEBRANDO:
+                break;
+
+            // En el suelo sin bloquear o en el aire (todo te pega)
+            case EstadoPersonaje::GOLPEADO_PEQUE:
+            case EstadoPersonaje::QUIETO:
+            case EstadoPersonaje::ANDANDO_ACERCANDOSE:
+            case EstadoPersonaje::ATAQUE_NORMAL_1:
+            case EstadoPersonaje::ATAQUE_NORMAL_2:
+            case EstadoPersonaje::ATAQUE_NORMAL_3:
+            case EstadoPersonaje::ATAQUE_AGACHADO:
+            case EstadoPersonaje::TOCANDO_SUELO:
+            case EstadoPersonaje::SALTANDO_SUBIENDO:
+            case EstadoPersonaje::SALTANDO_BAJANDO:
+            case EstadoPersonaje::ATAQUE_AEREO:
+
+                if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                    velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
+                    cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
+                } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                    velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                    if(hitboxElegidaEnemigo.esAtaqueBajo()){
+                        velX/=2;
+                        velY = IMPULSO_GOLPE_BAJO_MEDIO;
+                        cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+                    } else {
+                        cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+                    }
                 } else {
-                    cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
-                }
-            }
-            break;
-        
-        // En el suelo bloqueando (los ataques bajos te pegan)
-        case EstadoPersonaje::BLOQUEANDO:
-        case EstadoPersonaje::ANDANDO_ALEJANDOSE:
+                    velX = mirandoDerecha ? -IMPULSO_X_GOLPE_GRANDE : IMPULSO_X_GOLPE_GRANDE;
+                    velY = IMPULSO_Y_GOLPE_GRANDE;
 
-            // Aún si estás bloqueando, los ataques bajos te dan
-            if(hitboxElegidaEnemigo.esAtaqueBajo()){
-                if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
-                    velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
-                    cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
-                } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
-                    velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
-                    velX/=2;
-                    velY = IMPULSO_GOLPE_BAJO_MEDIO;
                     cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
                 }
-            } else {
-                if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
-                    velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
-                    cambiarEstado(EstadoPersonaje::BLOQUEANDO);
-                } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
-                    velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
-                    cambiarEstado(EstadoPersonaje::BLOQUEANDO);
-                }
-            }
+                break;
+            
+            // En el suelo bloqueando (los ataques bajos te pegan)
+            case EstadoPersonaje::BLOQUEANDO:
+            case EstadoPersonaje::ANDANDO_ALEJANDOSE:
 
-            break;
-        
-        // Agachado (los ataques no bajos te pegan, los bajos los bloqueas)
-        case EstadoPersonaje::AGACHADO:
-            if(!hitboxElegidaEnemigo.esAtaqueBajo()){
-                if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
-                    velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
-                    cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
-                } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
-                    velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
-                    cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+                // Aún si estás bloqueando, los ataques bajos te dan
+                if(hitboxElegidaEnemigo.esAtaqueBajo()){
+                    if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                        velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
+                        cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
+                    } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                        velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                        velX/=2;
+                        velY = IMPULSO_GOLPE_BAJO_MEDIO;
+                        cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
+                    }
+                } else {
+                    if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                        velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
+                        cambiarEstado(EstadoPersonaje::BLOQUEANDO);
+                    } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                        velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                        cambiarEstado(EstadoPersonaje::BLOQUEANDO);
+                    }
                 }
-            } else {
-                if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
-                    velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
-                    cambiarEstado(EstadoPersonaje::BLOQUEANDO);
-                } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
-                    velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
-                    cambiarEstado(EstadoPersonaje::BLOQUEANDO);
+
+                break;
+            
+            // Agachado (los ataques no bajos te pegan, los bajos los bloqueas)
+            case EstadoPersonaje::AGACHADO:
+                if(!hitboxElegidaEnemigo.esAtaqueBajo()){
+                    if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                        velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
+                        cambiarEstado(EstadoPersonaje::GOLPEADO_PEQUE);
+                    } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                        velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                        cambiarEstado(EstadoPersonaje::GOLPEADO_MEDIO);
+                    }
+                } else {
+                    if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                        velX = mirandoDerecha ? -IMPULSO_GOLPE_PEQUE : IMPULSO_GOLPE_PEQUE;
+                        cambiarEstado(EstadoPersonaje::BLOQUEANDO);
+                    } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                        velX = mirandoDerecha ? -IMPULSO_GOLPE_MEDIO : IMPULSO_GOLPE_MEDIO;
+                        cambiarEstado(EstadoPersonaje::BLOQUEANDO);
+                    }
                 }
-            }
-            break;
-        
-        // Realizando el ataque súper (sufre daño pero no se mueve ni cambia de estado)
-        case EstadoPersonaje::ATAQUE_SUPER:
-            if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
-                // Se le baja la vida igualmente
-            } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
-                // Se le baja la vida igualmente
-            }
-            break;
+                break;
+            
+            // Realizando el ataque súper (sufre daño pero no se mueve ni cambia de estado)
+            case EstadoPersonaje::ATAQUE_SUPER:
+                if(hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+                    // Se le baja la vida igualmente
+                } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_MEDIO){
+                    // Se le baja la vida igualmente
+                }
+                break;
+        }
     }
 
     // Ahora, se añaden efectos según haya salido la cosa
@@ -756,9 +773,22 @@ void Personaje::comprobarColisiones(std::list<std::shared_ptr<Animacion>> &anima
         }
 
     } else {
-        // Es importante volver antes de tiempo o si no estaríamos modificando anim mientras
-        // es un puntero sin inicializar, lo cual está feo
-        return;
+
+        VentanaPrincipal::vibrar(VIBRACION_ATAQUE_SUPER);
+
+        anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("golpeado-grande");
+
+        for(int i(0);i < NUM_PARTICULAS_GOLPEADO_GRANDE;++i){
+            int j(1+rand()%TIPO_GRANDE_CUANTAS_PARTICULAS);
+
+            auto particula = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("particula-golpeado-grande-"+std::to_string(j));
+            ((AnimacionConGravedad*)(particula.get()))->setPosicion(posicionMedia);
+            ((AnimacionConGravedad*)(particula.get()))->setVelocidad(sf::Vector2f((mirandoDerecha ? -1 : 1) * util::realAleatorio()*MAX_VELOCIDAD_PARTICULA_GRANDE,-1 * util::realAleatorio()*MAX_VELOCIDAD_PARTICULA_GRANDE));
+            ((AnimacionConGravedad*)(particula.get()))->setVelocidadGiro((rand()%2==0 ? -1 : 1) * util::realAleatorio()*MAX_VELOCIDAD_GIRO_PART);
+
+            efectosInsertados.push_back(particula);
+        }
+
     }
 
     anim->setPosicion(posicionMedia);
