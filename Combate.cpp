@@ -69,6 +69,8 @@ void Combate::comenzar(){
             }
         }
 
+        VentanaPrincipal::actualizar();
+
         // TERCER PASO: COMPROBAR COLISIONES.
 
         std::list<std::shared_ptr<Animacion>> nuevosEfectos;
