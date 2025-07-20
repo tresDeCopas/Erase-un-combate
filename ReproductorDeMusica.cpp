@@ -1,48 +1,55 @@
-#include "MusicPlayer.hpp"
-#include "Log.hpp"
+#include "ReproductorDeMusica.hpp"
+#include "Bitacora.hpp"
 
-MusicPlayer * MusicPlayer::musicPlayer = nullptr;
+ReproductorDeMusica * ReproductorDeMusica::reproductorDeMusica = nullptr;
 
-MusicPlayer * MusicPlayer::getInstance()
+ReproductorDeMusica * ReproductorDeMusica::unicaInstancia()
 {
-    if(musicPlayer==nullptr)
-        musicPlayer = new MusicPlayer();
-    return musicPlayer;
+    if(reproductorDeMusica==nullptr)
+        reproductorDeMusica = new ReproductorDeMusica();
+    return reproductorDeMusica;
 }
 
-void MusicPlayer::load(MusicID identifier, const std::string path)
+void ReproductorDeMusica::cargar(IDMusica identificador, const std::string ruta)
 {
-    filenames[identifier] = path;
+    rutasDeFicheros[identificador] = ruta;
 }
 
-void MusicPlayer::play(MusicID theme)
+void ReproductorDeMusica::reproducir(IDMusica cancion)
 {
-    std::string filename = filenames[theme];
+    std::string ruta = rutasDeFicheros[cancion];
 
-    if(!currentMusic.openFromFile(filename))
-        Log::getInstance()->printFileError(filename);
+    if(!musicaActual.openFromFile(ruta)){
+        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Emilio, vamos a animar un poco el ambiente, reproduce la canción " + ruta);
+        Bitacora::unicaInstancia()->escribir("Emilio: Ah no, esa se la llevó mi padre y ya no la he vuelto a ver");
+        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Pero... ¿para qué le das a tu padre un bien común de esta, nuestra comunidad?");
+        Bitacora::unicaInstancia()->escribir("Emilio: Es que se puso muy pesado, y con tal de que me dejara un rato en paz...");
+        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Voy a encontrar a Mariano inmediatamente. Se suspende la junta.");
+        Bitacora::unicaInstancia()->escribir("Emilio: Pero no se enfade con él señor Juan, no es maldad, es que está demente ya.");
+        exit(EXIT_FAILURE);
+    }
 
-    currentMusic.setLoop(true);
-    currentMusic.setVolume(MAX_MUSIC_VOLUME);
-    currentMusic.play();
+    musicaActual.setLoop(true);
+    musicaActual.setVolume(volumenActual);
+    musicaActual.play();
 }
 
-void MusicPlayer::stop()
+void ReproductorDeMusica::detener()
 {
-    currentMusic.stop();
+    musicaActual.stop();
 }
 
-float MusicPlayer::getVolume()
+float ReproductorDeMusica::obtenerVolumen()
 {
-    return currentMusic.getVolume();
+    return musicaActual.getVolume();
 }
 
-void MusicPlayer::alterVolume(float change)
+void ReproductorDeMusica::establecerVolumen(float nuevoVolumen)
 {
-    currentMusic.setVolume(currentMusic.getVolume()+change);
+    musicaActual.setVolume(nuevoVolumen > VOLUMEN_MAXIMO_MUSICA ? VOLUMEN_MAXIMO_MUSICA : nuevoVolumen < 0 ? 0 : nuevoVolumen);
 }
 
-void MusicPlayer::loadAllMusic()
+void ReproductorDeMusica::cargarTodaLaMusica()
 {
-    load(MusicID::WarningMusic,"music/warning/warningMusic.wav");
+    // cargar(MusicID::WarningMusic,"music/warning/warningMusic.wav");
 }

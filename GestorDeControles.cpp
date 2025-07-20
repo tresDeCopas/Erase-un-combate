@@ -29,125 +29,117 @@ GestorDeControles::GestorDeControles()
 
     // Al principio los controles no están asociados a nadie
     for(int i=0;i<NUMERO_CONTROLES;i++){
-        controlToCharacter[static_cast<Control>(i)] = CharName::NONE;
-    }
-}
-
-bool GestorDeControles::isAvailable(Control c){
-    return controlToCharacter[c] == CharName::NONE;
-}
-
-bool GestorDeControles::connectJoystick(CharName character, Control joystick){
-
-    // If a joystick button is pressed when the controls window is showing, then
-    // the character will be controlled by the joystick and not the keyboard
-
-    if(!isAvailable(joystick)) return false;
-
-    // Unassign the character to its current control
-    if(controlToCharacter[Control::KEYBOARD_LEFT] == character){
-        controlToCharacter[Control::KEYBOARD_LEFT] = CharName::NONE;
-    } else if(controlToCharacter[Control::KEYBOARD_RIGHT] == character){
-        controlToCharacter[Control::KEYBOARD_RIGHT] = CharName::NONE;
+        controlAJugador[static_cast<Control>(i)] = Jugador::NADIE;
     }
 
-    controlToCharacter[joystick] = character;
+    // Bueno sí, hay dos que sí están asociados al principio
+    controlAJugador[Control::TECLADO_IZQUIERDA] = Jugador::JUGADOR1;
+    controlAJugador[Control::TECLADO_DERECHA] = Jugador::JUGADOR2;
+}
+
+bool GestorDeControles::estaLibre(Control c){
+    return controlAJugador[c] == Jugador::NADIE;
+}
+
+bool GestorDeControles::conectarMando(Jugador j, Control c){
+
+    // Si no es un mando, nos vamos directamente
+    if(c == Control::TECLADO_DERECHA || c == Control::TECLADO_IZQUIERDA)
+        return false;
+
+    // Si ya está pillado, también
+    if(!estaLibre(c)) return false;
+
+    // Buscamos el control que sea que esté usando el jugador y lo deshabilitamos
+    // (Gracias a las maravillas de C y C++ puedo evitar usar llaves aquí)
+    for(int i=0;i<NUMERO_CONTROLES;i++)
+        if(controlAJugador[static_cast<Control>(i)] == j)
+            controlAJugador[static_cast<Control>(i)] = Jugador::NADIE;
+
+    // Por último, asignamos el control y ya está
+    controlAJugador[c] = j;
+
     return true;
 }
 
-std::pair<CharName,Accion> GestorDeControles::checkEvent(sf::Event event)
+std::pair<Jugador,Accion> GestorDeControles::comprobarEvento(sf::Event evento)
 {
-    // This is the pair of CharName and Accion that will be returned
-    std::pair<CharName,Accion> pair(CharName::NONE,Accion::NONE);
+    // Este es el par que va a ser devuelto (empieza vacío)
+    std::pair<Jugador,Accion> pair(Jugador::NADIE,Accion::NADA);
 
-    if(event.type == sf::Event::JoystickButtonPressed){
-        // Someone pressed a key on a joystick, let's find who
+    if(evento.type == sf::Event::JoystickButtonPressed){
+        // Alguien ha pulsado un botón de mando (el botón da igual, todos
+        // hacen lo mismo). Se le suma 2 al numerito del control porque los dos
+        // primeros controles son la parte izquierda del teclado y la parte derecha,
+        // por lo que el control 3 es el mando 0 y así sucesivamente
+        Control control = static_cast<Control>(evento.joystickButton.joystickId+2);
 
-        Control control = static_cast<Control>(event.joystickButton.joystickId+2);
+        // Si el control es de alguien, se actualiza el par
+        pair.first = controlAJugador[control];
+        if(pair.first != Jugador::NADIE)
+            pair.second = Accion::ATACAR;
 
-        pair.first = controlToCharacter[control];
-        if(pair.first != CharName::NONE)
-            pair.second = Accion::INTERACT;
+    } else if (evento.type == sf::Event::JoystickMoved){
+        // Alguien ha movido un joystick
 
-    } else if (event.type == sf::Event::JoystickMoved){
-        // Someone moved a joystick, let's find who
+        Control control = static_cast<Control>(evento.joystickMove.joystickId+2);
 
-        Control control = static_cast<Control>(event.joystickMove.joystickId+2);
-
-        pair.first = controlToCharacter[control];
-        if(pair.first == CharName::NONE)
-            pair.second = Accion::NONE;
-        else{
-            // Depending on the axis, do something
-            switch(event.joystickMove.axis){
+        // Se saca el jugador correspondiente al mando. Si hay jugador,
+        // se hacen cosas
+        pair.first = controlAJugador[control];
+        if(pair.first != Jugador::NADIE){
+            // Dependiendo del eje, se decide hacia dónde se mueve
+            switch(evento.joystickMove.axis){
+                // PovX, X y R son los ejes X de tres posibles entradas
+                // PovX es la cruceta, X es el joystick izquierdo y R el joystick derecho
                 case sf::Joystick::Axis::PovX:
                 case sf::Joystick::Axis::X:
                 case sf::Joystick::Axis::R:
-                    if(event.joystickMove.position > JOYSTICK_AXIS_THRESHOLD)
-                        pair.second = Accion::RIGHT;
-                    else if(event.joystickMove.position < -JOYSTICK_AXIS_THRESHOLD)
-                        pair.second = Accion::LEFT;
+                    if(evento.joystickMove.position > UMBRAL_JOYSTICK)
+                        pair.second = Accion::DERECHA;
+                    else if(evento.joystickMove.position < -UMBRAL_JOYSTICK)
+                        pair.second = Accion::IZQUIERDA;
                     break;
+
+                // PovY, Y y U son los ejes Y de tres posibles entradas
+                // PovY es la cruceta, Y es el joystick izquierdo y U el joystick derecho
                 case sf::Joystick::Axis::PovY:
                 case sf::Joystick::Axis::Y:
                 case sf::Joystick::Axis::U:
-                    if(event.joystickMove.position > JOYSTICK_AXIS_THRESHOLD)
-                        pair.second = Accion::UP;
-                    else if(event.joystickMove.position < -JOYSTICK_AXIS_THRESHOLD)
-                        pair.second = Accion::DOWN;
+                    if(evento.joystickMove.position > UMBRAL_JOYSTICK)
+                        pair.second = Accion::ARRIBA;
+                    else if(evento.joystickMove.position < -UMBRAL_JOYSTICK)
+                        pair.second = Accion::ABAJO;
                     break;
                 default:
                     break;
             }
         }
-    } else if (event.type == sf::Event::KeyPressed){
-        // Someone pressed a key
+    } else if (evento.type == sf::Event::KeyPressed){
+        // Alguien ha pulsado una tecla
 
-        // If it's the exit key, return it immediately
-        if(event.key.code == EXIT_KEY)
-            pair.second = Accion::EXIT;
+        // Si es la tecla de salida tiene solución fácil
+        if(evento.key.code == TECLA_SALIDA)
+            pair.second = Accion::ESCAPE;
         else {
-            // If it's another key, first check if it's a valid key
-            if(teclaAControlYAccion.count(event.key.code)){
-                // If it is, get the control and the action
-                Control c = teclaAControlYAccion[event.key.code].first;
-                Accion ka = teclaAControlYAccion[event.key.code].second;
+            // Si es otra tecla, hay que ver si es una de las que nos interesa
+            if(teclaAControlYAccion.count(evento.key.code)){
+                // Si es una tecla que tenemos registrada, se comprueba su control y su acción
+                Control c = teclaAControlYAccion[evento.key.code].first;
+                Accion a = teclaAControlYAccion[evento.key.code].second;
 
-                // Now, assign the CharName and the Accion
-                pair.first = controlToCharacter[c];
-                pair.second = ka;
-                // Also check if the character is NONE, in which case the action
-                // is also NONE just in case
-                if(pair.first == CharName::NONE){
-                    pair.second = Accion::NONE;
+                // Se asigna el personaje y la acción
+                pair.first = controlAJugador[c];
+                pair.second = a;
+                // Si el personaje es NADIE es porque nadie tiene ese control, así
+                // que todo lo que hemos hecho ha sido perder el tiempo
+                if(pair.first == Jugador::NADIE){
+                    pair.second = Accion::NADA;
                 }
             }
         }
     }
 
+    // Después de este pifostio devolvemos el par
     return pair;
-}
-
-// Returns true if the character has a control assigned by the end of the function (already had one, or didn't
-// have un but got a new one). Returns false if the function couldn't assign a control (both parts of the keyboard
-// are taken and the player needs to connect a controller)
-bool GestorDeControles::assignControl(CharName character)
-{
-    // Is that character already assigned to a control?
-    for(int i=0;i<NUM_CONTROLS;i++){
-        if(controlToCharacter[static_cast<Control>(i)] == character)
-            return true;
-    }
-
-    // If you are still here, let's try to assign the character to a keyboard part
-    if(controlToCharacter[Control::KEYBOARD_LEFT] == CharName::NONE){
-        controlToCharacter[Control::KEYBOARD_LEFT] = character;
-        return true;
-    } else if(controlToCharacter[Control::KEYBOARD_RIGHT] == CharName::NONE){
-        controlToCharacter[Control::KEYBOARD_RIGHT] = character;
-        return true;
-    }
-
-    // If you reach this point, you have to connect a controller (sorry heheh)
-    return false;
 }

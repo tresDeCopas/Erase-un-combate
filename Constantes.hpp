@@ -55,4 +55,19 @@ const int VENTANA_ESTILO = sf::Style::Close;
 // Número total de controles posibles (dos partes del teclado y ocho mandos)
 const int NUMERO_CONTROLES = 10;
 
+// El movimiento mínimo que se tiene que hacer con un joystick para considerar la
+// entrada válida (esto evita que con mover el joystick 0.00001 milimetros ya esté
+// moviéndose el personaje)
+const double UMBRAL_JOYSTICK = 0.3;
+
+// Tecla para salir del juego
+const sf::Keyboard::Key TECLA_SALIDA = sf::Keyboard::Key::Escape;
+
+/*
+    CONSTANTES PARA EL SONIDO
+*/
+
+// Volumen máximo del reproductor de música
+const float VOLUMEN_MAXIMO_MUSICA = 100.0;
+
 #endif // __CONSTANTES_HPP__

@@ -5,7 +5,7 @@
 
 // Enumerado para acciones que se pueden llevar a cabo al pulsar teclas
 enum class Accion {
-    IZQUIERDA, DERECHA, ARRIBA, ABAJO, ATACAR, ESCAPE
+    NADA, IZQUIERDA, DERECHA, ARRIBA, ABAJO, ATACAR, ESCAPE
 };
 
 // Tipo de bucle en una animación
@@ -75,6 +75,11 @@ enum class IDSonido {
 
 // Enumerado para los identificadores de fuentes
 enum class IDFuente {
+
+};
+
+// Enumerado para los identificadores de canciones
+enum class IDMusica {
 
 };
 

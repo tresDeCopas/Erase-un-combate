@@ -33,8 +33,8 @@ class GestorDeControles
         // Dado un evento, devuelve el jugador y la acción que está haciendo
         std::pair<Jugador,Accion> comprobarEvento(sf::Event evento);
 
-        // Asigna un control a un jugador
-        bool asignarControl(Jugador jugador, Control control);
+        // Permite establecer un mando para que lo use un jugador
+        bool conectarMando(Jugador j, Control c);
 
         // NUNCA SE COPIA UN SINGLETON
         GestorDeControles(GestorDeControles &otro) = delete;
