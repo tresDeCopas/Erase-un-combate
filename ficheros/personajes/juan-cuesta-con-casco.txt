@@ -42,11 +42,11 @@ Hitboxes:
 Frames:
 0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3
 
-Sonido:Repetir
+Sonido:repetir
 0,16
 --------------------------------------------------------------------------------
 Estado:andando-alejandose
-Bucle:al-reves
+Bucle:al reves
 
 Rectangulo:0
 Hitboxes:
@@ -67,7 +67,7 @@ Hitboxes:
 Frames:
 0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3
 
-Sonido:Repetir
+Sonido:repetir
 8,24
 --------------------------------------------------------------------------------
 Estado:saltando-subiendo
@@ -88,7 +88,7 @@ Hitboxes:
 Frames:
 0,0,0,0,0,1,1,1,1,1,2,2,2,2,2
 
-Sonido:No repetir
+Sonido:no repetir
 0
 --------------------------------------------------------------------------------
 Estado:saltando-bajando
@@ -128,7 +128,7 @@ Hitboxes:
 Frames:
 0,0,0,0,1,2,2,2,2
 
-Sonido:No repetir
+Sonido:no repetir
 4
 --------------------------------------------------------------------------------
 Estado:ataque-normal-2
@@ -154,7 +154,7 @@ Hitboxes:
 Frames:
 0,0,0,0,1,2,2,2,2,3,3,3,3
 
-Sonido:No repetir
+Sonido:no repetir
 4
 --------------------------------------------------------------------------------
 Estado:ataque-normal-3
@@ -180,7 +180,7 @@ Hitboxes:
 Frames:
 0,0,0,0,1,2,2,2,2,3,3,3,3
 
-Sonido:No repetir
+Sonido:no repetir
 4
 --------------------------------------------------------------------------------
 Estado:golpeado-peque
@@ -193,7 +193,7 @@ Hitboxes:
 Frames:
 0,0,0,0,0,0,0,0
 
-Sonido:No repetir
+Sonido:no repetir
 0
 --------------------------------------------------------------------------------
 Estado:golpeado-medio
@@ -210,7 +210,7 @@ Hitboxes:
 Frames:
 0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1
 
-Sonido:No repetir
+Sonido:no repetir
 0
 --------------------------------------------------------------------------------
 Estado:bloqueando
@@ -227,7 +227,7 @@ Hitboxes:
 Frames:
 0,0,0,1,1,1
 
-Sonido:No repetir
+Sonido:no repetir
 0
 
 ####

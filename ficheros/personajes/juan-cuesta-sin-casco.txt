@@ -42,7 +42,7 @@ Hitboxes:
 Frames:
 0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3
 
-Sonido:Repetir
+Sonido:repetir
 0,16
 --------------------------------------------------------------------------------
 Estado:andando-alejandose
@@ -67,7 +67,7 @@ Hitboxes:
 Frames:
 0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3
 
-Sonido:Repetir
+Sonido:repetir
 8,24
 --------------------------------------------------------------------------------
 Estado:saltando-subiendo
@@ -88,7 +88,7 @@ Hitboxes:
 Frames:
 0,0,0,0,0,1,1,1,1,1,2,2,2,2,2
 
-Sonido:No repetir
+Sonido:no repetir
 0
 --------------------------------------------------------------------------------
 Estado:saltando-bajando
@@ -110,7 +110,7 @@ Frames:
 0,0,0,0,0,1,1,1,1,1,2,2,2,2,2
 --------------------------------------------------------------------------------
 Estado:ataque-normal-1
-Bucle:sin bucle
+Bucle:sin-bucle
 
 Rectangulo:0
 Hitboxes:
@@ -128,11 +128,11 @@ Hitboxes:
 Frames:
 0,0,0,0,1,2,2,2,2
 
-Sonido:No repetir
+Sonido:no repetir
 4
 --------------------------------------------------------------------------------
 Estado:ataque-normal-2
-Bucle:sin bucle
+Bucle:sin-bucle
 
 Rectangulo:0
 Hitboxes:
@@ -154,11 +154,11 @@ Hitboxes:
 Frames:
 0,0,0,0,1,2,2,2,2,3,3,3,3
 
-Sonido:No repetir
+Sonido:no repetir
 4
 --------------------------------------------------------------------------------
 Estado:ataque-normal-3
-Bucle:sin bucle
+Bucle:sin-bucle
 
 Rectangulo:0
 Hitboxes:
@@ -180,11 +180,11 @@ Hitboxes:
 Frames:
 0,0,0,0,1,2,2,2,2,3,3,3,3
 
-Sonido:No repetir
+Sonido:no repetir
 4
 --------------------------------------------------------------------------------
 Estado:golpeado-peque
-Bucle:sin bucle
+Bucle:sin-bucle
 
 Rectangulo:0
 Hitboxes:
@@ -193,11 +193,11 @@ Hitboxes:
 Frames:
 0,0,0,0,0,0,0,0
 
-Sonido:No repetir
+Sonido:no repetir
 0
 --------------------------------------------------------------------------------
 Estado:golpeado-medio
-Bucle:sin bucle
+Bucle:sin-bucle
 
 Rectangulo:0
 Hitboxes:
@@ -210,11 +210,11 @@ Hitboxes:
 Frames:
 0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1
 
-Sonido:No repetir
+Sonido:no repetir
 0
 --------------------------------------------------------------------------------
 Estado:bloqueando
-Bucle:sin bucle
+Bucle:sin-bucle
 
 Rectangulo:0
 Hitboxes:
@@ -227,7 +227,7 @@ Hitboxes:
 Frames:
 0,0,0,1,1,1
 
-Sonido:No repetir
+Sonido:no repetir
 0
 
 ####

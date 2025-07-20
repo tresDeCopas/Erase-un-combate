@@ -1,6 +1,8 @@
 #include "Personaje.hpp"
 #include "Enums.hpp"
 #include "Constantes.hpp"
+#include "Utilidades.hpp"
+#include "ContenedorDeEfectos.hpp"
 #include <iostream>
 
 Personaje::Personaje(std::map<EstadoPersonaje,Animacion*> animaciones){
@@ -336,8 +338,8 @@ void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::lis
                 rectPropio.top += this->animaciones[estado]->getPosicionEsqSupIzq().y;
 
                 if(rectEnemigo.intersects(rectPropio) && hEnemigo.getFuerzaAtaque() > hitboxElegidaEnemigo.getFuerzaAtaque()){
-                    hitboxElegidaEnemigo = hEnemigo;
-                    hitboxElegidaPropia = hPropia;
+                    hitboxElegidaEnemigo = Hitbox(rectEnemigo,hEnemigo.getFuerzaAtaque(),hEnemigo.esAtaqueBajo());
+                    hitboxElegidaPropia = Hitbox(rectPropio,hPropia.getFuerzaAtaque(),hPropia.esAtaqueBajo());
                 }
             }
         }
@@ -381,4 +383,24 @@ void Personaje::comprobarColisiones(std::list<Animacion*> &animaciones, std::lis
             }
             break;
     }
+
+    // Ahora, se añaden efectos según haya salido la cosa
+
+    // Primero, se va a calcular el punto exacto en el que se debería
+    
+    sf::Vector2f posicionMedia = util::centroDeInterseccion(hitboxElegidaEnemigo.getRectangulo(),hitboxElegidaPropia.getRectangulo());
+    
+    Animacion* anim;
+    
+    // Una vez se sabe dónde se va a colocar, se comprueba cómo está el personaje ahora mismo
+    if(estado == EstadoPersonaje::BLOQUEANDO){
+        anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("bloqueado");
+    } else if (hitboxElegidaEnemigo.getFuerzaAtaque() <= MAX_ATAQUE_PEQUE){
+        anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("golpeado-peque");
+    }
+
+    anim->setPosicion(posicionMedia);
+    anim->setRotacion(rand()%360);
+    efectosInsertados.push_back(anim);
+
 }

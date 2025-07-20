@@ -161,7 +161,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
             if(util::separarString(linea,':')[0] == "Sonido"){
 
-                bool repetirSonido = util::separarString(linea,':')[1] == "Repetir";
+                bool repetirSonido = util::separarString(linea,':')[1] == "repetir";
 
                 sonido.setBuffer(ContenedorDeSonidos::unicaInstanciaSonidos()->obtener("sonidos/"+nombrePersonaje+"/"+nombreEstado+".wav"));
 

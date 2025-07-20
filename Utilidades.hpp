@@ -1,3 +1,4 @@
+#include "SFML/System.hpp"
 #include <string>
 #include <sstream>
 
@@ -9,7 +10,7 @@ namespace util{
 
     // Dado un string de entrada y un car�cter separador, corta el string original en substrings y
     // los devuelve en forma de vector (sin incluir el car�cter separador)
-    std::vector<std::string> separarString(std::string string, char separador){
+    inline std::vector<std::string> separarString(std::string string, char separador){
 
         std::stringstream stringstream(string);
 
@@ -25,7 +26,7 @@ namespace util{
     }
 
     // Dado un string, devuelve el tipo de bucle correspondiente
-    TipoBucle stringATipoBucle(std::string string){
+    inline TipoBucle stringATipoBucle(std::string string){
         if(string == "normal")
             return TipoBucle::NORMAL;
         if(string == "al-reves")
@@ -37,7 +38,7 @@ namespace util{
     }
 
     // Dado un string, devuelve el estado de personaje correspondiente
-    EstadoPersonaje stringAEstadoPersonaje(std::string string){
+    inline EstadoPersonaje stringAEstadoPersonaje(std::string string){
         if(string == "quieto")
             return EstadoPersonaje::QUIETO;
         if(string == "agachado")
@@ -80,5 +81,18 @@ namespace util{
             return EstadoPersonaje::CELEBRANDO;
 
         return EstadoPersonaje::QUIETO;
+    }
+
+    // Dados dos rectángulos, calcula el centro del subrectángulo que resulta de la intersección
+    // de ambos rectángulos
+    inline sf::Vector2f centroDeInterseccion(sf::IntRect r1, sf::IntRect r2){
+        
+        int izquierda = std::max(r1.left, r2.left);
+        int arriba = std::max(r1.top, r2.top);
+
+        int derecha = std::min(r1.left+r1.width, r2.left+r2.width);
+        int abajo = std::min(r1.top+r1.height, r2.top+r2.height);
+
+        return sf::Vector2f(izquierda + (derecha - izquierda)/2, arriba + (abajo-arriba)/2);
     }
 }

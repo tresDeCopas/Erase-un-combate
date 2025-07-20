@@ -1,0 +1,17 @@
+Tipo:frames
+Bucle:sin-bucle
+
+Rectangulo:0
+Hitboxes:
+
+Rectangulo:1
+Hitboxes:
+
+Rectangulo:2
+Hitboxes:
+
+Rectangulo:3
+Hitboxes:
+
+Frames:
+0,0,0,1,1,1,2,2,2,3,3,3
