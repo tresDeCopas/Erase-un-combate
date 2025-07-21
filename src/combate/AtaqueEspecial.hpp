@@ -36,5 +36,11 @@ class AtaqueEspecial {
         
         // Resetea el ataque especial para volver al principio
         void resetear();
+
+        // Hace que las acciones DERECHA cambien a IZQUIERDA y viceversa,
+        // como ocurre en los juegos de pelea, donde el personaje tiene
+        // que hacer movimientos distintos para hacer ataques especiales
+        // dependiendo de si está mirando hacia un lado o hacia otro
+        void voltear();
 };
 

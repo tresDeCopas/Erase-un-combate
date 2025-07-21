@@ -57,3 +57,13 @@ void AtaqueEspecial::resetear(){
     cooldown = 0;
     esperandoPausa = false;
 }
+
+void AtaqueEspecial::voltear()
+{
+    resetear();
+    for(std::vector<Accion>::iterator it = acciones.begin(); it != acciones.end(); it++)
+    {
+        if(*it == Accion::DERECHA) *it = Accion::IZQUIERDA;
+        else if(*it == Accion::IZQUIERDA) *it = Accion::DERECHA;
+    }
+}

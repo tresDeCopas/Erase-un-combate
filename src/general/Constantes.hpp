@@ -221,7 +221,7 @@ constexpr int MAX_ATAQUE_PEQUE = 3;
 constexpr int MAX_ATAQUE_MEDIO = 6;
 
 // Valor que tiene que alcanzar contadorTumbado para que se levante un personaje
-constexpr int MAX_CONTADOR_TUMBADO = NUMERO_FPS;
+constexpr int MAX_CONTADOR_TUMBADO = 10;
 
 // Valor inicial del contador de celebración. Al llegar a 0, el personaje que acaba de ganar celebra
 constexpr int MAX_CONTADOR_CELEBRACION = NUMERO_FPS*2;

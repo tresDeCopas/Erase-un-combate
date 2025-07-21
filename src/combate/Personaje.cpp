@@ -92,6 +92,7 @@ void Personaje::voltear()
     for(auto &[estado, anim] : animaciones){
         anim->voltear();
     }
+    ataqueEspecial.voltear();
 }
 
 EstadoPersonaje Personaje::getEstado(){
