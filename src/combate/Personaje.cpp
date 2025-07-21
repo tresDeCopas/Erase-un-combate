@@ -871,7 +871,8 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
     if(hitboxElegidaEnemigo.getFuerzaAtaque() > MAX_ATAQUE_MEDIO){
 
         // Parry épico de ulti
-        if(estado == EstadoPersonaje::ANDANDO_ALEJANDOSE &&  contadorEsquiveSuper < MAX_CONTADOR_ESQUIVE_SUPER){
+        if(estado == EstadoPersonaje::ANDANDO_ALEJANDOSE && contadorEsquiveSuper < MAX_CONTADOR_ESQUIVE_SUPER){
+
             cambiarEstado(EstadoPersonaje::ESQUIVE_SUPER);
         } else {
             velocidad.x = (escalaSprite.x > 0) ? -IMPULSO_X_GOLPE_SUPER : IMPULSO_X_GOLPE_SUPER;
@@ -1155,21 +1156,27 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
             efectosInsertados.push_back(particula);
         }
 
-    } else {
-        // En este último caso se ha hecho un esquive súper, por lo que no hay puntos de vida que quitar ni nada más
-        // que hacer en esta función
-        return;
     }
 
-    // Después, se quitan puntos de vida correspondientes
-    puntosDeVida-=fuerzaAtaque;
+    // Después, se quitan puntos de vida correspondientes (a no ser
+    // que se haya esquivado)
+    if(estado != EstadoPersonaje::ESQUIVE_SUPER)
+        puntosDeVida-=fuerzaAtaque;
 
     // Finalmente, se sube el medidor de súper según el daño original de la hitbox
     if(estado == EstadoPersonaje::BLOQUEANDO){
         // Los ataques bloqueados aumentan el medidor de súper el doble
         medidorSuper+=(hitboxElegidaEnemigo.getFuerzaAtaque()*2);
+    } else if(estado == EstadoPersonaje::ESQUIVE_SUPER){
+        // El esquive súper siempre llena a la mitad el medidor de súper
+        medidorSuper+=MAX_MEDIDOR_SUPER/2;
     } else {
         medidorSuper+=hitboxElegidaEnemigo.getFuerzaAtaque();
+    }
+
+    // El medidor de super no puede sobrepasar el límite
+    if(medidorSuper > MAX_MEDIDOR_SUPER){
+        medidorSuper = MAX_MEDIDOR_SUPER;
     }
 
     // Los personajes derrotados se tiran al suelo
@@ -1185,13 +1192,9 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
         }
     }
 
-    // El medidor de super no puede sobrepasar el límite
-    if(medidorSuper > MAX_MEDIDOR_SUPER){
-        medidorSuper = MAX_MEDIDOR_SUPER;
+    // No aparece ninguna animación al hacer un esquive súper
+    if(estado != EstadoPersonaje::ESQUIVE_SUPER){
+        anim->setPosicion(posicionMedia);
+        efectosInsertados.push_back(anim);
     }
-
-    anim->setPosicion(posicionMedia);
-    
-    efectosInsertados.push_back(anim);
-
 }
