@@ -31,9 +31,7 @@ cpr::Response descargarActualizacion(nlohmann::json_abi_v3_12_0::json json){
 
 // Borra los archivos correspondientes a la versión antigua (NO
 // TOCA LOS ARCHIVOS DE GUARDADO, ESO ES SAGRADO)
-void borrarArchivosViejos(){
-    // Cambiar el directorio actual a algo neutral para no bloquear el directorio
-    std::filesystem::path base = std::filesystem::absolute(".");
+void borrarArchivosViejos(std::filesystem::path base){
 
     for (const auto& entry : std::filesystem::directory_iterator(base)) {
         std::string nombre = entry.path().filename().string();
@@ -52,16 +50,26 @@ void borrarArchivosViejos(){
             nombre == "zipcmp.exe" ||
             nombre == "zipmerge.exe" ||
             nombre == "ziptool.exe" ||
-            nombre == "libzip.dll" ||
-            nombre == "")
+            nombre == "libzip.dll")
             continue;
 
         try {
-            std::cerr << "Eliminando " << nombre << "\n";
-            //sf::sleep(sf::seconds(2.f));
-            std::filesystem::remove_all(entry.path());
+            if (std::filesystem::is_directory(entry.path())) {
+                std::cerr << "Entrando al directorio " << nombre << "\n";
+                borrarArchivosViejos(entry.path());
+
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+                std::cerr << "Eliminando directorio " << nombre << "\n";
+                std::filesystem::remove(entry.path());
+            } else {
+                std::cerr << "Eliminando archivo " << nombre << "\n";
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                std::filesystem::remove(entry.path());
+            }
         } catch (const std::filesystem::filesystem_error& e) {
             std::cerr << "Error al eliminar " << nombre << ": " << e.what() << "\n";
+            perror("aa");
         }
     }
 }
@@ -159,7 +167,7 @@ int main(){
                     if (respuestaHTTP.status_code != 200) {
                         seguirIntentando = reintentarActualizacion(respuestaHTTP.status_code);
                     }
-                    borrarArchivosViejos();
+                    // borrarArchivosViejos(std::filesystem::absolute("."));
                     aplicarActualizacion();
                 }
             }
