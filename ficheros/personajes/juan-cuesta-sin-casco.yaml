@@ -143,6 +143,7 @@ estados:
           ancho: 12
           alto: 12
           ataque: 1
+          bajo: false
       - - posX: 51
           posY: 29
           ancho: 27
@@ -171,6 +172,7 @@ estados:
           ancho: 17
           alto: 12
           ataque: 2
+          bajo: false
       - - posX: 51
           posY: 29
           ancho: 27
@@ -204,6 +206,7 @@ estados:
           ancho: 14
           alto: 16
           ataque: 4
+          bajo: false
       - - posX: 54
           posY: 29
           ancho: 27
@@ -237,6 +240,7 @@ estados:
           ancho: 10
           alto: 15
           ataque: 3
+          bajo: false
       - - posX: 53
           posY: 29
           ancho: 27
@@ -252,6 +256,7 @@ estados:
           ancho: 10
           alto: 15
           ataque: 3
+          bajo: false
       - - posX: 54
           posY: 29
           ancho: 27
@@ -290,6 +295,7 @@ estados:
           ancho: 17
           alto: 17
           ataque: 2
+          bajo: false
       - - posX: 51
           posY: 29
           ancho: 27
@@ -300,6 +306,7 @@ estados:
           ancho: 29
           alto: 29
           ataque: 2
+          bajo: false
       - - posX: 51
           posY: 29
           ancho: 27
@@ -310,6 +317,7 @@ estados:
           ancho: 41
           alto: 41
           ataque: 2
+          bajo: false
       - - posX: 51
           posY: 29
           ancho: 27
@@ -403,6 +411,7 @@ estados:
           ancho: 14
           alto: 14
           ataque: 4
+          bajo: true
       - - posX: 51
           posY: 38
           ancho: 27
@@ -413,6 +422,7 @@ estados:
           ancho: 12
           alto: 12
           ataque: 4
+          bajo: true
       - - posX: 51
           posY: 38
           ancho: 27
@@ -454,6 +464,7 @@ estados:
           ancho: 32
           alto: 37
           ataque: 5
+          bajo: false
         - posX: 69
           posY: 65
           ancho: 26

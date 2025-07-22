@@ -6,6 +6,7 @@ rectangulos:
       ancho: 70
       alto: 1
       ataque: 20
+      bajo: false
   -
   -
   -

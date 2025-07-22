@@ -121,7 +121,12 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
                 // Se itera por cada hitbox del rectángulo
                 for(size_t j = 0; j < fichero["rectangulos"][i].size(); j++)
                 {
-                    ingredientes.hitboxes[i].emplace_back(sf::IntRect({fichero["rectangulos"][i][j]["posX"].as<int>(),fichero["rectangulos"][i][j]["posY"].as<int>()},{fichero["rectangulos"][i][j]["ancho"].as<int>(),fichero["rectangulos"][i][j]["alto"].as<int>()}),fichero["rectangulos"][i][j]["ataque"].as<int>(),false);
+                    sf::Vector2i posicionHitbox = {fichero["rectangulos"][i][j]["posX"].as<int>(), fichero["rectangulos"][i][j]["posY"].as<int>()};
+                    sf::Vector2i tamanoHitbox = {fichero["rectangulos"][i][j]["ancho"].as<int>(), fichero["rectangulos"][i][j]["alto"].as<int>()};
+                    int ataqueHitbox = fichero["rectangulos"][i][j]["ataque"].as<int>();
+                    bool ataqueBajo = ataqueHitbox == 0 ? false : fichero["rectangulos"][i][j]["bajo"].as<bool>();
+                    
+                    ingredientes.hitboxes[i].emplace_back(sf::IntRect(posicionHitbox, tamanoHitbox), ataqueHitbox, ataqueBajo);
                 }
             }
 

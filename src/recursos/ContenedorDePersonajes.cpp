@@ -129,7 +129,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                             sf::Vector2i posicionHitbox({itAtributoEstado->second[rectanguloActual][hitboxActual]["posX"].as<int>(),itAtributoEstado->second[rectanguloActual][hitboxActual]["posY"].as<int>()});
                             sf::Vector2i tamanoHitbox({itAtributoEstado->second[rectanguloActual][hitboxActual]["ancho"].as<int>(),itAtributoEstado->second[rectanguloActual][hitboxActual]["alto"].as<int>()});
                             int ataqueHitbox = itAtributoEstado->second[rectanguloActual][hitboxActual]["ataque"].as<int>();
-                            bool ataqueBajo = nombreEstado == "ataque-agachado";
+                            bool ataqueBajo = ataqueHitbox == 0 ? false : itAtributoEstado->second[rectanguloActual][hitboxActual]["bajo"].as<bool>();
 
                             ingredientes.hitboxes[rectanguloActual].emplace_back(sf::IntRect(posicionHitbox,tamanoHitbox),ataqueHitbox,ataqueBajo);
 
