@@ -5,6 +5,7 @@
 #include "ContenedorDeEfectos.hpp"
 #include "ReproductorDeMusica.hpp"
 #include "Utilidades.hpp"
+#include "ContadorDeCombos.hpp"
 #include <omp.h>
 #include <iostream>
 #include <list>
@@ -414,6 +415,10 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
     {
         efectos.push_back(*iter);
     }
+
+    // Se actualizan los combos
+    ContadorDeCombos::unicaInstancia()->actualizar();
+
 
     // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
 

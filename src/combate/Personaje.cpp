@@ -8,6 +8,7 @@
 #include "VentanaPrincipal.hpp"
 #include "Bitacora.hpp"
 #include "ReproductorDeSonidos.hpp"
+#include "ContadorDeCombos.hpp"
 #include <iostream>
 
 Personaje::Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> animaciones, std::string nombre, int maxPuntosDeVida, float velocidadMaxima, float fuerzaSalto, std::vector<Accion> accionesAtaqueEspecial) :
@@ -1163,6 +1164,17 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
     if(estado != EstadoPersonaje::ESQUIVE_SUPER)
         puntosDeVida-=fuerzaAtaque;
 
+
+    // En caso de que hayamos bloqueado o esquivado, el combo del otro
+    // jugador se rompe
+    if(estado == EstadoPersonaje::ESQUIVE_SUPER || estado == EstadoPersonaje::BLOQUEANDO)
+        ContadorDeCombos::unicaInstancia()->informar(jugador == Jugador::JUGADOR1 ? Jugador::JUGADOR2 : Jugador::JUGADOR1, false);
+
+    // Si se ha recibido el golpe de lleno, cuenta para combo
+    else
+        ContadorDeCombos::unicaInstancia()->informar(jugador == Jugador::JUGADOR1 ? Jugador::JUGADOR2 : Jugador::JUGADOR1, true, fuerzaAtaque);
+
+
     // Finalmente, se sube el medidor de súper según el daño original de la hitbox
     if(estado == EstadoPersonaje::BLOQUEANDO){
         // Los ataques bloqueados aumentan el medidor de súper el doble
@@ -1174,10 +1186,12 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
         medidorSuper+=hitboxElegidaEnemigo.getFuerzaAtaque();
     }
 
+
     // El medidor de super no puede sobrepasar el límite
     if(medidorSuper > MAX_MEDIDOR_SUPER){
         medidorSuper = MAX_MEDIDOR_SUPER;
     }
+
 
     // Los personajes derrotados se tiran al suelo
     if(puntosDeVida <= 0) {
@@ -1191,6 +1205,7 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
             cambiarEstado(EstadoPersonaje::GOLPEADO_SUBIENDO);
         }
     }
+    
 
     // No aparece ninguna animación al hacer un esquive súper
     if(estado != EstadoPersonaje::ESQUIVE_SUPER){

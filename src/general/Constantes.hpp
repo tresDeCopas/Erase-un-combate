@@ -287,6 +287,13 @@ constexpr sf::Color COLOR_BARRA_SUPER(89,114,255);
 constexpr int CONTADOR_VIBRACION_MAX = 2;
 
 /*
+    CONSTANTES PARA LOS COMBOS
+*/
+
+// Cuántos frames tiene un jugador para poder continuar un combo
+constexpr int FRAMES_RESTANTES_COMBO = 30;
+
+/*
     CONSTANTES PARA EL ONLINE
 */
 
