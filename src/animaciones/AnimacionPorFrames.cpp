@@ -185,6 +185,11 @@ std::vector<Hitbox> AnimacionPorFrames::getHitboxes(){
 }
 
 void AnimacionPorFrames::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    
+    // El shader usado se guarda porque la sombra no debería usarlo,
+    // solo el sprite de la propia animación
+    const sf::Shader *shader = states.shader;
+    
     if(tipoSombra != TipoSombra::SIN_SOMBRA)
     {
         // La sombra tendrá una anchura mayor y una sombra
@@ -218,10 +223,15 @@ void AnimacionPorFrames::draw(sf::RenderTarget& target, sf::RenderStates states)
         sombra.setFillColor(colorSombra);
         sombra.setPosition({sprite.getPosition().x,ALTURA_SUELO});
 
+        states.shader = nullptr;
         target.draw(sombra,states);
     }
 
+    states.shader = shader;
     target.draw(sprite,states);
+
+    // El shader tampoco se usa para los rectángulos de las hitboxes del modo debug
+    states.shader = nullptr;
 
     if(DEBUG){
         for(Hitbox h : hitboxes.at(rectanguloCorrespondiente.at(frameActual))){

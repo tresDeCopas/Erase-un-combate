@@ -5,7 +5,7 @@
 #include "ContenedorDeEfectos.hpp"
 #include "ReproductorDeMusica.hpp"
 #include "Utilidades.hpp"
-#include "ContadorDeCombos.hpp"
+#include "ContenedorDeCombos.hpp"
 #include <omp.h>
 #include <iostream>
 #include <list>
@@ -28,8 +28,9 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
     rectanguloOscuro.setOutlineThickness(0);
     rectanguloOscuro.setFillColor(sf::Color::Black);
 
-    if(direccionIP != sf::IpAddress(0,0,0,0)){
-        conector.emplace(direccionIP,lider);
+    if (direccionIP != sf::IpAddress(0, 0, 0, 0))
+    {
+        conector.emplace(direccionIP, lider);
     }
 
     personajeJugador1.setPosicion(VENTANA_ANCHURA / 3, ALTURA_SUELO);
@@ -163,14 +164,17 @@ void Combate::recibirEntradaPlayerVSPlayerOffline()
             InfoEvento infoEvento = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
 
             // Puede ser que la acción sea inválida, hay que comprobar que el jugador no es NADIE
-            if(infoEvento.jugador != Jugador::NADIE){
-                
+            if (infoEvento.jugador != Jugador::NADIE)
+            {
+
                 Personaje &personajeElegido = infoEvento.jugador == Jugador::JUGADOR1 ? personajeJugador1 : personajeJugador2;
 
                 if ((dynamic_cast<AnimacionAgrandable *>(cartelTodoListo.get()))->haTerminado())
                 {
-                    if(infoEvento.realizada) personajeElegido.realizarAccion(infoEvento.accion);
-                    else personajeElegido.detenerAccion(infoEvento.accion);
+                    if (infoEvento.realizada)
+                        personajeElegido.realizarAccion(infoEvento.accion);
+                    else if (infoEvento.accion != Accion::ATACAR)
+                        personajeElegido.detenerAccion(infoEvento.accion);
                 }
             }
         }
@@ -193,48 +197,62 @@ void Combate::recibirEntradaPlayerVSBot()
             InfoEvento infoEvento = GestorDeControles::unicaInstancia()->comprobarEvento(evento);
 
             // Si se pulsa una tecla que no es del jugador 1 da igual, se comprueba la siguiente tecla
-            if(infoEvento.jugador != Jugador::JUGADOR1)
+            if (infoEvento.jugador != Jugador::JUGADOR1)
                 continue;
 
             if ((dynamic_cast<AnimacionAgrandable *>(cartelTodoListo.get()))->haTerminado())
             {
-                if(infoEvento.realizada) personajeJugador1.realizarAccion(infoEvento.accion);
-                else personajeJugador1.detenerAccion(infoEvento.accion);
+                if (infoEvento.realizada)
+                    personajeJugador1.realizarAccion(infoEvento.accion);
+                else if (infoEvento.accion != Accion::ATACAR)
+                    personajeJugador1.detenerAccion(infoEvento.accion);
             }
         }
     }
 
-    if ((dynamic_cast<AnimacionAgrandable *>(cartelTodoListo.get()))->haTerminado()){
-        if(rand()%2 == 0){
+    if ((dynamic_cast<AnimacionAgrandable *>(cartelTodoListo.get()))->haTerminado())
+    {
+        if (rand() % 2 == 0)
+        {
             personajeJugador2.realizarAccion(Accion::ATACAR);
-        } else {
+        }
+        else
+        {
             personajeJugador2.detenerAccion(Accion::ATACAR);
         }
-    
-        if(rand()%10 == 0){
+
+        if (rand() % 10 == 0)
+        {
             personajeJugador2.realizarAccion(Accion::ARRIBA);
-        } else {
+        }
+        else
+        {
             personajeJugador2.detenerAccion(Accion::ARRIBA);
         }
-    
-        if(rand()%8 == 0){
-            if(personajeJugador2.isMirandoDerecha()){
+
+        if (rand() % 8 == 0)
+        {
+            if (personajeJugador2.isMirandoDerecha())
+            {
                 personajeJugador2.realizarAccion(Accion::DERECHA);
                 personajeJugador2.detenerAccion(Accion::IZQUIERDA);
-            } else {
+            }
+            else
+            {
                 personajeJugador2.realizarAccion(Accion::IZQUIERDA);
                 personajeJugador2.detenerAccion(Accion::DERECHA);
             }
         }
-    
-        if(rand()%8 == 0){
+
+        if (rand() % 8 == 0)
+        {
             personajeJugador2.realizarAccion(Accion::ABAJO);
-        } else {
+        }
+        else
+        {
             personajeJugador2.detenerAccion(Accion::ABAJO);
         }
     }
-
-    
 }
 
 void Combate::recibirEntradaPlayerVSPlayerOnline()
@@ -264,8 +282,10 @@ void Combate::recibirEntradaPlayerVSPlayerOnline()
 
             if ((dynamic_cast<AnimacionAgrandable *>(cartelTodoListo.get()))->haTerminado())
             {
-                if(infoEvento.realizada) accionesRealizadas.insert(infoEvento.accion);
-                else accionesDetenidas.insert(infoEvento.accion);
+                if (infoEvento.realizada)
+                    accionesRealizadas.insert(infoEvento.accion);
+                else
+                    accionesDetenidas.insert(infoEvento.accion);
             }
         }
     }
@@ -273,23 +293,23 @@ void Combate::recibirEntradaPlayerVSPlayerOnline()
     // Ahora que sabemos lo que ha hecho el jugador local, lo tenemos que mandar por los interneses
     // para que el otro lo sepa también, y tenemos que saber qué ha hecho el otro para poder estar
     // sincronizados y que todo vaya bien
-    AccionesOnline accionesOnline(conector->enviarRecibirAcciones(accionesRealizadas,accionesDetenidas));
+    AccionesOnline accionesOnline(conector->enviarRecibirAcciones(accionesRealizadas, accionesDetenidas));
 
     Personaje &personajeLocal = conector->isLider() ? personajeJugador2 : personajeJugador1;
     Personaje &personajeRemoto = conector->isLider() ? personajeJugador1 : personajeJugador2;
 
     // Ahora se comprueban las acciones que debería realizar cada personaje
 
-    for(const Accion &a : accionesOnline.accionesRealizadasLocal)
+    for (const Accion &a : accionesOnline.accionesRealizadasLocal)
         personajeLocal.realizarAccion(a);
-    
-    for(const Accion &a : accionesOnline.accionesDetenidasLocal)
+
+    for (const Accion &a : accionesOnline.accionesDetenidasLocal)
         personajeLocal.detenerAccion(a);
 
-    for(const Accion &a : accionesOnline.accionesRealizadasRemoto)
+    for (const Accion &a : accionesOnline.accionesRealizadasRemoto)
         personajeRemoto.realizarAccion(a);
-    
-    for(const Accion &a : accionesOnline.accionesDetenidasRemoto)
+
+    for (const Accion &a : accionesOnline.accionesDetenidasRemoto)
         personajeRemoto.detenerAccion(a);
 }
 
@@ -299,9 +319,9 @@ void Combate::actualizarPersonajesEfectosGuisEscenarioVentana(std::list<std::sha
     // de los personajes, así que si digo de meter cosas en la misma lista se nos va a la mi3rda todo)
     std::list<std::shared_ptr<Animacion>> nuevosEfectosAux;
 
-// Aquí la ejecución se bifurca en dos hilos que se ejecutarán a la vez o a lo mejor no, quién sabe. El caso
-// es que así tarda menos digo yo, ley de Amdahl ley de Moore ley de Gustaffson transistores power wall ya
-// me entiendes
+    // Aquí la ejecución se bifurca en dos hilos que se ejecutarán a la vez o a lo mejor no, quién sabe. El caso
+    // es que así tarda menos digo yo, ley de Amdahl ley de Moore ley de Gustaffson transistores power wall ya
+    // me entiendes
 
     sf::Vector2f posicionJugador1(personajeJugador1.getPosicion());
     sf::Vector2f posicionJugador2(personajeJugador2.getPosicion());
@@ -417,8 +437,7 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
     }
 
     // Se actualizan los combos
-    ContadorDeCombos::unicaInstancia()->actualizar();
-
+    ContenedorDeCombos::unicaInstancia()->actualizar();
 
     // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
 
@@ -435,7 +454,7 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
     // después, pero esto ocurre porque, al dibujarse después, se dibuja encima
     // del jugador 2, haciendo que el jugador 1 esté en frente. A eso se refiere
     // la prioridad más bien
-    if(prioridadDibujoJugador1 > prioridadDibujoJugador2)
+    if (prioridadDibujoJugador1 > prioridadDibujoJugador2)
     {
         ventana->draw(personajeJugador2);
         ventana->draw(personajeJugador1);
@@ -489,12 +508,17 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
     actualizarPersonajesEfectosGuisEscenarioVentana(efectos, nuevosEfectos);
 
     // Se actualiza el cartel de personaje ganador si está celebrando
-    if(personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::CELEBRANDO){
+    if (personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::CELEBRANDO)
+    {
         cartelJugador1Gana->actualizar(nuevosEfectos);
-    } else if(personajeJugador2.getPuntosDeVida() > personajeJugador1.getPuntosDeVida() && personajeJugador2.getEstado() == EstadoPersonaje::CELEBRANDO){
+    }
+    else if (personajeJugador2.getPuntosDeVida() > personajeJugador1.getPuntosDeVida() && personajeJugador2.getEstado() == EstadoPersonaje::CELEBRANDO)
+    {
         cartelJugador2Gana->actualizar(nuevosEfectos);
-    // Si no, si los dos tienen la misma vida es porque ha habido empate
-    } else if(personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO) {
+        // Si no, si los dos tienen la misma vida es porque ha habido empate
+    }
+    else if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO)
+    {
         cartelEmpate->actualizar(nuevosEfectos);
     }
 
@@ -505,16 +529,20 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
 
     // TERCER PASO: no se comprueban colisiones porque se supone que ya se ha terminado esta ronda. En su lugar, se
     // comprueba si ha habido empate, o si el jugador que ha ganado está celebrando
-    if(personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida()){
-        if(cartelEmpate->haTerminado()){
+    if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida())
+    {
+        if (cartelEmpate->haTerminado())
+        {
             sf::Color nuevoColor(rectanguloOscuro.getFillColor());
             nuevoColor.a += 5;
             rectanguloOscuro.setFillColor(nuevoColor);
         }
-    } else {
+    }
+    else
+    {
 
-        Personaje& ganador = personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() ?  personajeJugador1 : personajeJugador2;
-        Personaje& perdedor = personajeJugador1.getPuntosDeVida() < personajeJugador2.getPuntosDeVida() ?  personajeJugador1 : personajeJugador2;
+        Personaje &ganador = personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() ? personajeJugador1 : personajeJugador2;
+        Personaje &perdedor = personajeJugador1.getPuntosDeVida() < personajeJugador2.getPuntosDeVida() ? personajeJugador1 : personajeJugador2;
 
         if (ganador.getEstado() == EstadoPersonaje::QUIETO && perdedor.getEstado() == EstadoPersonaje::TUMBADO)
         {
@@ -527,7 +555,7 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
         }
         // Si ya se le ha dicho que celebre, se oscurece el rectángulo si ha terminado de celebrar
         else if (ganador.getEstado() == EstadoPersonaje::CELEBRANDO && ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() &&
-                ((ganador.getJugador() == Jugador::JUGADOR1 && cartelJugador1Gana->haTerminado()) || ((ganador.getJugador() == Jugador::JUGADOR2 && cartelJugador2Gana->haTerminado()))))
+                 ((ganador.getJugador() == Jugador::JUGADOR1 && cartelJugador1Gana->haTerminado()) || ((ganador.getJugador() == Jugador::JUGADOR2 && cartelJugador2Gana->haTerminado()))))
         {
             sf::Color nuevoColor(rectanguloOscuro.getFillColor());
             nuevoColor.a += 5;
@@ -551,11 +579,16 @@ void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &
     ventana->draw(GUIJugador2);
 
     // Se dibuja el cartel que se tenga que dibujar
-    if(personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::CELEBRANDO){
+    if (personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::CELEBRANDO)
+    {
         ventana->draw(*cartelJugador1Gana);
-    } else if(personajeJugador2.getPuntosDeVida() > personajeJugador1.getPuntosDeVida() && personajeJugador2.getEstado() == EstadoPersonaje::CELEBRANDO){
+    }
+    else if (personajeJugador2.getPuntosDeVida() > personajeJugador1.getPuntosDeVida() && personajeJugador2.getEstado() == EstadoPersonaje::CELEBRANDO)
+    {
         ventana->draw(*cartelJugador2Gana);
-    } else if(personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO) {
+    }
+    else if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO)
+    {
         ventana->draw(*cartelEmpate);
     }
 

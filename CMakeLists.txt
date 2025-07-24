@@ -74,10 +74,11 @@ src/animaciones/AnimacionPorFrames.cpp
 src/combate/AtaqueEspecial.cpp
 src/combate/Combate.cpp
 src/combate/ConectorOnline.cpp
-src/combate/ContadorDeCombos.cpp
+src/combate/ContenedorDeCombos.cpp
 src/combate/Escenario.cpp
 src/combate/GUIPersonaje.cpp
 src/combate/Hitbox.cpp
+src/combate/InfoCombo.cpp
 src/combate/Personaje.cpp
 src/general/Bitacora.cpp
 src/general/Utilidades.cpp
