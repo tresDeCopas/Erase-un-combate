@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Enums.hpp"
+#include <SFML/Graphics.hpp>
 
 /*
     Esta clase almacena información de un combo
     realizado por un jugador cualquiera
 */
-class InfoCombo {
+class InfoCombo : public sf::Drawable {
     private:
         // El jugador al que pertenece este combo
         Jugador jugador;
@@ -29,6 +30,22 @@ class InfoCombo {
         // (esto permite seguir mostrar la información
         // del combo en pantalla aunque ya se haya terminado)
         int framesDesdeQueTermino;
+
+        // Un sprite con un texto que dice "GOLPES" (para poder
+        // indicar el número de golpes que tiene el combo)
+        sf::Sprite spriteGolpes;
+
+        // Un sprite con un texto que dice "PUNTOS DE DAÑO" (para
+        // poder indicar el daño causado durante el combo)
+        sf::Sprite spritePuntosDeDano;
+
+        // Varios sprites con los números que indican la cantidad
+        // de golpes del combo
+        std::vector<sf::Sprite> spritesNumeroGolpes;
+
+        // Varios sprites con los números que indican la cantidad
+        // de puntos de daño que se han causado durante el combo
+        std::vector<sf::Sprite> spritesNumeroPuntosDeDano;
     
     public:
 
@@ -52,4 +69,7 @@ class InfoCombo {
         // la pantalla, por lo que este InfoCombo deja de ser
         // necesario y puede destruirse
         bool haTerminado();
+
+        // Dibuja la información sobre el combo realizado
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };

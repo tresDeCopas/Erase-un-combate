@@ -1,5 +1,6 @@
 #include "ContenedorDeCombos.hpp"
 #include "Constantes.hpp"
+#include "VentanaPrincipal.hpp"
 #include <iostream>
 
 ContenedorDeCombos *ContenedorDeCombos::contenedorDeCombos = nullptr;
@@ -57,5 +58,13 @@ void ContenedorDeCombos::informar(Jugador jugador, bool continuaCombo, int ataqu
         InfoCombo nuevoCombo(jugador);
         nuevoCombo.continuarCombo(ataque);
         combos.push_back(nuevoCombo);
+    }
+}
+
+void ContenedorDeCombos::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+    for(const InfoCombo& infoCombo : combos)
+    {
+        target.draw(infoCombo,states);
     }
 }

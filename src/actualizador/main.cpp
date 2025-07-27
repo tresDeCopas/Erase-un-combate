@@ -69,7 +69,6 @@ void borrarArchivosViejos(std::filesystem::path base){
             }
         } catch (const std::filesystem::filesystem_error& e) {
             std::cerr << "Error al eliminar " << nombre << ": " << e.what() << "\n";
-            perror("aa");
         }
     }
 }

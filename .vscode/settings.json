@@ -133,7 +133,8 @@
     "ranges": "cpp",
     "any": "cpp",
     "forward_list": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "future": "cpp"
   },
   "makefile.launchConfigurations": [
     {

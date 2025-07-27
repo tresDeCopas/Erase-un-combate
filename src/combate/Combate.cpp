@@ -470,6 +470,8 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
         ventana->draw(**iter);
     }
 
+    ventana->draw(*ContenedorDeCombos::unicaInstancia());
+
     ventana->draw(GUIJugador1);
     ventana->draw(GUIJugador2);
 

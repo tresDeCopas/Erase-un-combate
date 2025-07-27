@@ -8,7 +8,7 @@
     Esta clase recopila los distintos combos que se están haciendo
     en un combate y los muestra en pantalla
 */
-class ContenedorDeCombos
+class ContenedorDeCombos : public sf::Drawable
 {
     private:
         ContenedorDeCombos(){}
@@ -33,6 +33,9 @@ class ContenedorDeCombos
         // Por otra parte, si un jugador ataca al otro, el primero continúa (o comienza) un
         // combo, y es necesario indicar el daño causado por el combo
         void informar(Jugador jugador, bool continuaComboo, int ataque = 0);
+
+        // Dibuja los combos que se están realizando actualmente
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
         // NUNCA SE COPIA UN SINGLETON
         ContenedorDeCombos(ContenedorDeCombos &otro) = delete;
