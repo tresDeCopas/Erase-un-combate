@@ -45,10 +45,16 @@ void ContenedorDeCombos::informar(Jugador jugador, bool continuaCombo, int ataqu
     {
         if(infoCombo.getJugador() == jugador)
         {
-            if(continuaCombo) infoCombo.continuarCombo(ataque);
-            else infoCombo.terminarCombo();
-
-            comboEncontrado = true;
+            if(continuaCombo && infoCombo.sigueActivo())
+            {
+                infoCombo.continuarCombo(ataque);
+                comboEncontrado = true;
+            }
+            else if(!continuaCombo && infoCombo.sigueActivo())
+            {
+                infoCombo.terminarCombo();
+                comboEncontrado = true;
+            }
         }
     }
 

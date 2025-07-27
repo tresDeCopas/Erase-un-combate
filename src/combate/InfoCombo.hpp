@@ -31,13 +31,15 @@ class InfoCombo : public sf::Drawable {
         // del combo en pantalla aunque ya se haya terminado)
         int framesDesdeQueTermino;
 
-        // Un sprite con un texto que dice "GOLPES" (para poder
-        // indicar el número de golpes que tiene el combo)
-        sf::Sprite spriteGolpes;
+        // La posición a la que se debe acercar la info sobre
+        // el combo. Esto hace que la info se mueva gradualmente
+        // en vez de teletransportarse
+        sf::Vector2f posicionDeseada;
 
-        // Un sprite con un texto que dice "PUNTOS DE DAÑO" (para
-        // poder indicar el daño causado durante el combo)
-        sf::Sprite spritePuntosDeDano;
+        // Un sprite con un texto que dice "GOLPES" arriba y
+        // "DAÑO" abajo para poder indicar el número de golpes
+        // que tiene el combo y el daño causado
+        sf::Sprite spriteTexto;
 
         // Varios sprites con los números que indican la cantidad
         // de golpes del combo
@@ -64,6 +66,9 @@ class InfoCombo : public sf::Drawable {
 
         // Actualiza contadores y mueve los sprites si es necesario
         void actualizar();
+
+        // Indica si el combo sigue activo y se puede continuar
+        bool sigueActivo();
 
         // Indica si los sprites del combo ya han desaparecido de
         // la pantalla, por lo que este InfoCombo deja de ser

@@ -301,7 +301,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             }
             else
             {
-                detenerAccion(Accion::ATACAR);
                 cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
             }
         }
@@ -318,7 +317,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         }
         else if (accionesRealizadas[Accion::ATACAR])
         {
-            detenerAccion(Accion::ATACAR);
             cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
         }
         else if (accionesRealizadas[Accion::ARRIBA])
@@ -490,7 +488,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         {
             if (accionesRealizadas[Accion::ATACAR])
             {
-                detenerAccion(Accion::ATACAR);
                 cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_2);
             }
             else
@@ -695,7 +692,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             pararMovimiento();
             if (accionesRealizadas[Accion::ATACAR])
             {
-                detenerAccion(Accion::ATACAR);
                 cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
             }
             else if (animaciones.at(estado)->haTerminado())
@@ -1387,12 +1383,16 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
     // En caso de que hayamos bloqueado o esquivado, el combo del otro
     // jugador se rompe
     if (estado == EstadoPersonaje::ESQUIVE_SUPER || estado == EstadoPersonaje::BLOQUEANDO)
+    {
         ContenedorDeCombos::unicaInstancia()->informar(jugador == Jugador::JUGADOR1 ? Jugador::JUGADOR2 : Jugador::JUGADOR1, false);
-
-    // Si se ha recibido el golpe de lleno, cuenta para combo
+    }
+    // Si se ha recibido el golpe de lleno, cuenta para combo para el otro
+    // jugador, y nuestro combo se rompe
     else
+    {
         ContenedorDeCombos::unicaInstancia()->informar(jugador == Jugador::JUGADOR1 ? Jugador::JUGADOR2 : Jugador::JUGADOR1, true, fuerzaAtaque);
-
+        ContenedorDeCombos::unicaInstancia()->informar(jugador, false);
+    }
     // Finalmente, se sube el medidor de súper según el daño original de la hitbox
     if (estado == EstadoPersonaje::BLOQUEANDO)
     {

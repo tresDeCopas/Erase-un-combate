@@ -173,7 +173,7 @@ void Combate::recibirEntradaPlayerVSPlayerOffline()
                 {
                     if (infoEvento.realizada)
                         personajeElegido.realizarAccion(infoEvento.accion);
-                    else if (infoEvento.accion != Accion::ATACAR)
+                    else
                         personajeElegido.detenerAccion(infoEvento.accion);
                 }
             }
@@ -204,7 +204,7 @@ void Combate::recibirEntradaPlayerVSBot()
             {
                 if (infoEvento.realizada)
                     personajeJugador1.realizarAccion(infoEvento.accion);
-                else if (infoEvento.accion != Accion::ATACAR)
+                else
                     personajeJugador1.detenerAccion(infoEvento.accion);
             }
         }

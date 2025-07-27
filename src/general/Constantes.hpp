@@ -291,7 +291,11 @@ constexpr int CONTADOR_VIBRACION_MAX = 2;
 */
 
 // Cuántos frames tiene un jugador para poder continuar un combo
-constexpr int FRAMES_RESTANTES_COMBO = 30;
+constexpr int FRAMES_RESTANTES_COMBO = NUMERO_FPS;
+
+// Durante cuántos frames se mostrará la información del combo que
+// acaba de terminar antes de desaparecer para siempre
+constexpr int FRAMES_MOSTRAR_COMBO_TERMINADO = NUMERO_FPS*2;
 
 // El color para los números y el texto que indican los golpes y
 // el daño causado durante el combo para el jugador 1
@@ -301,18 +305,20 @@ constexpr sf::Color COLOR_INFO_COMBO_J1 = sf::Color(100,100,150);
 // el daño causado durante el combo para el jugador 2
 constexpr sf::Color COLOR_INFO_COMBO_J2 = sf::Color(150,100,100);
 
-// La posición que tendrá el cartel que dice "GOLPES" de información
-// de un combo cuando el combo está activo para el jugador 1
-constexpr sf::Vector2f POSICION_INFO_COMBO_GOLPES_J1 = sf::Vector2f(VENTANA_ANCHURA/20.f,7.f*VENTANA_ALTURA/20.f);
+// El número de píxeles que tiene que haber entre la información
+// que sale con los golpes y del daño causado durante un combo y
+// el borde más cercano. Para el jugador 1, es el margen con el borde
+// izquierdo. Para el jugador 2, es el margen con el borde derecho
+// (teniendo en cuenta en este caso los sprites de números que haya a
+// la derecha del texto)
+constexpr float MARGEN_HORIZONTAL_INFO_COMBO = 10.f;
 
-// La posición que tendrá el cartel que dice "GOLPES" de información
-// de un combo cuando el combo está activo para el jugador 2
-constexpr sf::Vector2f POSICION_INFO_COMBO_GOLPES_J2 = sf::Vector2f(18.f*VENTANA_ANCHURA/20.f,7.f*VENTANA_ALTURA/20.f);
+// Posición en el eje Y de la información de los combos realizados
+constexpr float POSICION_Y_INFO_COMBO = VENTANA_ALTURA/3.f;
 
-// La posición que tendrá el cartel que dice "PUNTOS DE DAÑO" de
-// información de un combo cuando el combo está activo, relativa a la
-// posición del cartel que dice "GOLPES", para el jugador 1
-constexpr sf::Vector2f POSICION_RELATIVA_INFO_COMBO_PUNTOS_DE_DANO = sf::Vector2f(0.f, 30.f);
+// El número mínimo de golpes que tiene que tener un combo para
+// que se muestre en pantalla
+constexpr int MIN_GOLPES_MOSTRAR_COMBO = 3;
 
 /*
     CONSTANTES PARA EL ONLINE
