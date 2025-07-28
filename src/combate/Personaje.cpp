@@ -1380,9 +1380,15 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
     if (estado != EstadoPersonaje::ESQUIVE_SUPER)
         puntosDeVida -= fuerzaAtaque;
 
+    // Si un personaje ha sido derrotado, se terminan todos los combos
+    if(puntosDeVida <= 0)
+    {
+        ContenedorDeCombos::unicaInstancia()->informar(Jugador::JUGADOR1, false);
+        ContenedorDeCombos::unicaInstancia()->informar(Jugador::JUGADOR2, false);
+    }
     // En caso de que hayamos bloqueado o esquivado, el combo del otro
     // jugador se rompe
-    if (estado == EstadoPersonaje::ESQUIVE_SUPER || estado == EstadoPersonaje::BLOQUEANDO)
+    else if (estado == EstadoPersonaje::ESQUIVE_SUPER || estado == EstadoPersonaje::BLOQUEANDO)
     {
         ContenedorDeCombos::unicaInstancia()->informar(jugador == Jugador::JUGADOR1 ? Jugador::JUGADOR2 : Jugador::JUGADOR1, false);
     }

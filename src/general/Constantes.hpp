@@ -320,6 +320,20 @@ constexpr float POSICION_Y_INFO_COMBO = VENTANA_ALTURA/3.f;
 // que se muestre en pantalla
 constexpr int MIN_GOLPES_MOSTRAR_COMBO = 3;
 
+// La anchura de cada uno de los dígitos usados para contar
+// los golpes y el daño causado durante los combos
+constexpr int ANCHURA_DIGITO_COMBO = 10;
+
+// En la información del combo, cómo de bajo o alto están los
+// números que indican los golpes del combo, con respecto a la
+// posición del texto del combo
+constexpr int ALTURA_RELATIVA_NUMEROS_GOLPES_COMBO = 0;
+
+// En la información del combo, cómo de bajo o alto están los
+// números que indican el ataque del combo, con respecto a la
+// posición del texto del combo
+constexpr int ALTURA_RELATIVA_NUMEROS_ATAQUE_COMBO = 15;
+
 // Cuando se continúa un combo suena un sonidito cada vez más agudo. Este
 // es el tono máximo al que se debe reproducir ese sonido
 constexpr float MAX_TONO_SONIDO_CONTINUAR_COMBO = 2.f;

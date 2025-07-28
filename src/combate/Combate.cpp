@@ -565,6 +565,9 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
         }
     }
 
+    // Se actualizan los combos
+    ContenedorDeCombos::unicaInstancia()->actualizar();
+
     // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
 
     ventana->clear(sf::Color(100, 100, 100));
@@ -576,6 +579,8 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
     {
         ventana->draw(**iter);
     }
+
+    ventana->draw(*ContenedorDeCombos::unicaInstancia());
 
     ventana->draw(GUIJugador1);
     ventana->draw(GUIJugador2);

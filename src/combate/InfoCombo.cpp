@@ -34,23 +34,75 @@ void InfoCombo::continuarCombo(int ataque)
     // Para continuar un combo, este debe estar activo
     assert(comboActivo);
 
-
     // Se incrementa en 1 el número de golpes y se suma
     // el ataque causado ahora al ataque total causado
     numeroGolpes++;
     ataqueCausado += ataque;
 
-    // Los fotogramas restantes para que se 
+    // Se borran los sprites de los numeritos para el daño
+    // y los golpes para meter sprites nuevos
+    spritesNumeroGolpes.clear();
+    spritesNumeroPuntosDeDano.clear();
+
+    // Se meten los sprites de los numeritos nuevos para
+    // los golpes del combo
+    int auxNumeroGolpes = numeroGolpes;
+    do
+    {
+        int digitoActual = auxNumeroGolpes%10;
+
+        sf::Sprite spriteDigitoActual(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/combos/numeros-j" + std::string(jugador == Jugador::JUGADOR1 ? "1" : "2") + "-claro.png"));
+        
+        sf::Vector2i tamanoDigito = spriteDigitoActual.getTextureRect().size;
+
+        spriteDigitoActual.setTextureRect(sf::IntRect({(tamanoDigito.x/10)*digitoActual,0},{tamanoDigito.x/10,tamanoDigito.y}));
+
+        spritesNumeroGolpes.push_back(spriteDigitoActual);
+
+        auxNumeroGolpes/=10;
+    }
+    while (auxNumeroGolpes != 0);
+
+    // Se meten los sprites de los numeritos nuevos para
+    // el ataque causado durante el combo
+    int auxAtaqueCausado = ataqueCausado;
+    do
+    {
+        int digitoActual = auxAtaqueCausado%10;
+
+        sf::Sprite spriteDigitoActual(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/combos/numeros-j" + std::string(jugador == Jugador::JUGADOR1 ? "1" : "2") + "-oscuro.png"));
+        
+        sf::Vector2i tamanoDigito = spriteDigitoActual.getTextureRect().size;
+
+        spriteDigitoActual.setTextureRect(sf::IntRect({(tamanoDigito.x/10)*digitoActual,0},{tamanoDigito.x/10,tamanoDigito.y}));
+
+        spritesNumeroPuntosDeDano.push_back(spriteDigitoActual);
+
+        auxAtaqueCausado/=10;
+    }
+    while (auxAtaqueCausado != 0);
+
+    // Los fotogramas restantes para que se termine el
+    // combo se resetean
     fotogramasRestantes = FRAMES_RESTANTES_COMBO;
 
-    if(numeroGolpes == MIN_GOLPES_MOSTRAR_COMBO)
+    if(jugador == Jugador::JUGADOR1 && numeroGolpes == MIN_GOLPES_MOSTRAR_COMBO)
     {
-        if(jugador == Jugador::JUGADOR1)
-            posicionDeseada = {MARGEN_HORIZONTAL_INFO_COMBO,POSICION_Y_INFO_COMBO};
-        else
-            posicionDeseada = {VENTANA_ANCHURA-spriteTexto.getTextureRect().size.x-MARGEN_HORIZONTAL_INFO_COMBO,POSICION_Y_INFO_COMBO};
+        // La posición de la info del combo para el jugador 1 es más sencilla de
+        // poner y nunca cambia
+        posicionDeseada = {MARGEN_HORIZONTAL_INFO_COMBO,POSICION_Y_INFO_COMBO};
     }
-    else if(numeroGolpes > MIN_GOLPES_MOSTRAR_COMBO)
+    else if(jugador == Jugador::JUGADOR2 && numeroGolpes >= MIN_GOLPES_MOSTRAR_COMBO)
+    {
+        // En el caso del jugador 2 la posición cambia según los números que haya
+        // a la derecha
+        posicionDeseada.x = VENTANA_ANCHURA - MARGEN_HORIZONTAL_INFO_COMBO -
+                            spriteTexto.getTextureRect().size.x -
+                            std::max(spritesNumeroGolpes.size(),spritesNumeroPuntosDeDano.size())*ANCHURA_DIGITO_COMBO;
+    }
+
+    // Cada vez que se continúa el combo, el texto y los números rebotan
+    if(numeroGolpes > MIN_GOLPES_MOSTRAR_COMBO)
     {
         spriteTexto.move(MOVIMIENTO_INFO_COMBO_CONTINUAR);
 
@@ -78,7 +130,7 @@ void InfoCombo::continuarCombo(int ataque)
 
         ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/combos/continuar-combo.ogg",tono);
     }
-
+    
     std::cerr << "\rCombo J" << (jugador == Jugador::JUGADOR1 ? "1" : "2") << ": " << numeroGolpes << " golpes, " << ataqueCausado << " de ataque";
 }
 
@@ -108,9 +160,31 @@ void InfoCombo::terminarCombo()
 
 void InfoCombo::actualizar()
 {
-    // Se actualiza la posición
+    // Se actualiza la posición del sprite del texto
     spriteTexto.setPosition({util::aproximarFloat(spriteTexto.getPosition().x,posicionDeseada.x,0.8),
                              util::aproximarFloat(spriteTexto.getPosition().y,posicionDeseada.y,0.8)});
+            
+    for(int i = 0; i < spritesNumeroGolpes.size(); i++)
+    {
+        sf::Vector2f nuevaPosicion = spriteTexto.getPosition();
+
+        nuevaPosicion.x += spriteTexto.getTextureRect().size.x;
+        nuevaPosicion.x += (spritesNumeroGolpes[i].getTextureRect().size.x) * (spritesNumeroGolpes.size()-i-1);
+        nuevaPosicion.y += ALTURA_RELATIVA_NUMEROS_GOLPES_COMBO;
+
+        spritesNumeroGolpes[i].setPosition(nuevaPosicion);
+    }
+
+    for(int i = 0; i < spritesNumeroPuntosDeDano.size(); i++)
+    {
+        sf::Vector2f nuevaPosicion = spriteTexto.getPosition();
+
+        nuevaPosicion.x += spriteTexto.getTextureRect().size.x;
+        nuevaPosicion.x += (spritesNumeroPuntosDeDano[i].getTextureRect().size.x) * (spritesNumeroPuntosDeDano.size()-i-1);
+        nuevaPosicion.y += ALTURA_RELATIVA_NUMEROS_ATAQUE_COMBO;
+
+        spritesNumeroPuntosDeDano[i].setPosition(nuevaPosicion);
+    }
 
     if(comboActivo)
     {
@@ -129,6 +203,16 @@ void InfoCombo::actualizar()
             sf::Color nuevoColor = spriteTexto.getColor();
             nuevoColor.a = 255*(1.f-((fotogramasDesdeQueTermino-FRAMES_MOSTRAR_COMBO_TERMINADO/2.f)/(FRAMES_MOSTRAR_COMBO_TERMINADO/2.f)));
             spriteTexto.setColor(nuevoColor);
+
+            for(sf::Sprite &sprite : spritesNumeroGolpes)
+            {
+                sprite.setColor(nuevoColor);
+            }
+
+            for(sf::Sprite &sprite : spritesNumeroPuntosDeDano)
+            {
+                sprite.setColor(nuevoColor);
+            }
         }
     }
 }
