@@ -130,8 +130,6 @@ void InfoCombo::continuarCombo(int ataque)
 
         ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/combos/continuar-combo.ogg",tono);
     }
-    
-    std::cerr << "\rCombo J" << (jugador == Jugador::JUGADOR1 ? "1" : "2") << ": " << numeroGolpes << " golpes, " << ataqueCausado << " de ataque";
 }
 
 void InfoCombo::terminarCombo()
@@ -140,7 +138,7 @@ void InfoCombo::terminarCombo()
     {
         ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/combos/terminar-combo.ogg");
 
-        posicionDeseada = {spriteTexto.getPosition().x,spriteTexto.getPosition().y+spriteTexto.getTextureRect().size.y};
+        posicionDeseada.y = spriteTexto.getPosition().y+spriteTexto.getTextureRect().size.y;
         
         spriteTexto.setColor(COLOR_COMBO_TERMINADO);
 

@@ -130,6 +130,8 @@ void Combate::actualizarFotogramaPreparandoSuper(std::list<std::shared_ptr<Anima
         ventana->draw(**iter);
     }
 
+    ventana->draw(*ContenedorDeCombos::unicaInstancia());
+
     // Se dibuja un rectángulo oscuro encima
     sf::RectangleShape rectanguloOscuro(sf::Vector2f(VENTANA_ANCHURA, VENTANA_ALTURA));
     rectanguloOscuro.setPosition({0, 0});
