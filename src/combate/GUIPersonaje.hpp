@@ -42,7 +42,7 @@ class GUIPersonaje : public sf::Drawable {
         int contadorVidaAtrasado;
 
         // Este retraso permite que el rectángulo de vida atrasado se mueva lentamente en vez de un
-        // píxel por frame, lo cual es demasiado rápido para 60 FPS y 100 puntos de vida totales
+        // píxel por fotograma, lo cual es demasiado rápido para 60 FPS y 100 puntos de vida totales
         int retrasoContadorVidaAtrasado;
 
         // Permite que la GUI vibre cuando el personaje sea golpeado

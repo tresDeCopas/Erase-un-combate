@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AnimacionPorFrames.hpp"
+#include "AnimacionPorFotogramas.hpp"
 #include "Enums.hpp"
 #include "AtaqueEspecial.hpp"
 #include <SFML/Graphics.hpp>
@@ -57,7 +57,7 @@ class Personaje : public sf::Drawable {
         // siendo su máximo 255 (completamente blanco) y su mínimo 0 (normal)
         int contadorBlanco;
 
-        // Cuenta cuántos frames lleva el personaje andando alejándose del enemigo
+        // Cuenta cuántos fotogramas lleva el personaje andando alejándose del enemigo
         int contadorEsquiveSuper;
 
         // Jugador al que está asociado el personaje
@@ -69,9 +69,9 @@ class Personaje : public sf::Drawable {
         // Shader que hace que el personaje se ponga blanco al preparar el ataque súper
         std::shared_ptr<sf::Shader> shader;
 
-        // Animación del personaje según el estado (siempre son animaciones por frames pero es bueno
+        // Animación del personaje según el estado (siempre son animaciones por fotogramas pero es bueno
         // usar punteros compartidos con las animaciones)
-        std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> animaciones;
+        std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFotogramas>> animaciones;
 
         // Indica qué acciones están siendo realizadas
         std::map<Accion,bool> accionesRealizadas;
@@ -94,7 +94,7 @@ class Personaje : public sf::Drawable {
     public:
 
         // Construye el personaje desde cero
-        Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> animaciones, std::string nombre, int maxPuntosDeVida, float velocidadMaxima, float fuerzaSalto, std::vector<Accion> accionesAtaqueEspecial);
+        Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFotogramas>> animaciones, std::string nombre, int maxPuntosDeVida, float velocidadMaxima, float fuerzaSalto, std::vector<Accion> accionesAtaqueEspecial);
 
         // Indica que se está pulsando un botón
         void realizarAccion(Accion accion);
@@ -155,10 +155,10 @@ class Personaje : public sf::Drawable {
         Jugador getJugador();
 
         // Devuelve la animación de un estado
-        std::shared_ptr<AnimacionPorFrames> getAnimacionSegunEstado(EstadoPersonaje estado);
+        std::shared_ptr<AnimacionPorFotogramas> getAnimacionSegunEstado(EstadoPersonaje estado);
 
         // Establece el mapa de animaciones
-        void setAnimaciones(const std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFrames>> &animaciones);
+        void setAnimaciones(const std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFotogramas>> &animaciones);
 
         // Cambia el estado
         void cambiarEstado(EstadoPersonaje estadoNuevo);

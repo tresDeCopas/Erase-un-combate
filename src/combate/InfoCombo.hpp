@@ -21,15 +21,15 @@ class InfoCombo : public sf::Drawable {
         // Indica si el combo está activo o si se ha roto
         bool comboActivo;
 
-        // Indica cuántos frames le quedan al combo para
+        // Indica cuántos fotogramas le quedan al combo para
         // romperse (a no ser que el personaje que está
         // realizando el combo siga atacando)
-        int framesRestantes;
+        int fotogramasRestantes;
 
-        // Indica hace cuántos frames terminó el combo
+        // Indica hace cuántos fotogramas terminó el combo
         // (esto permite seguir mostrar la información
         // del combo en pantalla aunque ya se haya terminado)
-        int framesDesdeQueTermino;
+        int fotogramasDesdeQueTermino;
 
         // La posición a la que se debe acercar la info sobre
         // el combo. Esto hace que la info se mueva gradualmente

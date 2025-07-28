@@ -78,7 +78,7 @@ void Combate::resetear()
     escenario.resetear();
 }
 
-void Combate::actualizarFramePreparandoSuper(std::list<std::shared_ptr<Animacion>> &efectos)
+void Combate::actualizarFotogramaPreparandoSuper(std::list<std::shared_ptr<Animacion>> &efectos)
 {
 
     // Sacamos la ventana principal
@@ -365,7 +365,7 @@ void Combate::actualizarPersonajesEfectosGuisEscenarioVentana(std::list<std::sha
     VentanaPrincipal::actualizar();
 }
 
-void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efectos)
+void Combate::actualizarFotogramaNormal(std::list<std::shared_ptr<Animacion>> &efectos)
 {
 
     sf::RenderWindow *ventana = VentanaPrincipal::unicaInstancia();
@@ -490,7 +490,7 @@ void Combate::actualizarFrameNormal(std::list<std::shared_ptr<Animacion>> &efect
     ventana->display();
 }
 
-void Combate::actualizarFrameCelebracion(std::list<std::shared_ptr<Animacion>> &efectos)
+void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion>> &efectos)
 {
     sf::RenderWindow *ventana = VentanaPrincipal::unicaInstancia();
 
@@ -620,7 +620,7 @@ void Combate::comenzar()
         while (personajeJugador1.getPuntosDeVida() > 0 && personajeJugador2.getPuntosDeVida() > 0)
         {
 
-            // Se prepara un reloj para ver cuánto tiempo pasa entre frames
+            // Se prepara un reloj para ver cuánto tiempo pasa entre fotogramas
             sf::Clock reloj;
 
             // Se aclara el rectángulo que cubre el combate
@@ -637,15 +637,15 @@ void Combate::comenzar()
             // ataque, por lo que todo se pone oscuro y el tiempo se para por un momento
             if (personajeJugador1.getEstado() == EstadoPersonaje::PREPARANDO_SUPER || personajeJugador2.getEstado() == EstadoPersonaje::PREPARANDO_SUPER)
             {
-                actualizarFramePreparandoSuper(efectos);
+                actualizarFotogramaPreparandoSuper(efectos);
             }
             else
             {
-                actualizarFrameNormal(efectos);
+                actualizarFotogramaNormal(efectos);
             }
 
-            // El juego se duerme hasta que dé tiempo a dibujar el siguiente frame, teniendo en cuenta
-            // que se deben dibujar 60 frames por segundo y que cada frame además necesita un tiempo
+            // El juego se duerme hasta que dé tiempo a dibujar el siguiente fotograma, teniendo en cuenta
+            // que se deben dibujar 60 fotogramas por segundo y que cada fotograma además necesita un tiempo
             // previo de preparación para actualizar y dibujar y tal
             sf::sleep(sf::seconds(1.f / NUMERO_FPS) - reloj.reset());
         }
@@ -673,7 +673,7 @@ void Combate::comenzar()
         {
             sf::Clock reloj;
 
-            actualizarFrameCelebracion(efectos);
+            actualizarFotogramaCelebracion(efectos);
 
             sf::sleep(sf::seconds(1.f / NUMERO_FPS) - reloj.reset());
         }

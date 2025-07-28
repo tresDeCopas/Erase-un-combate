@@ -18,20 +18,20 @@ class AnimacionAgrandable : public Animacion {
 
         // Indica si el sprite se está agrandando (si está a false puede que se esté disminuyendo
         // o puede que esté manteniéndose en su máximo tamaño, depende de si contadorMaxTamano es menor
-        // que framesMaxTamaño (máximo tamaño) o igual (disminuyendo))
+        // que fotogramasMaxTamaño (máximo tamaño) o igual (disminuyendo))
         bool seEstaAgrandando;
 
-        // Indica cuántos frames debe esperar el frame en tamaño máximo antes de volver a
+        // Indica cuántos fotogramas debe esperar el fotograma en tamaño máximo antes de volver a
         // disminuir de tamaño
-        int framesEspera;
+        int fotogramasEspera;
 
-        // Indica cuántos frames lleva el sprite con su tamaño máximo
+        // Indica cuántos fotogramas lleva el sprite con su tamaño máximo
         int contadorEspera;
 
     public:
-        AnimacionAgrandable(int framesMaxTamano, sf::Texture& textura, std::string rutaSonido);
+        AnimacionAgrandable(int fotogramasMaxTamano, sf::Texture& textura, std::string rutaSonido);
 
-        // Actualiza la animación (avanza un frame), reproduciendo el sonido si es necesario. En nuevasAnimaciones
+        // Actualiza la animación (avanza un fotograma), reproduciendo el sonido si es necesario. En nuevasAnimaciones
         // se insertan las nuevas animaciones que serán introducidas
         void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones);
 

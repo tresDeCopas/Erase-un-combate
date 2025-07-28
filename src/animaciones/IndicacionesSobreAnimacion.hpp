@@ -3,7 +3,7 @@
 #include <SFML/System.hpp>
 #include <string>
 
-// Este struct se utiliza en la clase AnimacionPorFrames para
+// Este struct se utiliza en la clase AnimacionPorFotogramas para
 // indicar las características de las animaciones que aparecen dentro
 // de otras animaciones (por ejemplo, cuando Juan Cuesta dispara
 // el rifle en su superataque, la animación de Juan Cuesta disparando

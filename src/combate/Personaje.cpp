@@ -11,7 +11,7 @@
 #include "ContenedorDeCombos.hpp"
 #include <iostream>
 
-Personaje::Personaje(std::map<EstadoPersonaje, std::shared_ptr<AnimacionPorFrames>> animaciones, std::string nombre, int maxPuntosDeVida, float velocidadMaxima, float fuerzaSalto, std::vector<Accion> accionesAtaqueEspecial) : puntosDeVida(maxPuntosDeVida), maxPuntosDeVida(maxPuntosDeVida), medidorSuper(0), velocidadMaxima(velocidadMaxima), fuerzaSalto(-fuerzaSalto), nombre(nombre), velocidad({0.f, 0.f}),
+Personaje::Personaje(std::map<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> animaciones, std::string nombre, int maxPuntosDeVida, float velocidadMaxima, float fuerzaSalto, std::vector<Accion> accionesAtaqueEspecial) : puntosDeVida(maxPuntosDeVida), maxPuntosDeVida(maxPuntosDeVida), medidorSuper(0), velocidadMaxima(velocidadMaxima), fuerzaSalto(-fuerzaSalto), nombre(nombre), velocidad({0.f, 0.f}),
                                                                                                                                                                                                                                   escalaSprite({1.f, 1.f}), contadorTumbado(0), contadorBlanco(0), contadorEsquiveSuper(0), estado(EstadoPersonaje::QUIETO), shader(std::make_shared<sf::Shader>()),
                                                                                                                                                                                                                                   animaciones(animaciones), ataqueEspecial(accionesAtaqueEspecial)
 {
@@ -38,9 +38,9 @@ Personaje Personaje::clonar()
     // Se limpian las animaciones porque se van a hacer de nuevo
     nuevo.animaciones.clear();
 
-    for (std::pair<EstadoPersonaje, std::shared_ptr<AnimacionPorFrames>> par : this->animaciones)
+    for (std::pair<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> par : this->animaciones)
     {
-        nuevo.animaciones.insert({par.first, std::dynamic_pointer_cast<AnimacionPorFrames>(par.second->clonar())});
+        nuevo.animaciones.insert({par.first, std::dynamic_pointer_cast<AnimacionPorFotogramas>(par.second->clonar())});
     }
 
     return nuevo;
@@ -131,12 +131,12 @@ Jugador Personaje::getJugador()
     return this->jugador;
 }
 
-std::shared_ptr<AnimacionPorFrames> Personaje::getAnimacionSegunEstado(EstadoPersonaje estado)
+std::shared_ptr<AnimacionPorFotogramas> Personaje::getAnimacionSegunEstado(EstadoPersonaje estado)
 {
     return animaciones.at(estado);
 }
 
-void Personaje::setAnimaciones(const std::map<EstadoPersonaje, std::shared_ptr<AnimacionPorFrames>> &animaciones)
+void Personaje::setAnimaciones(const std::map<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> &animaciones)
 {
     this->animaciones = animaciones;
 }
@@ -625,7 +625,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         // El contador siempre sube para que la gente no se quede tirada
         contadorTumbado++;
 
-        // Se pone a true si el jugador se ha movido en este frame para
+        // Se pone a true si el jugador se ha movido en este fotograma para
         // levantarse antes
         bool movido = false;
 
@@ -840,12 +840,12 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
     }
 
-    // Se actualiza la animación por frames del estado
+    // Se actualiza la animación por fotogramas del estado
     animaciones.at(estado)->actualizar(efectosInsertados);
 
-    // Se obtiene el estiramiento para este frame según diga la animaciónm
+    // Se obtiene el estiramiento para este fotograma según diga la animaciónm
     // y se multiplica a la escala calculada
-    escalaSprite = escalaSprite.componentWiseMul(animaciones.at(estado)->getEstiramientoFrameActual());
+    escalaSprite = escalaSprite.componentWiseMul(animaciones.at(estado)->getEstiramientoFotogramaActual());
 
     // Se actualiza la escala del personaje
     animaciones[estado]->setEscala(escalaSprite);
@@ -854,9 +854,9 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     escalaSprite.x = util::aproximarFloat(escalaSprite.x, (escalaSprite.x > 0) ? 1.f : -1.f, 0.8);
     escalaSprite.y = util::aproximarFloat(escalaSprite.y, 1.f, 0.8);
 
-    // Se consulta el movimiento de la animación por frames
+    // Se consulta el movimiento de la animación por fotogramas
     sf::Vector2f movimiento;
-    movimiento = animaciones.at(estado)->getMovimientoFrameActual();
+    movimiento = animaciones.at(estado)->getMovimientoFotogramaActual();
     velocidad.x += movimiento.x;
     velocidad.y += movimiento.y;
 

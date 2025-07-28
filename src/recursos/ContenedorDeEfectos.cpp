@@ -1,7 +1,7 @@
 #include "ContenedorDeEfectos.hpp"
 #include "ContenedorDeRecursos.hpp"
 #include "Bitacora.hpp"
-#include "AnimacionPorFrames.hpp"
+#include "AnimacionPorFotogramas.hpp"
 #include "AnimacionConGravedad.hpp"
 #include "AnimacionAgrandable.hpp"
 #include "AnimacionDesvaneciente.hpp"
@@ -87,7 +87,7 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
         if (tipoAnimacion == "Fotogramas")
         {
             // Estos serán los ingredientes para hacer la animación
-            IngredientesAnimacionPorFrames ingredientes;
+            IngredientesAnimacionPorFotogramas ingredientes;
 
             // Los efectos con animaciones por fotogramas no tienen sombra
             ingredientes.tipoSombra = TipoSombra::SIN_SOMBRA;
@@ -154,11 +154,11 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
 
                 for(size_t i = 0; i < fichero["sonido"]["fotogramas"].size(); i++)
                 {
-                    ingredientes.framesConSonido.insert(fichero["sonido"]["fotogramas"][i].as<int>());
+                    ingredientes.fotogramasConSonido.insert(fichero["sonido"]["fotogramas"][i].as<int>());
                 }
             }
 
-            anim = std::make_shared<AnimacionPorFrames>(ingredientes);
+            anim = std::make_shared<AnimacionPorFotogramas>(ingredientes);
         }
         else if (tipoAnimacion == "Gravedad")
         {
@@ -179,9 +179,9 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
         {
             rutaSonido = "sonidos/efectos/" + nombreEfecto + ".ogg";
 
-            int framesEspera = fichero["framesEspera"].as<int>();
+            int fotogramasEspera = fichero["fotogramasEspera"].as<int>();
 
-            anim = std::make_shared<AnimacionAgrandable>(framesEspera, textura, rutaSonido);
+            anim = std::make_shared<AnimacionAgrandable>(fotogramasEspera, textura, rutaSonido);
         }
         else if (tipoAnimacion == "Desvaneciente")
         {   

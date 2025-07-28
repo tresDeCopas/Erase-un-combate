@@ -84,7 +84,7 @@ Seleccion MenuPrincipal::comenzar(){
     seleccionActual = Seleccion::MODO_HISTORIA;
 
     while(true){
-        // Se prepara un reloj para ver cuánto tiempo pasa entre frames
+        // Se prepara un reloj para ver cuánto tiempo pasa entre fotogramas
         sf::Clock reloj;
 
         while(const std::optional evento = ventana->pollEvent()){

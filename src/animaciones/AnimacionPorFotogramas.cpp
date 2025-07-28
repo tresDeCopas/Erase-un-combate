@@ -1,4 +1,4 @@
-#include "AnimacionPorFrames.hpp"
+#include "AnimacionPorFotogramas.hpp"
 #include "AnimacionConGravedad.hpp"
 #include "ReproductorDeSonidos.hpp"
 #include "Constantes.hpp"
@@ -8,7 +8,7 @@
 #include <typeinfo>
 #include "ContenedorDeRecursos.hpp"
 
-AnimacionPorFrames::AnimacionPorFrames(IngredientesAnimacionPorFrames &ingredientes) :
+AnimacionPorFotogramas::AnimacionPorFotogramas(IngredientesAnimacionPorFotogramas &ingredientes) :
     Animacion(ContenedorDeTexturas::unicaInstancia()->obtener(ingredientes.rutaTextura)) {
 
     sprite.setTextureRect(sf::IntRect({0,0}, {static_cast<int>(sprite.getTextureRect().size.x/ingredientes.numRectangulos), static_cast<int>(sprite.getTextureRect().size.y)}));
@@ -19,10 +19,10 @@ AnimacionPorFrames::AnimacionPorFrames(IngredientesAnimacionPorFrames &ingredien
     this->hitboxes = ingredientes.hitboxes;
     this->rectanguloCorrespondiente = ingredientes.rectanguloCorrespondiente;
     this->rutaSonido = ingredientes.rutaSonido;
-    this->framesConSonido = ingredientes.framesConSonido;
-    this->framesConMovimiento = ingredientes.framesConMovimiento;
-    this->framesConEstiramientos = ingredientes.framesConEstiramientos;
-    this->framesConAnimaciones = ingredientes.framesConAnimaciones;
+    this->fotogramasConSonido = ingredientes.fotogramasConSonido;
+    this->fotogramasConMovimiento = ingredientes.fotogramasConMovimiento;
+    this->fotogramasConEstiramientos = ingredientes.fotogramasConEstiramientos;
+    this->fotogramasConAnimaciones = ingredientes.fotogramasConAnimaciones;
     this->repetirSonido = ingredientes.repetirSonido;
     this->tipoSombra = ingredientes.tipoSombra;
 
@@ -31,44 +31,44 @@ AnimacionPorFrames::AnimacionPorFrames(IngredientesAnimacionPorFrames &ingredien
     resetear();
 }
 
-void AnimacionPorFrames::actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones) {
+void AnimacionPorFotogramas::actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones) {
 
     if(tipoBucle == TipoBucle::NORMAL){
-        if(!primerFrame) frameActual++;
-        if(frameActual >= (int)rectanguloCorrespondiente.size()) {
-            frameActual = 0;
+        if(!primerFotograma) fotogramaActual++;
+        if(fotogramaActual >= (int)rectanguloCorrespondiente.size()) {
+            fotogramaActual = 0;
             if(!repetirSonido) sonidoYaReproducido = true;
         }
     } else if (tipoBucle == TipoBucle::SIN_BUCLE){
-        if(frameActual < (int)rectanguloCorrespondiente.size()-1)
-            if(!primerFrame) frameActual++;
+        if(fotogramaActual < (int)rectanguloCorrespondiente.size()-1)
+            if(!primerFotograma) fotogramaActual++;
     }
 
-    // Ya seguro que no es el primer frame
-    primerFrame = false;
+    // Ya seguro que no es el primer fotograma
+    primerFotograma = false;
 
     // Se reproduce el sonido si es necesario
-    if(!sonidoYaReproducido && framesConSonido.count(frameActual)){
+    if(!sonidoYaReproducido && fotogramasConSonido.count(fotogramaActual)){
         ReproductorDeSonidos::unicaInstancia()->reproducir(rutaSonido);
     }
 
     // Se actualizan las nuevas animaciones si es necesario
-    if(framesConAnimaciones.count(frameActual)){
+    if(fotogramasConAnimaciones.count(fotogramaActual)){
 
-        std::shared_ptr<Animacion> anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto(framesConAnimaciones[frameActual].rutaAnimacion);
+        std::shared_ptr<Animacion> anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto(fotogramasConAnimaciones[fotogramaActual].rutaAnimacion);
 
         sf::Vector2f posicionAnimacion(getPosicionEsqSupIzq());
 
-        posicionAnimacion.x+=framesConAnimaciones[frameActual].posicionInicial.x;
-        posicionAnimacion.y+=framesConAnimaciones[frameActual].posicionInicial.y;
+        posicionAnimacion.x+=fotogramasConAnimaciones[fotogramaActual].posicionInicial.x;
+        posicionAnimacion.y+=fotogramasConAnimaciones[fotogramaActual].posicionInicial.y;
 
         anim->setPosicion(posicionAnimacion);
 
         if(std::string(typeid(*anim).name()) == "AnimacionConGravedad"){
-            ((AnimacionConGravedad*)(anim.get()))->setVelocidad(framesConAnimaciones[frameActual].velocidadInicial);
+            ((AnimacionConGravedad*)(anim.get()))->setVelocidad(fotogramasConAnimaciones[fotogramaActual].velocidadInicial);
         }
 
-        if(framesConAnimaciones.at(frameActual).necesitaVoltearse){
+        if(fotogramasConAnimaciones.at(fotogramaActual).necesitaVoltearse){
             // En este caso hay que usar la posición actual del sprite, al contrario
             // que las hitboxes, que usan una posición relativa al sprite que luego se
             // actualiza. Aquí, la posición es relativa a la ventana, por lo que hay que
@@ -83,14 +83,14 @@ void AnimacionPorFrames::actualizar(std::list<std::shared_ptr<Animacion>> &nueva
         nuevasAnimaciones.push_back(anim);
     }
 
-    if(framesConEstiramientos.count(frameActual)){
-        sprite.scale(framesConEstiramientos[frameActual]);
+    if(fotogramasConEstiramientos.count(fotogramaActual)){
+        sprite.scale(fotogramasConEstiramientos[fotogramaActual]);
     }
 
-    sprite.setTextureRect(sf::IntRect({rectanguloCorrespondiente[frameActual]*sprite.getTextureRect().size.x,0}, {sprite.getTextureRect().size.x,sprite.getTextureRect().size.y}));
+    sprite.setTextureRect(sf::IntRect({rectanguloCorrespondiente[fotogramaActual]*sprite.getTextureRect().size.x,0}, {sprite.getTextureRect().size.x,sprite.getTextureRect().size.y}));
 }
 
-void AnimacionPorFrames::voltear(){
+void AnimacionPorFotogramas::voltear(){
     // Al escalar el eje X por -1 se le da la vuelta muy guay todo pero no es suficiente
     sprite.scale({-1,1});
 
@@ -116,59 +116,59 @@ void AnimacionPorFrames::voltear(){
     }
 
     // También hay que voltear los movimientos
-    for(auto &par : framesConMovimiento){
+    for(auto &par : fotogramasConMovimiento){
         par.second.x = -par.second.x;
     }
 
     // También hay que voltear las animaciones adicionales
-    for(auto &par : framesConAnimaciones){
+    for(auto &par : fotogramasConAnimaciones){
         par.second.necesitaVoltearse = !par.second.necesitaVoltearse;
     }
 }
 
-int AnimacionPorFrames::getNumeroRectangulo() {
-    return rectanguloCorrespondiente[frameActual];
+int AnimacionPorFotogramas::getNumeroRectangulo() {
+    return rectanguloCorrespondiente[fotogramaActual];
 }
 
-int AnimacionPorFrames::getNumeroFrame(){
-    return frameActual;
+int AnimacionPorFotogramas::getNumeroFotograma(){
+    return fotogramaActual;
 }
 
-sf::Vector2f AnimacionPorFrames::getEstiramientoFrameActual(){
-    if(framesConEstiramientos.count(frameActual)) return framesConEstiramientos[frameActual];
+sf::Vector2f AnimacionPorFotogramas::getEstiramientoFotogramaActual(){
+    if(fotogramasConEstiramientos.count(fotogramaActual)) return fotogramasConEstiramientos[fotogramaActual];
     else return sf::Vector2f{1.f,1.f};
 }
 
-void AnimacionPorFrames::setTipoBucle(TipoBucle tipoBucle){
+void AnimacionPorFotogramas::setTipoBucle(TipoBucle tipoBucle){
     this->tipoBucle = tipoBucle;
 }
 
-sf::Vector2f AnimacionPorFrames::getMovimientoFrameActual(){
-    return framesConMovimiento[frameActual];
+sf::Vector2f AnimacionPorFotogramas::getMovimientoFotogramaActual(){
+    return fotogramasConMovimiento[fotogramaActual];
 }
 
-bool AnimacionPorFrames::haTerminado(){
-    return tipoBucle == TipoBucle::SIN_BUCLE && frameActual == (int)rectanguloCorrespondiente.size()-1;
+bool AnimacionPorFotogramas::haTerminado(){
+    return tipoBucle == TipoBucle::SIN_BUCLE && fotogramaActual == (int)rectanguloCorrespondiente.size()-1;
 }
 
-void AnimacionPorFrames::resetear(){
-    frameActual = 0;
+void AnimacionPorFotogramas::resetear(){
+    fotogramaActual = 0;
     sonidoYaReproducido = false;
-    primerFrame = true;
+    primerFotograma = true;
 }
 
-std::shared_ptr<Animacion> AnimacionPorFrames::clonar(){
-    return std::make_shared<AnimacionPorFrames>(*this);
+std::shared_ptr<Animacion> AnimacionPorFotogramas::clonar(){
+    return std::make_shared<AnimacionPorFotogramas>(*this);
 }
 
-std::vector<Hitbox> AnimacionPorFrames::getHitboxes(){
-    // Cuando un rectángulo tiene una hitbox con daño, solo el primer frame de ese rectángulo hará
-    // realmente daño. Esto hace que si un rectángulo cn hitbox dañina dura varios frames, solo el
+std::vector<Hitbox> AnimacionPorFotogramas::getHitboxes(){
+    // Cuando un rectángulo tiene una hitbox con daño, solo el primer fotograma de ese rectángulo hará
+    // realmente daño. Esto hace que si un rectángulo cn hitbox dañina dura varios fotogramas, solo el
     // primero sea el que cause daño, mientras que los siguientes son para que la animación se vea
     // más bonita y dé tiempo a verla, y así no pase demasiado rápido
-    if(frameActual > 0 && rectanguloCorrespondiente[frameActual] == rectanguloCorrespondiente[frameActual-1])
+    if(fotogramaActual > 0 && rectanguloCorrespondiente[fotogramaActual] == rectanguloCorrespondiente[fotogramaActual-1])
     {
-        std::vector<Hitbox> nuevasHitboxes = hitboxes[rectanguloCorrespondiente[frameActual]];
+        std::vector<Hitbox> nuevasHitboxes = hitboxes[rectanguloCorrespondiente[fotogramaActual]];
 
         for(Hitbox& h : nuevasHitboxes){
             if(h.getFuerzaAtaque() != 0){
@@ -180,11 +180,11 @@ std::vector<Hitbox> AnimacionPorFrames::getHitboxes(){
     }
     else
     {
-        return hitboxes[rectanguloCorrespondiente[frameActual]];
+        return hitboxes[rectanguloCorrespondiente[fotogramaActual]];
     }
 }
 
-void AnimacionPorFrames::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void AnimacionPorFotogramas::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     
     // El shader usado se guarda porque la sombra no debería usarlo,
     // solo el sprite de la propia animación
@@ -234,7 +234,7 @@ void AnimacionPorFrames::draw(sf::RenderTarget& target, sf::RenderStates states)
     states.shader = nullptr;
 
     if(DEBUG){
-        for(Hitbox h : hitboxes.at(rectanguloCorrespondiente.at(frameActual))){
+        for(Hitbox h : hitboxes.at(rectanguloCorrespondiente.at(fotogramaActual))){
             sf::RectangleShape rectanguloHitbox(sf::Vector2f(h.getRectangulo().size.x,h.getRectangulo().size.y));
             rectanguloHitbox.setPosition({(float)h.getRectangulo().position.x,(float)h.getRectangulo().position.y});
             rectanguloHitbox.move(getPosicionEsqSupIzq());

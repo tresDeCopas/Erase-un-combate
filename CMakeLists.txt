@@ -70,7 +70,7 @@ src/animaciones/Animacion.cpp
 src/animaciones/AnimacionAgrandable.cpp
 src/animaciones/AnimacionConGravedad.cpp
 src/animaciones/AnimacionDesvaneciente.cpp
-src/animaciones/AnimacionPorFrames.cpp
+src/animaciones/AnimacionPorFotogramas.cpp
 src/combate/AtaqueEspecial.cpp
 src/combate/Combate.cpp
 src/combate/ConectorOnline.cpp

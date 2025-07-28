@@ -23,7 +23,7 @@ ReproductorDeSonidos::~ReproductorDeSonidos()
         delete reproductorDeSonidos;
 }
 
-void ReproductorDeSonidos::reproducir(std::string sonido)
+void ReproductorDeSonidos::reproducir(std::string sonido, float tono)
 {
     // Primero se crea el sonido si no existe
     if (!sonidos.count(sonido))
@@ -34,6 +34,7 @@ void ReproductorDeSonidos::reproducir(std::string sonido)
 
     // Se reproduce el sonido requerido
     sonidos.at(sonido).setVolume(volumenActual);
+    sonidos.at(sonido).setPitch(tono);
     sonidos.at(sonido).play();
 }
 

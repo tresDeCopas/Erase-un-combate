@@ -16,13 +16,13 @@ private:
     // Velocidad del objeto volador
     sf::Vector2f velocidad;
 
-    // Velocidad de giro del objeto volador en grados sexagesimales por frame
+    // Velocidad de giro del objeto volador en grados sexagesimales por fotograma
     double velocidadGiro;
 
     // Indica si el objeto se ha chocado, por lo que empieza a parpadear y tal
     bool haChocado;
 
-    // Se va sumando 1 por cada frame que pase desde que el objeto se choca contra algo,
+    // Se va sumando 1 por cada fotograma que pase desde que el objeto se choca contra algo,
     // permitiendo que parpadee y finalmente desaparezca.
     int contadorParpadeo;
 

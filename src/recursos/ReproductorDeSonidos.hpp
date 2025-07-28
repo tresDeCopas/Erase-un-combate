@@ -32,8 +32,9 @@ class ReproductorDeSonidos
     public:
 
         // Reproduce el sonido dado su identificador (ruta del fichero relativa al directorio donde
-        // se ejecuta el programa)
-        void reproducir(std::string sonido);
+        // se ejecuta el programa). Se puede especificar un tono en el que se reproducirá el
+        // sonido, o se puede dejar como está para que se reproduzca con el tono por defecto
+        void reproducir(std::string sonido, float tono = 1.f);
 
         // Detiene por completo la reproducción de la canción
         void detener();

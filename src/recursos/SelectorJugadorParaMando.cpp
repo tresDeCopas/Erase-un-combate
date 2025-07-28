@@ -64,7 +64,7 @@ Jugador SelectorJugadorParaMando::decidirJugador(Control c)
 
     // while(rectanguloOscuro.getFillColor() != COLOR_FINAL_RECTANGULO_OSCURO_SELECTOR_MANDOS){
 
-    //     // Se prepara un reloj para ver cuánto tiempo pasa entre frames
+    //     // Se prepara un reloj para ver cuánto tiempo pasa entre fotogramas
     //     sf::Clock reloj;
 
     //     // Se comprueba solo el evento de cerrar la ventana
@@ -85,8 +85,8 @@ Jugador SelectorJugadorParaMando::decidirJugador(Control c)
     //     ventana->draw(rectanguloOscuro);
     //     ventana->display();
 
-    //     // El juego se duerme hasta que dé tiempo a dibujar el siguiente frame, teniendo en cuenta
-    //     // que se deben dibujar 60 frames por segundo y que cada frame además necesita un tiempo
+    //     // El juego se duerme hasta que dé tiempo a dibujar el siguiente fotograma, teniendo en cuenta
+    //     // que se deben dibujar 60 fotogramas por segundo y que cada fotograma además necesita un tiempo
     //     // previo de preparación para actualizar y dibujar y tal
     //     sf::sleep(sf::seconds(1.f / NUMERO_FPS) - reloj.reset());
     // }
@@ -98,7 +98,7 @@ Jugador SelectorJugadorParaMando::decidirJugador(Control c)
 
     while (!jugadorDecidido && ventana->isOpen())
     {
-        // Se prepara un reloj para ver cuánto tiempo pasa entre frames
+        // Se prepara un reloj para ver cuánto tiempo pasa entre fotogramas
         sf::Clock reloj;
 
         // Se comprueban los eventos como de costumbre
@@ -142,8 +142,8 @@ Jugador SelectorJugadorParaMando::decidirJugador(Control c)
         ventana->draw(jugadorSeleccionado == Jugador::JUGADOR1 ? spriteJugador1 : spriteJugador2);
         ventana->display();
 
-        // El juego se duerme hasta que dé tiempo a dibujar el siguiente frame, teniendo en cuenta
-        // que se deben dibujar 60 frames por segundo y que cada frame además necesita un tiempo
+        // El juego se duerme hasta que dé tiempo a dibujar el siguiente fotograma, teniendo en cuenta
+        // que se deben dibujar 60 fotogramas por segundo y que cada fotograma además necesita un tiempo
         // previo de preparación para actualizar y dibujar y tal
         sf::sleep(sf::seconds(1.f / NUMERO_FPS) - reloj.reset());
     }

@@ -25,7 +25,7 @@ class Animacion : public sf::Drawable {
         // defecto para sf::Sprite
         Animacion(sf::Texture &textura);
 
-        // Actualiza la animación (avanza un frame), reproduciendo el sonido si es necesario. En nuevasAnimaciones
+        // Actualiza la animación (avanza un fotograma), reproduciendo el sonido si es necesario. En nuevasAnimaciones
         // se insertan las nuevas animaciones que serán introducidas
         virtual void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones) = 0;
 

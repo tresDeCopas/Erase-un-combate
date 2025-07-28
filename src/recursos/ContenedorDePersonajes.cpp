@@ -39,7 +39,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
     for (const std::filesystem::directory_entry &entrada : std::filesystem::directory_iterator("ficheros/personajes"))
     {
         // En este mapa se van a guardar las animaciones según el estado
-        std::map<EstadoPersonaje, std::shared_ptr<AnimacionPorFrames>> animaciones;
+        std::map<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> animaciones;
 
         // Las acciones que hay que hacer en orden para poder desencadenar el ataque especial
         std::vector<Accion> accionesAtaqueEspecial;
@@ -74,7 +74,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
             std::string nombreEstado = itEstado->first.as<std::string>();
 
             // Se preparan los ingredientes
-            IngredientesAnimacionPorFrames ingredientes;
+            IngredientesAnimacionPorFotogramas ingredientes;
 
             // Los personajes sí tienen sombra
             if(nombreEstado == "golpeado-subiendo" || nombreEstado == "golpeado-bajando" || nombreEstado == "tumbado")
@@ -143,9 +143,9 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                 {
                     Bitacora::unicaInstancia()->escribir("Juan Cuesta: Encontrados " + std::to_string(itAtributoEstado->second.size()) + " fotogramas.");
 
-                    for(size_t frameActual = 0; frameActual < itAtributoEstado->second.size(); frameActual++)
+                    for(size_t fotogramaActual = 0; fotogramaActual < itAtributoEstado->second.size(); fotogramaActual++)
                     {
-                        ingredientes.rectanguloCorrespondiente[frameActual] = itAtributoEstado->second[frameActual].as<int>();
+                        ingredientes.rectanguloCorrespondiente[fotogramaActual] = itAtributoEstado->second[fotogramaActual].as<int>();
                     }
                 }
 
@@ -167,7 +167,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
 
                     for(size_t i = 0; i < itAtributoEstado->second["fotogramas"].size(); i++)
                     {
-                        ingredientes.framesConSonido.insert(itAtributoEstado->second["fotogramas"][i].as<int>());
+                        ingredientes.fotogramasConSonido.insert(itAtributoEstado->second["fotogramas"][i].as<int>());
                     }
                 }
                 else if(itAtributoEstado->first.as<std::string>() == "efectos")
@@ -187,7 +187,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                         indicacionesAnimacion.rutaAnimacion = nombreEfecto;
                         indicacionesAnimacion.velocidadInicial = velocidadInicialEfecto;
 
-                        ingredientes.framesConAnimaciones[fotogramaEfecto] = indicacionesAnimacion;
+                        ingredientes.fotogramasConAnimaciones[fotogramaEfecto] = indicacionesAnimacion;
 
                         Bitacora::unicaInstancia()->escribir("Juan Cuesta: Efecto número " + std::to_string(i) + " de nombre \"" + nombreEfecto + "\" desencadenado en fotograma " + std::to_string(fotogramaEfecto) + ". Posición (" + std::to_string(posicionEfecto.x) + "," + std::to_string(posicionEfecto.y) + ") y velocidad inicial (" + std::to_string(velocidadInicialEfecto.x) + "," + std::to_string(velocidadInicialEfecto.y) + ").");
                     }
@@ -201,7 +201,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                         int fotogramaMovimiento = itAtributoEstado->second[i]["fotograma"].as<int>();
                         sf::Vector2f velocidadMovimiento = {itAtributoEstado->second[i]["velX"].as<float>(),itAtributoEstado->second[i]["velY"].as<float>()};
 
-                        ingredientes.framesConMovimiento[fotogramaMovimiento] = velocidadMovimiento;
+                        ingredientes.fotogramasConMovimiento[fotogramaMovimiento] = velocidadMovimiento;
 
                         Bitacora::unicaInstancia()->escribir("Juan Cuesta: Movimiento número " + std::to_string(i) + " desencadenado en fotograma " + std::to_string(fotogramaMovimiento) + ". Movimiento de (" + std::to_string(velocidadMovimiento.x) + "," + std::to_string(velocidadMovimiento.y) + ").");
                     }
@@ -215,7 +215,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                         int fotogramaEstiramiento = itAtributoEstado->second[i]["fotograma"].as<int>();
                         sf::Vector2f escalaEstiramiento = {itAtributoEstado->second[i]["escalaX"].as<float>(),itAtributoEstado->second[i]["escalaY"].as<float>()};
 
-                        ingredientes.framesConEstiramientos[fotogramaEstiramiento] = escalaEstiramiento;
+                        ingredientes.fotogramasConEstiramientos[fotogramaEstiramiento] = escalaEstiramiento;
 
                         Bitacora::unicaInstancia()->escribir("Juan Cuesta: Estiramiento número " + std::to_string(i) + " desencadenado en fotograma " + std::to_string(fotogramaEstiramiento) + ". Estiramiento de (" + std::to_string(escalaEstiramiento.x) + "," + std::to_string(escalaEstiramiento.y) + ").");
                     }
@@ -232,9 +232,9 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
                 }
             }
 
-            std::shared_ptr<AnimacionPorFrames> anim = std::make_shared<AnimacionPorFrames>(ingredientes);
+            std::shared_ptr<AnimacionPorFotogramas> anim = std::make_shared<AnimacionPorFotogramas>(ingredientes);
 
-            animaciones.insert(std::pair<EstadoPersonaje, std::shared_ptr<AnimacionPorFrames>>(util::stringAEstadoPersonaje(nombreEstado), anim));
+            animaciones.insert(std::pair<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>>(util::stringAEstadoPersonaje(nombreEstado), anim));
             
             Bitacora::unicaInstancia()->escribir("Juan Cuesta: Se terminó de cargar la animación para el estado " + nombreEstado + ".\n");
         }

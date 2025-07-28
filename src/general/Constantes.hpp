@@ -38,7 +38,7 @@ constexpr int MAXIMA_LONGITUD_TEXTURA = 1024;
 constexpr int VENTANA_ANCHURA = 300;
 constexpr int VENTANA_ALTURA = 200;
 
-// Numero de frames por segundo
+// Numero de fotogramas por segundo
 constexpr int NUMERO_FPS = 60;
 
 // Nombre de la ventana principal
@@ -53,7 +53,7 @@ constexpr int VIBRACION_ATAQUE_MEDIO = 7;
 // Vibración de la ventana para un ataque súper
 constexpr int VIBRACION_ATAQUE_SUPER = 30;
 
-// Cada cuántos frames se actualiza la vibración de la ventana principal para que el efecto no
+// Cada cuántos fotogramas se actualiza la vibración de la ventana principal para que el efecto no
 // sea tan violento a los ojos
 constexpr int VIBRACION_RETRASO = 1;
 
@@ -79,7 +79,7 @@ constexpr unsigned int MANDO_BOTON_SALTAR = 2;
 // Tecla para salir del juego
 constexpr sf::Keyboard::Scancode TECLA_SALIDA = sf::Keyboard::Scancode::Escape;
 
-// Frames que te da el juego desde que haces un input de un ataque especial hasta
+// Fotogramas que te da el juego desde que haces un input de un ataque especial hasta
 // que haces el siguiente como máximo
 constexpr int COOLDOWN_ATAQUE_ESPECIAL = 30;
 
@@ -111,7 +111,7 @@ const std::string SECUENCIA_FIN_FICHERO = "####";
 // con gravedad se dé por terminada
 constexpr int MAX_CONTADOR_PARPADEO = 40;
 
-// Cada cuántos frames las animaciones con gravedad pasan a ser visibles o invisibles para
+// Cada cuántos fotogramas las animaciones con gravedad pasan a ser visibles o invisibles para
 // el efecto de parpadeo
 constexpr int DURACION_PARPADEO = 2;
 
@@ -130,7 +130,7 @@ constexpr int MAX_VELOCIDAD_PARTICULA_SUPER = 8;
 // Cómo de desplazada está la animación del polvo en el eje X con respecto al centro del personaje
 constexpr int OFFSET_POLVO = 15;
 
-// Cuánto se agrandan o disminuyen las animaciones agrandables cada frame
+// Cuánto se agrandan o disminuyen las animaciones agrandables cada fotograma
 constexpr double TASA_CRECIMIENTO_ANIMACION_AGRANDABLE = 0.1;
 
 // Posición de los carteles que aparecen durante los combates (los de "¿Todo listo?" y tal)
@@ -191,7 +191,7 @@ constexpr int MAX_MEDIDOR_SUPER = 50;
 // de un personaje, para evitar que vaya muy rápido
 constexpr int MAX_RETRASO_MEDIDOR_VIDA_ATRASADO = 3;
 
-// Aumento de velocidad cada frame al andar
+// Aumento de velocidad cada fotograma al andar
 constexpr float VELOCIDAD_ANDAR_AUMENTO = 0.3;
 
 // Cuando un personaje GOLPEADO_BAJANDO choca el suelo con una velocidad menor a esta, pasa
@@ -226,7 +226,7 @@ constexpr int MAX_CONTADOR_TUMBADO = 10;
 // Valor inicial del contador de celebración. Al llegar a 0, el personaje que acaba de ganar celebra
 constexpr int MAX_CONTADOR_CELEBRACION = NUMERO_FPS*2;
 
-// Máximo de frames que tienen que pasar desde que se empiece a caminar al revés del rival para poder
+// Máximo de fotogramas que tienen que pasar desde que se empiece a caminar al revés del rival para poder
 // hacerle parry a un ataque súper
 constexpr int MAX_CONTADOR_ESQUIVE_SUPER = 4;
 
@@ -283,17 +283,17 @@ constexpr sf::Color COLOR_BARRA_VIDA_ATRASADA(204,65,65);
 // Color de la barra de súper
 constexpr sf::Color COLOR_BARRA_SUPER(89,114,255);
 
-// Cada cuántos frames se actualiza la vibración
+// Cada cuántos fotogramas se actualiza la vibración
 constexpr int CONTADOR_VIBRACION_MAX = 2;
 
 /*
     CONSTANTES PARA LOS COMBOS
 */
 
-// Cuántos frames tiene un jugador para poder continuar un combo
+// Cuántos fotogramas tiene un jugador para poder continuar un combo
 constexpr int FRAMES_RESTANTES_COMBO = NUMERO_FPS;
 
-// Durante cuántos frames se mostrará la información del combo que
+// Durante cuántos fotogramas se mostrará la información del combo que
 // acaba de terminar antes de desaparecer para siempre
 constexpr int FRAMES_MOSTRAR_COMBO_TERMINADO = NUMERO_FPS*2;
 
@@ -319,6 +319,16 @@ constexpr float POSICION_Y_INFO_COMBO = VENTANA_ALTURA/3.f;
 // El número mínimo de golpes que tiene que tener un combo para
 // que se muestre en pantalla
 constexpr int MIN_GOLPES_MOSTRAR_COMBO = 3;
+
+// Cuando se continúa un combo suena un sonidito cada vez más agudo. Este
+// es el tono máximo al que se debe reproducir ese sonido
+constexpr float MAX_TONO_SONIDO_CONTINUAR_COMBO = 2.f;
+
+// El color de la info del combo cuando el combo termina
+constexpr sf::Color COLOR_COMBO_TERMINADO = sf::Color(100.f,100.f,100.f);
+
+// El movimiento que hace la info del combo cada vez que el combo se continúa
+constexpr sf::Vector2f MOVIMIENTO_INFO_COMBO_CONTINUAR = {0.f,-5.f};
 
 /*
     CONSTANTES PARA EL ONLINE

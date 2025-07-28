@@ -22,7 +22,7 @@ class AnimacionDesvaneciente : public Animacion {
         // agrandará hasta multiplicar su tamaño por el escalado dado
         AnimacionDesvaneciente(sf::Texture &textura, float escalado);
 
-        // Actualiza la animación (avanza un frame), reproduciendo el sonido si es necesario. En nuevasAnimaciones
+        // Actualiza la animación (avanza un fotograma), reproduciendo el sonido si es necesario. En nuevasAnimaciones
         // se insertan las nuevas animaciones que serán introducidas
         void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones);
 
