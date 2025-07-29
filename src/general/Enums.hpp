@@ -12,8 +12,7 @@ enum class Accion {
 // Tipo de bucle en una animación
 enum class TipoBucle {
     SIN_BUCLE,      // No hay bucle, cuando la animación termina se deja de actualizar
-    NORMAL,         // Cuando termina la animación, vuelve a empezar desde el principio
-    PING_PONG       // POR ELIMINAR // Cuando termina la animación, empieza desde el final hasta el principio y al revés
+    NORMAL         // Cuando termina la animación, vuelve a empezar desde el principio
 };
 
 // Enumerado para estados en los que se puede encontrar un personaje

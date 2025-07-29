@@ -4,8 +4,8 @@
 
 namespace util{
 
-    std::vector<std::string> separarString(std::string string, char separador){
-
+    std::vector<std::string> separarString(std::string string, char separador)
+    {
         std::stringstream stringstream(string);
 
         std::vector<std::string> vectorParaDevolver;
@@ -19,89 +19,62 @@ namespace util{
         return vectorParaDevolver;
     }
 
+    std::unordered_map<std::string,TipoBucle> tablaStringATipoBucle =
+    {
+      {"Normal", TipoBucle::NORMAL},
+      {"Sin bucle", TipoBucle::SIN_BUCLE}  
+    };
+
     TipoBucle stringATipoBucle(std::string string){
-        if(string == "Normal")
-            return TipoBucle::NORMAL;
-        if(string == "Ping pong")
-            return TipoBucle::PING_PONG;
-
-        return TipoBucle::SIN_BUCLE;
+        return tablaStringATipoBucle.at(string);
     }
 
-    EstadoPersonaje stringAEstadoPersonaje(std::string string){
-        if(string == "quieto")
-            return EstadoPersonaje::QUIETO;
-        if(string == "agachado")
-            return EstadoPersonaje::AGACHADO;
-        if(string == "ataque-agachado")
-            return EstadoPersonaje::ATAQUE_AGACHADO;
-        if(string == "ataque-normal-1")
-            return EstadoPersonaje::ATAQUE_NORMAL_1;
-        if(string == "ataque-normal-2")
-            return EstadoPersonaje::ATAQUE_NORMAL_2;
-        if(string == "ataque-normal-3")
-            return EstadoPersonaje::ATAQUE_NORMAL_3;
-        if(string == "ataque-alejandose")
-            return EstadoPersonaje::ATAQUE_ALEJANDOSE;
-        if(string == "ataque-aereo")
-            return EstadoPersonaje::ATAQUE_AEREO;
-        if(string == "ataque-especial")
-            return EstadoPersonaje::ATAQUE_ESPECIAL;
-        if(string == "golpeado-peque")
-            return EstadoPersonaje::GOLPEADO_PEQUE;
-        if(string == "golpeado-medio")
-            return EstadoPersonaje::GOLPEADO_MEDIO;
-        if(string == "golpeado-subiendo")
-            return EstadoPersonaje::GOLPEADO_SUBIENDO;
-        if(string == "golpeado-bajando")
-            return EstadoPersonaje::GOLPEADO_BAJANDO;
-        if(string == "saltando-subiendo")
-            return EstadoPersonaje::SALTANDO_SUBIENDO;
-        if(string == "saltando-bajando")
-            return EstadoPersonaje::SALTANDO_BAJANDO;
-        if(string == "tocando-suelo")
-            return EstadoPersonaje::TOCANDO_SUELO;
-        if(string == "andando-acercandose")
-            return EstadoPersonaje::ANDANDO_ACERCANDOSE;
-        if(string == "andando-alejandose")
-            return EstadoPersonaje::ANDANDO_ALEJANDOSE;
-        if(string == "bloqueando")
-            return EstadoPersonaje::BLOQUEANDO;
-        if(string == "esquive-super")
-            return EstadoPersonaje::ESQUIVE_SUPER;
-        if(string == "preparando-super")
-            return EstadoPersonaje::PREPARANDO_SUPER;
-        if(string == "ataque-super")
-            return EstadoPersonaje::ATAQUE_SUPER;
-        if(string == "tumbado")
-            return EstadoPersonaje::TUMBADO;
-        if(string == "levantandose")
-            return EstadoPersonaje::LEVANTANDOSE;
-        if(string == "celebrando")
-            return EstadoPersonaje::CELEBRANDO;
+    std::unordered_map<std::string,EstadoPersonaje> tablaStringAEstadoPersonaje =
+    {
+        {"quieto", EstadoPersonaje::QUIETO},
+        {"agachado", EstadoPersonaje::AGACHADO},
+        {"ataque-agachado", EstadoPersonaje::ATAQUE_AGACHADO},
+        {"ataque-normal-1", EstadoPersonaje::ATAQUE_NORMAL_1},
+        {"ataque-normal-2", EstadoPersonaje::ATAQUE_NORMAL_2},
+        {"ataque-normal-3", EstadoPersonaje::ATAQUE_NORMAL_3},
+        {"ataque-alejandose", EstadoPersonaje::ATAQUE_ALEJANDOSE},
+        {"ataque-aereo", EstadoPersonaje::ATAQUE_AEREO},
+        {"ataque-especial", EstadoPersonaje::ATAQUE_ESPECIAL},
+        {"golpeado-peque", EstadoPersonaje::GOLPEADO_PEQUE},
+        {"golpeado-medio", EstadoPersonaje::GOLPEADO_MEDIO},
+        {"golpeado-subiendo", EstadoPersonaje::GOLPEADO_SUBIENDO},
+        {"golpeado-bajando", EstadoPersonaje::GOLPEADO_BAJANDO},
+        {"saltando-subiendo", EstadoPersonaje::SALTANDO_SUBIENDO},
+        {"saltando-bajando", EstadoPersonaje::SALTANDO_BAJANDO},
+        {"tocando-suelo", EstadoPersonaje::TOCANDO_SUELO},
+        {"andando-acercandose", EstadoPersonaje::ANDANDO_ACERCANDOSE},
+        {"andando-alejandose", EstadoPersonaje::ANDANDO_ALEJANDOSE},
+        {"bloqueando", EstadoPersonaje::BLOQUEANDO},
+        {"esquive-super", EstadoPersonaje::ESQUIVE_SUPER},
+        {"preparando-super", EstadoPersonaje::PREPARANDO_SUPER},
+        {"ataque-super", EstadoPersonaje::ATAQUE_SUPER},
+        {"tumbado", EstadoPersonaje::TUMBADO},
+        {"levantandose", EstadoPersonaje::LEVANTANDOSE},
+        {"celebrando", EstadoPersonaje::CELEBRANDO}
+    };
 
-        Bitacora::unicaInstancia()->escribir("Emilio: Oiga señor Juan, esto de \"" + string + "\"... ¿qué estado de personaje es?");
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: Pues ninguno, que yo sepa. ¿Por?");
-        Bitacora::unicaInstancia()->escribir("Emilio: No, es que se supone que tiene que ser alguno, porque estoy aquí en util::stringAEstadoPersonaje y me acaba de llegar.");
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: ¡¿Pero cómo te va a llegar eso?! Esto es un sinsentido... se suspende la junta.");
-        
-        exit(EXIT_FAILURE);
+    EstadoPersonaje stringAEstadoPersonaje(std::string string)
+    {
+        return tablaStringAEstadoPersonaje.at(string);
     }
 
-    Accion stringAAccion(const std::string &string){
-        if(string == "ARRIBA")
-            return Accion::ARRIBA;
-        if(string == "ABAJO")
-            return Accion::ABAJO;
-        if(string == "DERECHA")
-            return Accion::DERECHA;
-        if(string == "IZQUIERDA")
-            return Accion::IZQUIERDA;
-        if(string == "ATACAR")
-            return Accion::ATACAR;
-        
-        Bitacora::unicaInstancia()->escribir("Juan Cuesta: A ver, ¿cuántas veces lo tengo que decir? En la función stringAAccion solo se deben pasar acciones válidas, y " + string + " no lo es. Esta gente no se lee las circulares... se suspende la junta.");
-        exit(EXIT_FAILURE);
+    std::unordered_map<std::string,Accion> tablaStringAAccion =
+    {
+      {"ARRIBA", Accion::ARRIBA},
+      {"ABAJO", Accion::ABAJO},
+      {"DERECHA", Accion::DERECHA},
+      {"IZQUIERDA", Accion::IZQUIERDA},
+      {"ATACAR", Accion::ATACAR}
+    };
+
+    Accion stringAAccion(const std::string &string)
+    {
+        return tablaStringAAccion.at(string);
     }
 
     sf::Vector2f centroDeInterseccion(sf::IntRect r1, sf::IntRect r2){

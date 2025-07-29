@@ -17,11 +17,20 @@ namespace util{
     // los devuelve en forma de vector (sin incluir el carácter separador)
     std::vector<std::string> separarString(std::string string, char separador);
 
+    // Una tabla que permite implementar la función stringATipoBucle de forma eficiente
+    extern std::unordered_map<std::string,TipoBucle> tablaStringATipoBucle;
+
     // Dado un string, devuelve el tipo de bucle correspondiente
     TipoBucle stringATipoBucle(std::string string);
 
+    // Una tabla que permite implementar la función stringAEstadoPersonaje de forma eficiente
+    extern std::unordered_map<std::string,EstadoPersonaje> tablaStringAEstadoPersonaje;
+
     // Dado un string, devuelve el estado de personaje correspondiente
     EstadoPersonaje stringAEstadoPersonaje(std::string string);
+
+    // Una tabla que permite implementar la función stringAAccion de forma eficiente
+    extern std::unordered_map<std::string,Accion> tablaStringAAccion;
 
     // Dado un string, devuelve la acción correspondiente
     Accion stringAAccion(const std::string &string);
