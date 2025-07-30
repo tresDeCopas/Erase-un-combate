@@ -1409,8 +1409,8 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
     }
     else if (estado == EstadoPersonaje::ESQUIVE_SUPER)
     {
-        // El esquive súper siempre llena a la mitad el medidor de súper
-        medidorSuper += MAX_MEDIDOR_SUPER / 2;
+        // El esquive súper llena el medidor de súper
+        medidorSuper = MAX_MEDIDOR_SUPER;
     }
     else
     {

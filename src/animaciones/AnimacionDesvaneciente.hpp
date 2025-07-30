@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Animacion.hpp"
+#include <string>
 #include <SFML/Graphics.hpp>
 
 /*
@@ -15,12 +16,18 @@ class AnimacionDesvaneciente : public Animacion {
         // se indica por ejemplo 2, al terminar la animación el sprite será
         // el doble de grande de lo que era al empezar
         float escalado;
+        
+        // La ruta del sonido que sonará al actualizar el efecto por primera vez
+        std::string rutaSonido;
+        
+        // Indica si el sonido ya se ha reproducido o no
+        bool sonidoReproducido;
 
     public:
 
         // Crea una animación desvaneciente con la textura dada, que se
         // agrandará hasta multiplicar su tamaño por el escalado dado
-        AnimacionDesvaneciente(sf::Texture &textura, float escalado);
+        AnimacionDesvaneciente(sf::Texture &textura, float escalado, std::string rutaSonido);
 
         // Actualiza la animación (avanza un fotograma), reproduciendo el sonido si es necesario. En nuevasAnimaciones
         // se insertan las nuevas animaciones que serán introducidas

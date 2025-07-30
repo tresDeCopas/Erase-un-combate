@@ -58,6 +58,16 @@ class GUIPersonaje : public sf::Drawable {
 
         // Número de rondas ganadas
         int rondasGanadas;
+
+        // Permite saber si el medidor de súper está lleno. Aunque se
+        // puede comprobar manualmente con el medidor de súper del personaje,
+        // esto permite saber si se ha llenado ahora mismo o si se llenó antes,
+        // así que se puede poner el efecto de destello cuando 
+        bool medidorDeSuperLleno;
+
+        // Los efectos generados por la GUI tienen que ir aquí o si no los
+        // efectos se moverán con la pantalla y queda raro
+        std::list<std::shared_ptr<Animacion>> efectos;
     
     public:
 

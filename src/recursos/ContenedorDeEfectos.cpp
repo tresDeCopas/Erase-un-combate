@@ -187,7 +187,14 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
         {   
             float escalado = fichero["escala"].as<float>();
 
-            anim = std::make_shared<AnimacionDesvaneciente>(textura, escalado);
+            std::string rutaSonido;
+
+            if(fichero["sonido"])
+            {
+                rutaSonido = "sonidos/efectos/" + nombreEfecto + ".ogg";
+            }
+
+            anim = std::make_shared<AnimacionDesvaneciente>(textura, escalado, rutaSonido);
         }
 
         animaciones.insert(std::pair<std::string, std::shared_ptr<Animacion>>(nombreEfecto, anim));

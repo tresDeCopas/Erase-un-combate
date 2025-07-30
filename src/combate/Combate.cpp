@@ -112,8 +112,6 @@ void Combate::actualizarFotogramaPreparandoSuper(std::list<std::shared_ptr<Anima
     // No se actualiza el escenario para dar el efecto de que se ha parado el tiempo
 
     VentanaPrincipal::actualizar();
-    GUIJugador1.actualizar();
-    GUIJugador2.actualizar();
 
     ventana->clear(sf::Color(100, 100, 120));
 
@@ -124,6 +122,9 @@ void Combate::actualizarFotogramaPreparandoSuper(std::list<std::shared_ptr<Anima
         ventana->draw(personajeJugador1);
     if (personajeJugador2.getEstado() != EstadoPersonaje::PREPARANDO_SUPER)
         ventana->draw(personajeJugador2);
+
+    ventana->draw(GUIJugador1);
+    ventana->draw(GUIJugador2);
 
     for (std::list<std::shared_ptr<Animacion>>::iterator iter = efectos.begin(); iter != efectos.end(); iter++)
     {
@@ -143,9 +144,6 @@ void Combate::actualizarFotogramaPreparandoSuper(std::list<std::shared_ptr<Anima
         ventana->draw(personajeJugador1);
     if (personajeJugador2.getEstado() == EstadoPersonaje::PREPARANDO_SUPER)
         ventana->draw(personajeJugador2);
-
-    ventana->draw(GUIJugador1);
-    ventana->draw(GUIJugador2);
 
     ventana->display();
 }
@@ -328,14 +326,14 @@ void Combate::actualizarPersonajesEfectosGuisEscenarioVentana(std::list<std::sha
     sf::Vector2f posicionJugador1(personajeJugador1.getPosicion());
     sf::Vector2f posicionJugador2(personajeJugador2.getPosicion());
 
-#pragma omp parallel num_threads(2)
+    #pragma omp parallel num_threads(2)
     {
-#pragma omp sections
+        #pragma omp sections
         {
-#pragma omp section
+            #pragma omp section
             personajeJugador1.actualizar(posicionJugador2, nuevosEfectos);
 
-#pragma omp section
+            #pragma omp section
             personajeJugador2.actualizar(posicionJugador1, nuevosEfectosAux);
         }
     }
@@ -415,14 +413,14 @@ void Combate::actualizarFotogramaNormal(std::list<std::shared_ptr<Animacion>> &e
     efectosA.push_back(personajeJugador2.getAnimacionSegunEstado(personajeJugador2.getEstado())->clonar());
     efectosB.push_back(personajeJugador1.getAnimacionSegunEstado(personajeJugador1.getEstado())->clonar());
 
-#pragma omp parallel num_threads(2)
+    #pragma omp parallel num_threads(2)
     {
-#pragma omp single
+        #pragma omp single
         {
-#pragma omp task
+            #pragma omp task
             personajeJugador1.comprobarColisiones(efectosA, nuevosEfectosA);
 
-#pragma omp task
+            #pragma omp task
             personajeJugador2.comprobarColisiones(efectosB, nuevosEfectosB);
         }
     }
@@ -467,15 +465,15 @@ void Combate::actualizarFotogramaNormal(std::list<std::shared_ptr<Animacion>> &e
         ventana->draw(personajeJugador2);
     }
 
+    ventana->draw(GUIJugador1);
+    ventana->draw(GUIJugador2);
+
     for (auto iter = efectos.begin(); iter != efectos.end(); iter++)
     {
         ventana->draw(**iter);
     }
 
     ventana->draw(*ContenedorDeCombos::unicaInstancia());
-
-    ventana->draw(GUIJugador1);
-    ventana->draw(GUIJugador2);
 
     if (!cartelTodoListo->haTerminado())
     {

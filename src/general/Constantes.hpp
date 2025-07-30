@@ -185,7 +185,7 @@ constexpr sf::Vector2f PERSONAJE_PLANTILLA_ORIGEN = sf::Vector2f(64, 100);
 constexpr float GRAVEDAD = 0.4;
 
 // Valor máximo del medidor de súper de un personaje
-constexpr int MAX_MEDIDOR_SUPER = 50;
+constexpr int MAX_MEDIDOR_SUPER = 30;
 
 // Retraso entre movimientos de píxel y píxel del medidor de vida atrasado
 // de un personaje, para evitar que vaya muy rápido
@@ -229,6 +229,10 @@ constexpr int MAX_CONTADOR_CELEBRACION = NUMERO_FPS*2;
 // Máximo de fotogramas que tienen que pasar desde que se empiece a caminar al revés del rival para poder
 // hacerle parry a un ataque súper
 constexpr int MAX_CONTADOR_ESQUIVE_SUPER = 4;
+
+// La posición en la que aparece el destello
+constexpr sf::Vector2f POSICION_DESTELLO_SUPER_CARGADA_J1 = {108.f,21.f};
+constexpr sf::Vector2f POSICION_DESTELLO_SUPER_CARGADA_J2 = {34.f,21.f};
 
 /*
     CONSTANTES PARA EL ESCENARIO

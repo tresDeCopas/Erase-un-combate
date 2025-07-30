@@ -1,6 +1,8 @@
 #include "GUIPersonaje.hpp"
 #include "Constantes.hpp"
 #include "ContenedorDeRecursos.hpp"
+#include "ContenedorDeEfectos.hpp"
+#include <string>
 
 GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaje(personaje), parteIzquierda(parteIzquierda),
                                                                         spriteNombre(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/personajes/" + personaje.nombre + "/nombre.png")),
@@ -8,9 +10,8 @@ GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaj
                                                                         vibracion(0), contadorVibracion(CONTADOR_VIBRACION_MAX),
                                                                         spritePrincipalBase(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/gui/base-izquierda-0.png")),
                                                                         spritePrincipalFrente(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/gui/frente-izquierda.png")),
-                                                                        rondasGanadas(0)
+                                                                        rondasGanadas(0), medidorDeSuperLleno(false)
 {
-
     rectanguloVidaReal.setSize(TAMANO_BARRA_VIDA);
     rectanguloVidaReal.setFillColor(COLOR_BARRA_VIDA_REAL);
 
@@ -78,7 +79,6 @@ GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaj
 
 void GUIPersonaje::actualizar()
 {
-
     // Se alterna la vibración lentamente
     if (--contadorVibracion <= 0)
     {
@@ -124,6 +124,20 @@ void GUIPersonaje::actualizar()
         retrasoContadorVidaAtrasado--;
     }
 
+    // Se comprueba si el medidor de súper se ha llenado y se
+    // crea un efecto de destello
+    if(!medidorDeSuperLleno && personaje.medidorSuper == MAX_MEDIDOR_SUPER)
+    {
+        medidorDeSuperLleno = true;
+        std::shared_ptr<Animacion> destelloSuperCargada = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("super-cargada-j" + std::string(personaje.jugador == Jugador::JUGADOR1 ? "1" : "2") + "-destello");
+        destelloSuperCargada->setPosicion(spritePrincipalBase.getPosition() + (personaje.jugador == Jugador::JUGADOR1 ? POSICION_DESTELLO_SUPER_CARGADA_J1 : POSICION_DESTELLO_SUPER_CARGADA_J2));
+        efectos.push_back(destelloSuperCargada);
+    }
+    else if (medidorDeSuperLleno && personaje.medidorSuper < MAX_MEDIDOR_SUPER)
+    {
+        medidorDeSuperLleno = false;
+    }
+
     rectanguloVidaReal.setSize(sf::Vector2f(((float)personaje.puntosDeVida / personaje.getMaxPuntosDeVida()) * TAMANO_BARRA_VIDA.x, rectanguloVidaReal.getSize().y));
     rectanguloVidaAtrasada.setSize(sf::Vector2f(((float)contadorVidaAtrasado / personaje.getMaxPuntosDeVida()) * TAMANO_BARRA_VIDA.x, rectanguloVidaAtrasada.getSize().y));
 
@@ -142,6 +156,12 @@ void GUIPersonaje::actualizar()
         sf::Vector2f posicionBarraSuper(POSICION_GUI_IZQUIERDA + POSICION_BARRA_SUPER_IZQUIERDA);
         posicionBarraSuper.x = VENTANA_ANCHURA - posicionBarraSuper.x - rectanguloSuper.getSize().x;
         rectanguloSuper.setPosition(posicionBarraSuper);
+    }
+
+    // Se actualizan los efectos
+    for(std::shared_ptr<Animacion>& efecto : efectos)
+    {
+        efecto->actualizar(efectos);
     }
 }
 
@@ -181,4 +201,9 @@ void GUIPersonaje::draw(sf::RenderTarget &target, sf::RenderStates states) const
     target.draw(spriteNombre, states);
     target.draw(spritePortrait, states);
     target.draw(spritePrincipalFrente, states);
+
+    for(std::shared_ptr<Animacion> efecto : efectos)
+    {
+        target.draw(*efecto);
+    }
 }
