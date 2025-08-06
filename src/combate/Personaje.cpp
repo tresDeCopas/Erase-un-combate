@@ -317,7 +317,8 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         }
         else if (accionesRealizadas[Accion::ATACAR])
         {
-            cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
+            detenerAccion(Accion::ATACAR);
+            cambiarEstado(EstadoPersonaje::ATAQUE_ACERCANDOSE);
         }
         else if (accionesRealizadas[Accion::ARRIBA])
         {
@@ -525,6 +526,16 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
 
     case EstadoPersonaje::ATAQUE_ALEJANDOSE:
+
+        pararMovimiento();
+
+        if (animaciones.at(estado)->haTerminado())
+        {
+            cambiarEstado(EstadoPersonaje::QUIETO);
+        }
+        break;
+
+    case EstadoPersonaje::ATAQUE_ACERCANDOSE:
 
         pararMovimiento();
 
@@ -809,6 +820,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     case EstadoPersonaje::ATAQUE_NORMAL_2:
     case EstadoPersonaje::ATAQUE_NORMAL_3:
     case EstadoPersonaje::ATAQUE_ALEJANDOSE:
+    case EstadoPersonaje::ATAQUE_ACERCANDOSE:
     case EstadoPersonaje::ATAQUE_ESPECIAL:
     case EstadoPersonaje::ATAQUE_AEREO:
     case EstadoPersonaje::ATAQUE_AGACHADO:
@@ -1069,6 +1081,7 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
         case EstadoPersonaje::ATAQUE_NORMAL_2:
         case EstadoPersonaje::ATAQUE_NORMAL_3:
         case EstadoPersonaje::ATAQUE_ALEJANDOSE:
+        case EstadoPersonaje::ATAQUE_ACERCANDOSE:
         case EstadoPersonaje::ATAQUE_ESPECIAL:
         case EstadoPersonaje::ATAQUE_AGACHADO:
         case EstadoPersonaje::TOCANDO_SUELO:

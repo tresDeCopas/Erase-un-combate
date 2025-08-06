@@ -185,7 +185,7 @@ constexpr sf::Vector2f PERSONAJE_PLANTILLA_ORIGEN = sf::Vector2f(64, 100);
 constexpr float GRAVEDAD = 0.4;
 
 // Valor máximo del medidor de súper de un personaje
-constexpr int MAX_MEDIDOR_SUPER = 30;
+constexpr int MAX_MEDIDOR_SUPER = 50;
 
 // Retraso entre movimientos de píxel y píxel del medidor de vida atrasado
 // de un personaje, para evitar que vaya muy rápido

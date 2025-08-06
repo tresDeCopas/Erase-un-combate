@@ -205,7 +205,7 @@ estados:
           posY: 56
           ancho: 14
           alto: 16
-          ataque: 4
+          ataque: 5
           bajo: false
       - - posX: 54
           posY: 29
@@ -266,6 +266,50 @@ estados:
     sonido:
       tipo: "No repetir"
       fotogramas: [4,16]
+
+  ataque-acercandose:
+    bucle: "Sin bucle"
+    rectangulos:
+      - - posX: 51
+          posY: 29
+          ancho: 27
+          alto: 71
+          ataque: 0
+      - - posX: 54
+          posY: 32
+          ancho: 27
+          alto: 68
+          ataque: 0
+        - posX: 93
+          posY: 74
+          ancho: 11
+          alto: 11
+          ataque: 4
+          bajo: false
+      - - posX: 54
+          posY: 32
+          ancho: 27
+          alto: 68
+          ataque: 0
+      - - posX: 54
+          posY: 32
+          ancho: 27
+          alto: 68
+          ataque: 0
+      - - posX: 54
+          posY: 33
+          ancho: 27
+          alto: 67
+          ataque: 0
+      - - posX: 51
+          posY: 30
+          ancho: 27
+          alto: 70
+          ataque: 0
+    fotogramas: [0,0,0,0,0,0,1,1,2,2,3,3,3,4,4,4,4,5,5,5,5,5]
+    sonido:
+      tipo: "No repetir"
+      fotogramas: [4]
   
   ataque-especial:
     bucle: "Sin bucle"

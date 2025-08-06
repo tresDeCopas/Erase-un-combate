@@ -38,6 +38,7 @@ namespace util{
         {"ataque-normal-2", EstadoPersonaje::ATAQUE_NORMAL_2},
         {"ataque-normal-3", EstadoPersonaje::ATAQUE_NORMAL_3},
         {"ataque-alejandose", EstadoPersonaje::ATAQUE_ALEJANDOSE},
+        {"ataque-acercandose", EstadoPersonaje::ATAQUE_ACERCANDOSE},
         {"ataque-aereo", EstadoPersonaje::ATAQUE_AEREO},
         {"ataque-especial", EstadoPersonaje::ATAQUE_ESPECIAL},
         {"golpeado-peque", EstadoPersonaje::GOLPEADO_PEQUE},
@@ -60,6 +61,14 @@ namespace util{
 
     EstadoPersonaje stringAEstadoPersonaje(std::string string)
     {
+        if(!tablaStringAEstadoPersonaje.count(string))
+        {
+            Bitacora::unicaInstancia()->escribir("Emilio: señor Juan, una duda que me acaba de surgir... ¿esto de " + string + " qué estado de personaje es?");
+            Bitacora::unicaInstancia()->escribir("Juan Cuesta: pues, que yo sepa, ninguno... ¿por qué lo dices?");
+            Bitacora::unicaInstancia()->escribir("Emilio: no, es que estaba aquí buscándolo en tablaStringAEstadoPersonaje y nada, que no lo encuentro.");
+            Bitacora::unicaInstancia()->escribir("Juan Cuesta: qué follón... se suspende la junta.");
+        }
+
         return tablaStringAEstadoPersonaje.at(string);
     }
 
