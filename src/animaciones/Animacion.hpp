@@ -40,7 +40,7 @@ class Animacion : public sf::Drawable {
         void setPosicion(float x, float y);
         void setPosicion(sf::Vector2f posicion);
 
-        // Establece la rotación del sprite en grados centígrados
+        // Establece la rotación del sprite en grados sexagesimales
         void setRotacion(double angulo);
 
         // Establece el color de la animación

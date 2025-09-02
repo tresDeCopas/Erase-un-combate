@@ -1306,6 +1306,7 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
     else if (fuerzaAtaque <= MAX_ATAQUE_PEQUE)
     {
         anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("golpeado-peque");
+        anim->setRotacion((rand()%2)*45);
         ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/personajes/" + this->nombre + "/golpeado-peque.ogg");
 
         for (int i = 0; i < fuerzaAtaque; ++i)

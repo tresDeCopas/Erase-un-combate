@@ -44,22 +44,22 @@ endif()
 
 # Para usar cpr para poder hacer peticiones a GitHub y así
 # ver si hay actualizaciones del jueguito
-FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
-                         GIT_TAG master) # Replace with your desired git commit from: https://github.com/libcpr/cpr/releases
-FetchContent_MakeAvailable(cpr)
+# FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
+#                          GIT_TAG master)
+# FetchContent_MakeAvailable(cpr)
 
 # Para usar el parseador de JSON y así permitir que el actualizador
 # se comunique con la API de GitHub
-FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
-FetchContent_MakeAvailable(json)
+# FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
+# FetchContent_MakeAvailable(json)
 
 # Libzip para poder extraer la nueva versión del juego al actualizarlo
-FetchContent_Declare(
-  libzip
-  GIT_REPOSITORY https://github.com/nih-at/libzip.git
-  GIT_TAG main
-)
-FetchContent_MakeAvailable(libzip)
+# FetchContent_Declare(
+#   libzip
+#   GIT_REPOSITORY https://github.com/nih-at/libzip.git
+#   GIT_TAG main
+# )
+# FetchContent_MakeAvailable(libzip)
 
 # Se indica dónde están los hpp
 include_directories(src/animaciones src/combate src/general src/menus src/recursos)
@@ -94,23 +94,23 @@ src/recursos/ReproductorDeSonidos.cpp
 src/recursos/SelectorJugadorParaMando.cpp)
 
 # Este otro ejecutable es para el actualizador
-add_executable(EraseUnActualizador
-src/actualizador/main.cpp)
+# add_executable(EraseUnActualizador
+# src/actualizador/main.cpp)
 
 # Se especifica que el estándar de C++ que se quiere usar es el de 2020
 target_compile_features(EraseUnCombate PRIVATE cxx_std_20)
-target_compile_features(EraseUnActualizador PRIVATE cxx_std_20)
+# target_compile_features(EraseUnActualizador PRIVATE cxx_std_20)
 
 # Se especifican directorios de include específicos al actualizador
-target_include_directories(EraseUnActualizador PRIVATE
-    ${zlib_SOURCE_DIR}
-    ${minizip_SOURCE_DIR}/mz
-    ${minizip_SOURCE_DIR}/lib
-)
+# target_include_directories(EraseUnActualizador PRIVATE
+#     ${zlib_SOURCE_DIR}
+#     ${minizip_SOURCE_DIR}/mz
+#     ${minizip_SOURCE_DIR}/lib
+# )
 
 # Se especifican los cinco módulos de SFML y el módulo de yaml-cpp
 target_link_libraries(EraseUnCombate PRIVATE SFML::Graphics SFML::Network SFML::Window SFML::System SFML::Audio yaml-cpp::yaml-cpp)
-target_link_libraries(EraseUnActualizador PRIVATE SFML::Graphics SFML::Network SFML::Window SFML::System SFML::Audio cpr::cpr nlohmann_json::nlohmann_json zip)
+# target_link_libraries(EraseUnActualizador PRIVATE SFML::Graphics SFML::Network SFML::Window SFML::System SFML::Audio cpr::cpr nlohmann_json::nlohmann_json zip)
 
 # Se especifica que el juego no debería tener una ventana de consola de comandos (pero
 # del actualizador no se dice nada porque este sí debería tener)
