@@ -17,6 +17,9 @@ namespace util{
     // los devuelve en forma de vector (sin incluir el carácter separador)
     std::vector<std::string> separarString(std::string string, char separador);
 
+    // Dados dos puntos devuelve la distancia entre ellos
+    float distanciaEuclidiana(const sf::Vector2f& punto1, const sf::Vector2f& punto2);
+
     // Una tabla que permite implementar la función stringATipoBucle de forma eficiente
     extern std::unordered_map<std::string,TipoBucle> tablaStringATipoBucle;
 
@@ -41,7 +44,7 @@ namespace util{
     sf::Vector2f centroDeInterseccion(sf::IntRect r1, sf::IntRect r2);
 
     // Devuelve un número real en el rango [0,1)
-    double realAleatorio();
+    float realAleatorio();
 
     // Dada una acción, devuelve el bit correspondiente
     uint8_t accionABit(Accion accion);
@@ -50,11 +53,11 @@ namespace util{
     // el factorPrimero y multiplicando el segundo por (1-factorPrimero), y sumando los dos resultados.
     // En caso de que la diferencia entre alguno de los elementos (red, green, blue o alpha) sea 0, se cambia
     // en 1 para que no se queda atascada para siempre
-    sf::Color aproximarColor(const sf::Color& primerColor, const sf::Color& segundoColor, double factorPrimero);
+    sf::Color aproximarColor(const sf::Color& primerColor, const sf::Color& segundoColor, float factorPrimero);
 
     // Dados dos floats, devuelve una aproximación del primero al segundo, multiplicando el primero por
     // el factorPrimero y multiplicando el segundo por (1-factorPrimero), y sumando los dos resultados
-    float aproximarFloat(const float& primerFloat, const float& segundoFloat, double factorPrimero);
+    float aproximarFloat(const float& primerFloat, const float& segundoFloat, float factorPrimero);
 
     // En base al estado en el que se encuentra un personaje, devuelve cuánta prioridad tiene a la hora
     // de ser dibujado. Si un personaje tiene más prioridad que otro, significa que se dibujará encima,

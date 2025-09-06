@@ -625,6 +625,8 @@ void Combate::comenzar()
         while (personajeJugador1.getPuntosDeVida() > 0 && personajeJugador2.getPuntosDeVida() > 0)
         {
 
+            std::cerr << "Efectos: " << efectos.size() << "\n";
+
             // Se prepara un reloj para ver cuánto tiempo pasa entre fotogramas
             sf::Clock reloj;
 

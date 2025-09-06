@@ -5,6 +5,7 @@
 #include "AnimacionConGravedad.hpp"
 #include "AnimacionAgrandable.hpp"
 #include "AnimacionDesvaneciente.hpp"
+#include "AnimacionParticulaLineal.hpp"
 #include "Utilidades.hpp"
 #include <SFML/Audio.hpp>
 #include <filesystem>
@@ -195,6 +196,10 @@ void ContenedorDeEfectos::cargarTodosLosEfectos()
             }
 
             anim = std::make_shared<AnimacionDesvaneciente>(textura, escalado, rutaSonido);
+        }
+        else if (tipoAnimacion == "ParticulaLineal")
+        {
+            anim = std::make_shared<AnimacionParticulaLineal>(textura);
         }
 
         animaciones.insert(std::pair<std::string, std::shared_ptr<Animacion>>(nombreEfecto, anim));

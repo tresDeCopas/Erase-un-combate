@@ -1,6 +1,7 @@
 #include "Utilidades.hpp"
 #include "Constantes.hpp"
 #include "Bitacora.hpp"
+#include <cmath>
 
 namespace util{
 
@@ -17,6 +18,11 @@ namespace util{
         }
 
         return vectorParaDevolver;
+    }
+
+    float distanciaEuclidiana(const sf::Vector2f& punto1, const sf::Vector2f& punto2)
+    {
+        return std::sqrt(std::pow(punto2.x - punto1.x, 2.f) + std::pow(punto2.y - punto1.y, 2.f));
     }
 
     std::unordered_map<std::string,TipoBucle> tablaStringATipoBucle =
@@ -97,8 +103,8 @@ namespace util{
         return sf::Vector2f(izquierda + (derecha - izquierda)/2, arriba + (abajo-arriba)/2);
     }
 
-    double realAleatorio(){
-        return ((double)rand()) / RAND_MAX;
+    float realAleatorio(){
+        return ((float)rand()) / RAND_MAX;
     }
 
     uint8_t accionABit(Accion accion){
@@ -147,7 +153,7 @@ namespace util{
         }
     }
 
-    sf::Color aproximarColor(const sf::Color& primerColor, const sf::Color& segundoColor, double factorPrimero){
+    sf::Color aproximarColor(const sf::Color& primerColor, const sf::Color& segundoColor, float factorPrimero){
         sf::Color colorResultado = primerColor;
         colorResultado.r = colorResultado.r*factorPrimero + segundoColor.r*(1-factorPrimero);
         colorResultado.g = colorResultado.g*factorPrimero + segundoColor.g*(1-factorPrimero);
@@ -187,7 +193,7 @@ namespace util{
         return colorResultado;
     }
 
-    float aproximarFloat(const float& primerFloat, const float& segundoFloat, double factorPrimero)
+    float aproximarFloat(const float& primerFloat, const float& segundoFloat, float factorPrimero)
     {
         return primerFloat*factorPrimero + segundoFloat*(1-factorPrimero);
     }

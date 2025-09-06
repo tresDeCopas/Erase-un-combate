@@ -29,10 +29,9 @@ class AnimacionAgrandable : public Animacion {
         int contadorEspera;
 
     public:
-        AnimacionAgrandable(int fotogramasMaxTamano, sf::Texture& textura, std::string rutaSonido);
+        AnimacionAgrandable(int fotogramasEspera, sf::Texture& textura, std::string rutaSonido);
 
-        // Actualiza la animación (avanza un fotograma), reproduciendo el sonido si es necesario. En nuevasAnimaciones
-        // se insertan las nuevas animaciones que serán introducidas
+        // Actualiza la animación
         void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones);
 
         // Resetea la animación al estado inicial

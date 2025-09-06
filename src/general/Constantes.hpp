@@ -136,6 +136,27 @@ constexpr double TASA_CRECIMIENTO_ANIMACION_AGRANDABLE = 0.1;
 // Posición de los carteles que aparecen durante los combates (los de "¿Todo listo?" y tal)
 constexpr sf::Vector2f POSICION_CARTELES_COMBATE = sf::Vector2f(VENTANA_ANCHURA/2, VENTANA_ALTURA/3);
 
+// El número de partículas lineales que aparecen cuando un personaje es golpeado
+// con un ataque peque
+constexpr int NUM_PARTICULAS_LINEALES_ATAQUE_PEQUE = 2;
+
+// El número de partículas lineales que aparecen cuando un personaje es golpeado
+// con un ataque medio
+constexpr int NUM_PARTICULAS_LINEALES_ATAQUE_MEDIO = 3;
+
+// El número de píxeles que se mueven las partículas lineales que aparecen cuando
+// un personaje es golpeado por un ataque peque
+constexpr int LONGITUD_MOVIMIENTO_PARTICULA_LINEAL_ATAQUE_PEQUE = 15;
+
+// El número de píxeles que se mueven las partículas lineales que aparecen cuando
+// un personaje es golpeado por un ataque medio
+constexpr int LONGITUD_MOVIMIENTO_PARTICULA_LINEAL_ATAQUE_MEDIO = 25;
+
+// La proporción del recorrido que tiene que hacer una partícula lineal para empezar a menguar
+// (la proporción se expresa como un número entre 0 y 1, donde 0 significa que todavía no ha
+// empezado a moverse, y 1 significa que ya ha terminado)
+constexpr float PROPORCION_RECORRIDO_MENGUAR_PARTICULA_LINEAL = 0.9;
+
 /*
     CONSTANTES PARA EL MENÚ PRINCIPAL
 */
@@ -375,5 +396,5 @@ constexpr uint8_t BIT_ATAQUE = 16;
 */
 
 // Si dos floats se diferencian en menos que este número, se consideran iguales
-constexpr float UMBRAL_FLOAT = 0.0001;
+constexpr float UMBRAL_FLOAT = 0.001;
 
