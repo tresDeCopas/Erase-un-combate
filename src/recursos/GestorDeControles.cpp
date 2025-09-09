@@ -1,6 +1,7 @@
 #include "GestorDeControles.hpp"
 #include "Constantes.hpp"
 #include "SelectorJugadorParaMando.hpp"
+#include "Configuracion.hpp"
 #include <iostream>
 
 // La instancia es nula al principio
@@ -224,6 +225,27 @@ InfoEvento GestorDeControles::comprobarEvento(std::optional<sf::Event> evento)
                 infoEvento.jugador = controlAJugador[c];
                 infoEvento.accion = a;
                 infoEvento.realizada = evento->is<sf::Event::KeyPressed>();
+            }
+            // Se comprueba si se ha pulsado una tecla de debug
+            else if(evento->is<sf::Event::KeyPressed>())
+            {
+                switch(scancode)
+                {
+                    case sf::Keyboard::Scancode::Num1:
+                        if(Configuracion::unicaInstancia()->getFPS() == 60)
+                            Configuracion::unicaInstancia()->setFPS(20);
+                        else
+                            Configuracion::unicaInstancia()->setFPS(60);
+                        break;
+                    
+                    case sf::Keyboard::Scancode::Num2:
+                        Configuracion::unicaInstancia()->setHitboxesVisibles(!Configuracion::unicaInstancia()->isHitboxesVisibles());
+                        break;
+
+                    case sf::Keyboard::Scancode::Num3:
+                        Configuracion::unicaInstancia()->setSalidaABitacora(!Configuracion::unicaInstancia()->isSalidaABitacora());
+                        break;
+                }
             }
         }
     }

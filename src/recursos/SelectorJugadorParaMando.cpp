@@ -4,6 +4,7 @@
 #include "ContenedorDeRecursos.hpp"
 #include "ReproductorDeMusica.hpp"
 #include "Utilidades.hpp"
+#include "Configuracion.hpp"
 
 // La instancia es nula al principio
 SelectorJugadorParaMando *SelectorJugadorParaMando::selectorJugadorParaMando = nullptr;
@@ -145,7 +146,7 @@ Jugador SelectorJugadorParaMando::decidirJugador(Control c)
         // El juego se duerme hasta que dé tiempo a dibujar el siguiente fotograma, teniendo en cuenta
         // que se deben dibujar 60 fotogramas por segundo y que cada fotograma además necesita un tiempo
         // previo de preparación para actualizar y dibujar y tal
-        sf::sleep(sf::seconds(1.f / NUMERO_FPS) - reloj.reset());
+        sf::sleep(sf::seconds(1.f / Configuracion::unicaInstancia()->getFPS()) - reloj.reset());
     }
 
     sonidoDesaparecer.play();

@@ -1,5 +1,6 @@
 #include "Bitacora.hpp"
 #include "Constantes.hpp"
+#include "Configuracion.hpp"
 #include <iostream>
 
 Bitacora * Bitacora::bitacora = nullptr;
@@ -37,7 +38,7 @@ void Bitacora::escribir(std::string cosillas)
 {
     ficheroBitacora << cosillas << "\n";
     ficheroBitacora.flush();
-    if(DEBUG)
+    if(Configuracion::unicaInstancia()->isSalidaABitacora())
         std::cerr << cosillas << "\n";
 }
 

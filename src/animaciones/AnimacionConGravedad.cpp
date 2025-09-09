@@ -1,4 +1,5 @@
 #include "AnimacionConGravedad.hpp"
+#include "Configuracion.hpp"
 #include "Constantes.hpp"
 
 AnimacionConGravedad::AnimacionConGravedad(sf::Texture &textura, sf::Vector2f posicion, sf::Vector2f velocidad, double velocidadGiro, std::string rutaSonido) : Animacion(textura)
@@ -184,7 +185,7 @@ void AnimacionConGravedad::draw(sf::RenderTarget& target, sf::RenderStates state
         target.draw(sprite,states);
     }
 
-    if(DEBUG && hitbox.has_value()){
+    if(Configuracion::unicaInstancia()->isHitboxesVisibles() && hitbox.has_value()){
         sf::RectangleShape rectanguloHitbox(sf::Vector2f(hitbox.value().getRectangulo().size.x,hitbox.value().getRectangulo().size.y));
         rectanguloHitbox.setPosition({(float)hitbox.value().getRectangulo().position.x,(float)hitbox.value().getRectangulo().position.y});
         rectanguloHitbox.move(getPosicionEsqSupIzq());

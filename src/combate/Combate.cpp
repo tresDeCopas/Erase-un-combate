@@ -6,6 +6,7 @@
 #include "ReproductorDeMusica.hpp"
 #include "Utilidades.hpp"
 #include "ContenedorDeCombos.hpp"
+#include "Configuracion.hpp"
 #include <omp.h>
 #include <iostream>
 #include <list>
@@ -624,9 +625,6 @@ void Combate::comenzar()
 
         while (personajeJugador1.getPuntosDeVida() > 0 && personajeJugador2.getPuntosDeVida() > 0)
         {
-
-            std::cerr << "Efectos: " << efectos.size() << "\n";
-
             // Se prepara un reloj para ver cuánto tiempo pasa entre fotogramas
             sf::Clock reloj;
 
@@ -654,7 +652,7 @@ void Combate::comenzar()
             // El juego se duerme hasta que dé tiempo a dibujar el siguiente fotograma, teniendo en cuenta
             // que se deben dibujar 60 fotogramas por segundo y que cada fotograma además necesita un tiempo
             // previo de preparación para actualizar y dibujar y tal
-            sf::sleep(sf::seconds(1.f / NUMERO_FPS) - reloj.reset());
+            sf::sleep(sf::seconds(1.f / Configuracion::unicaInstancia()->getFPS()) - reloj.reset());
         }
 
         // Se termina el bucle de la ronda al ser uno de los luchadores derribado. Se detiene
@@ -682,7 +680,7 @@ void Combate::comenzar()
 
             actualizarFotogramaCelebracion(efectos);
 
-            sf::sleep(sf::seconds(1.f / NUMERO_FPS) - reloj.reset());
+            sf::sleep(sf::seconds(1.f / Configuracion::unicaInstancia()->getFPS()) - reloj.reset());
         }
     }
 }

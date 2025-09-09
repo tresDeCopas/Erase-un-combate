@@ -13,9 +13,6 @@
     CONSTANTES PARA EL DEBUG
 */
 
-// Indica si se quiere activar el modo debug (mostrar hitboxes en pantalla y acta vecinal en la consola)
-constexpr bool DEBUG = false;
-
 // Color para las hitboxes que hacen daño
 constexpr sf::Color HITBOX_ATAQUE_COLOR = sf::Color::Red;
 
@@ -38,8 +35,8 @@ constexpr int MAXIMA_LONGITUD_TEXTURA = 1024;
 constexpr int VENTANA_ANCHURA = 300;
 constexpr int VENTANA_ALTURA = 200;
 
-// Numero de fotogramas por segundo
-constexpr int NUMERO_FPS = 60;
+// Numero de fotogramas por segundo que se establece por defecto
+constexpr int NUMERO_FPS_INICIAL = 60;
 
 // Nombre de la ventana principal
 const std::string VENTANA_NOMBRE = "Erase un combate";
@@ -245,7 +242,7 @@ constexpr int MAX_ATAQUE_MEDIO = 6;
 constexpr int MAX_CONTADOR_TUMBADO = 10;
 
 // Valor inicial del contador de celebración. Al llegar a 0, el personaje que acaba de ganar celebra
-constexpr int MAX_CONTADOR_CELEBRACION = NUMERO_FPS*2;
+constexpr int MAX_CONTADOR_CELEBRACION = NUMERO_FPS_INICIAL*2;
 
 // Máximo de fotogramas que tienen que pasar desde que se empiece a caminar al revés del rival para poder
 // hacerle parry a un ataque súper
@@ -316,11 +313,11 @@ constexpr int CONTADOR_VIBRACION_MAX = 2;
 */
 
 // Cuántos fotogramas tiene un jugador para poder continuar un combo
-constexpr int FRAMES_RESTANTES_COMBO = NUMERO_FPS;
+constexpr int FRAMES_RESTANTES_COMBO = NUMERO_FPS_INICIAL;
 
 // Durante cuántos fotogramas se mostrará la información del combo que
 // acaba de terminar antes de desaparecer para siempre
-constexpr int FRAMES_MOSTRAR_COMBO_TERMINADO = NUMERO_FPS*2;
+constexpr int FRAMES_MOSTRAR_COMBO_TERMINADO = NUMERO_FPS_INICIAL*2;
 
 // El color para los números y el texto que indican los golpes y
 // el daño causado durante el combo para el jugador 1

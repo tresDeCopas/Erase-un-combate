@@ -239,7 +239,7 @@ estados:
           posY: 58
           ancho: 10
           alto: 15
-          ataque: 3
+          ataque: 2
           bajo: false
       - - posX: 53
           posY: 29
@@ -255,14 +255,14 @@ estados:
           posY: 59
           ancho: 10
           alto: 15
-          ataque: 3
+          ataque: 2
           bajo: false
       - - posX: 54
           posY: 29
           ancho: 27
           alto: 71
           ataque: 0
-    fotogramas: [0,0,0,0,1,1,2,2,2,2,2,2,0,0,0,0,3,3,4,4,4,4,4,4,0,0,0,0]
+    fotogramas: [0,0,0,0,1,1,2,2,2,2,2,0,0,3,3,4,4,4,4,4,0,0,0,0]
     sonido:
       tipo: "No repetir"
       fotogramas: [4,16]
@@ -306,7 +306,7 @@ estados:
           ancho: 27
           alto: 70
           ataque: 0
-    fotogramas: [0,0,0,0,0,0,1,1,2,2,3,3,3,4,4,4,4,5,5,5,5,5]
+    fotogramas: [0,0,0,0,0,0,1,2,2,3,3,3,4,4,4,4,5,5,5,5,5]
     sonido:
       tipo: "No repetir"
       fotogramas: [4]
@@ -472,7 +472,7 @@ estados:
           ancho: 27
           alto: 62
           ataque: 0
-    fotogramas: [0,0,0,0,1,1,2,2,3,3,3,3,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0]
+    fotogramas: [0,0,0,0,1,2,2,3,3,3,3,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0]
     sonido:
       tipo: "No repetir"
       fotogramas: [8]

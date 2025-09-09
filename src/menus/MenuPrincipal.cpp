@@ -6,6 +6,7 @@
 #include "GestorDeControles.hpp"
 #include "ReproductorDeMusica.hpp"
 #include "ReproductorDeSonidos.hpp"
+#include "Configuracion.hpp"
 #include "Utilidades.hpp"
 
 // La instancia es nula al principio
@@ -274,6 +275,6 @@ Seleccion MenuPrincipal::comenzar(){
         
         ventana->display();
 
-        sf::sleep(sf::seconds(1.f / NUMERO_FPS) - reloj.reset());
+        sf::sleep(sf::seconds(1.f / Configuracion::unicaInstancia()->getFPS()) - reloj.reset());
     }
 }

@@ -3,6 +3,7 @@
 #include "ReproductorDeSonidos.hpp"
 #include "Constantes.hpp"
 #include "ContenedorDeEfectos.hpp"
+#include "Configuracion.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <typeinfo>
@@ -233,7 +234,7 @@ void AnimacionPorFotogramas::draw(sf::RenderTarget& target, sf::RenderStates sta
     // El shader tampoco se usa para los rectángulos de las hitboxes del modo debug
     states.shader = nullptr;
 
-    if(DEBUG){
+    if(Configuracion::unicaInstancia()->isHitboxesVisibles()){
         for(Hitbox h : hitboxes.at(rectanguloCorrespondiente.at(fotogramaActual))){
             sf::RectangleShape rectanguloHitbox(sf::Vector2f(h.getRectangulo().size.x,h.getRectangulo().size.y));
             rectanguloHitbox.setPosition({(float)h.getRectangulo().position.x,(float)h.getRectangulo().position.y});

@@ -82,6 +82,7 @@ src/combate/Hitbox.cpp
 src/combate/InfoCombo.cpp
 src/combate/Personaje.cpp
 src/general/Bitacora.cpp
+src/general/Configuracion.cpp
 src/general/Utilidades.cpp
 src/general/VentanaPrincipal.cpp
 src/main.cpp
