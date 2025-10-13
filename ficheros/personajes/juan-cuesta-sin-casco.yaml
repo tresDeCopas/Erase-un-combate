@@ -454,19 +454,13 @@ estados:
           posY: 78
           ancho: 14
           alto: 14
-          ataque: 4
+          ataque: 5
           bajo: true
       - - posX: 51
           posY: 38
           ancho: 27
           alto: 62
           ataque: 0
-        - posX: 57
-          posY: 83
-          ancho: 12
-          alto: 12
-          ataque: 4
-          bajo: true
       - - posX: 51
           posY: 38
           ancho: 27

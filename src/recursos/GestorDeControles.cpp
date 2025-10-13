@@ -85,7 +85,8 @@ InfoEvento GestorDeControles::comprobarEvento(std::optional<sf::Event> evento)
     // Este es el InfoEvento que va a ser devuelto (empieza vacío)
     InfoEvento infoEvento{Jugador::NADIE, Accion::NADA, false};
 
-    if(evento->is<sf::Event::JoystickButtonPressed>() || evento->is<sf::Event::JoystickButtonReleased>()){
+    if(evento->is<sf::Event::JoystickButtonPressed>() || evento->is<sf::Event::JoystickButtonReleased>())
+    {
         // Alguien ha pulsado un botón de mando (el botón da igual, todos
         // hacen lo mismo). Se le suma 2 al numerito del control porque los dos
         // primeros controles son la parte izquierda del teclado y la parte derecha,
@@ -212,6 +213,7 @@ InfoEvento GestorDeControles::comprobarEvento(std::optional<sf::Event> evento)
         }
 
         if(scancode == TECLA_SALIDA){
+            infoEvento.jugador = Jugador::JUGADOR1;
             infoEvento.accion = Accion::ESCAPE;
             infoEvento.realizada = evento->is<sf::Event::KeyPressed>();
         } else {

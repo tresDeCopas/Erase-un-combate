@@ -2,6 +2,7 @@
 #include "ContenedorDeEfectos.hpp"
 #include "MenuPrincipal.hpp"
 #include "Combate.hpp"
+#include "MenuSeleccionPersonaje.hpp"
 
 #include "yaml-cpp/yaml.h"
 #include <iostream>
@@ -19,9 +20,18 @@ int main(int argc, char* argv[]){
 
         Seleccion seleccion = MenuPrincipal::unicaInstancia()->comenzar();
 
-        if(seleccion == Seleccion::BATALLA_VS){
-            Combate combate("juan-cuesta-sin-casco", "juan-cuesta-sin-casco", "fachada-erase-unos-estatutos");
+        if(seleccion == Seleccion::BATALLA_VS)
+        {
+            Combate combate("juan-cuesta-sin-casco", "andres-guerra", "fachada-erase-unos-estatutos");
             combate.comenzar();
+        }
+        else if (seleccion == Seleccion::MODO_HISTORIA)
+        {
+            std::unordered_map<Jugador,std::string> personajesElegidos = MenuSeleccionPersonaje::unicaInstancia()->comenzarEleccionDoble();
+            if(!personajesElegidos.empty())
+            {
+                // noseque
+            }
         }
     }
     

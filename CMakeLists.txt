@@ -87,6 +87,7 @@ src/general/Utilidades.cpp
 src/general/VentanaPrincipal.cpp
 src/main.cpp
 src/menus/MenuPrincipal.cpp
+src/menus/MenuSeleccionPersonaje.cpp
 src/recursos/ContenedorDeEfectos.cpp
 src/recursos/ContenedorDePersonajes.cpp
 src/recursos/ContenedorDeRecursos.cpp

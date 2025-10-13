@@ -84,7 +84,7 @@ Seleccion MenuPrincipal::comenzar(){
 
     seleccionActual = Seleccion::MODO_HISTORIA;
 
-    while(true){
+    while(!(selectorPulsado && rectanguloNegro.getFillColor().a == 255)){
         // Se prepara un reloj para ver cuánto tiempo pasa entre fotogramas
         sf::Clock reloj;
 
@@ -163,8 +163,6 @@ Seleccion MenuPrincipal::comenzar(){
             rectanguloNegro.setFillColor(sf::Color(rectanguloNegro.getFillColor().r, rectanguloNegro.getFillColor().g, rectanguloNegro.getFillColor().b, rectanguloNegro.getFillColor().a-5));
         } else if (selectorPulsado && brilloSelector < 0.1f && rectanguloNegro.getFillColor().a < 255){
             rectanguloNegro.setFillColor(sf::Color(rectanguloNegro.getFillColor().r, rectanguloNegro.getFillColor().g, rectanguloNegro.getFillColor().b, rectanguloNegro.getFillColor().a+5));
-        } else if (selectorPulsado && rectanguloNegro.getFillColor().a == 255){
-            return seleccionActual;
         }
 
         dientesSierraArriba.move({0,-0.2});
@@ -277,4 +275,6 @@ Seleccion MenuPrincipal::comenzar(){
 
         sf::sleep(sf::seconds(1.f / Configuracion::unicaInstancia()->getFPS()) - reloj.reset());
     }
+
+    return seleccionActual;
 }

@@ -102,11 +102,9 @@ void AnimacionPorFotogramas::voltear(){
         for(Hitbox hitbox : listaHitboxes){
 
             // Esto se explicaría mejor con un dibujito pero bueno
-            int puntoCentral = sprite.getTextureRect().size.x/2;
-
             int derecha = hitbox.getRectangulo().position.x+hitbox.getRectangulo().size.x;
 
-            int nuevaIzquierda = derecha - (derecha-puntoCentral)*2;
+            int nuevaIzquierda = sprite.getTextureRect().size.x - derecha;
 
             Hitbox nuevaHitbox(sf::IntRect({nuevaIzquierda,hitbox.getRectangulo().position.y},{hitbox.getRectangulo().size.x,hitbox.getRectangulo().size.y}),hitbox.getFuerzaAtaque(),hitbox.esAtaqueBajo());
 

@@ -34,7 +34,7 @@
 *.layout
 
 # Cmake stuff
-build/
+build*
 
 # dlls that depend on the machine
 *.dll
