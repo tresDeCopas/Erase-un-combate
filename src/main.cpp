@@ -7,6 +7,8 @@
 #include "yaml-cpp/yaml.h"
 #include <iostream>
 
+#include <unistd.h>
+
 int main(int argc, char* argv[]){
 
     // Los personajes y efectos son recursos que se tienen que cargar desde un principio.
@@ -32,6 +34,11 @@ int main(int argc, char* argv[]){
             {
                 // noseque
             }
+        }
+        else if (seleccion == Seleccion::OPCIONES)
+        {
+            execl("EraseUnActualizador.exe","EraseUnActualizador.exe",nullptr);
+            perror("No se pudo iniciar el actualizador");
         }
     }
     

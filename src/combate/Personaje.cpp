@@ -906,7 +906,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
 void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> &animaciones, std::list<std::shared_ptr<Animacion>> &efectosInsertados)
 {
-
     // Se sacan las hitboxes de la animación del estado actual
     std::vector<Hitbox> hitboxes = this->animaciones.at(estado)->getHitboxes();
 
