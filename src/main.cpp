@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
 
         if(seleccion == Seleccion::BATALLA_VS)
         {
-            Combate combate("juan-cuesta-sin-casco", "andres-guerra", "fachada-erase-unos-estatutos");
+            Combate combate("juan-cuesta-sin-casco", "juan-cuesta-sin-casco", "fachada-erase-unos-estatutos");
             combate.comenzar();
         }
         else if (seleccion == Seleccion::MODO_HISTORIA)

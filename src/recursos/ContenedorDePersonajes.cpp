@@ -26,9 +26,7 @@ ContenedorDePersonajes::~ContenedorDePersonajes()
 Personaje ContenedorDePersonajes::obtenerPersonaje(std::string nombre)
 {
     // Se obtiene el personaje y se devuelve por valor, copiándolo todo
-    Personaje nuevo(personajes.at(nombre));
-
-    return nuevo;
+    return personajes.at(nombre).clonar();
 }
 
 void ContenedorDePersonajes::cargarTodosLosPersonajes()

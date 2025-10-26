@@ -140,10 +140,9 @@ InfoEvento GestorDeControles::comprobarEvento(std::optional<sf::Event> evento)
 
             // Dependiendo del eje, se decide hacia dónde se mueve
             switch(evento->getIf<sf::Event::JoystickMoved>()->axis){
-                // PovX, X y R son los ejes X de tres posibles entradas
-                // PovX es la cruceta, X es el joystick izquierdo y R el joystick derecho.
+                // PovX y X son los ejes X de dos posibles entradas
+                // PovX es la cruceta y X es el joystick izquierdo
                 case sf::Joystick::Axis::X:
-                case sf::Joystick::Axis::R:
                 case sf::Joystick::Axis::PovX:
 
                     if(posicionJoystick > UMBRAL_JOYSTICK && !jugadorRealizandoAccionJoystick[infoEvento.jugador][Accion::DERECHA]){
@@ -167,11 +166,10 @@ InfoEvento GestorDeControles::comprobarEvento(std::optional<sf::Event> evento)
                     }
                     break;
 
-                // PovY, Y y U son los ejes Y de tres posibles entradas
-                // PovY es la cruceta, Y es el joystick izquierdo y U el joystick derecho.
-                // Por algún motivo los ejes Y y U están invertidos, así que no queda otra
+                // PovY e Y son los ejes Y de dos posibles entradas
+                // PovY es la cruceta e Y es el joystick izquierdo
+                // Por algún motivo el eje Y está invertido, así que no queda otra
                 case sf::Joystick::Axis::Y:
-                case sf::Joystick::Axis::U:
                     posicionJoystick = -posicionJoystick;
 
                 case sf::Joystick::Axis::PovY:

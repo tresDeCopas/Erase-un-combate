@@ -13,8 +13,8 @@
 
 // Al usar initializer lists o como se diga en españolo me evito que se creen los
 // personajes usando el constructor vacío para nada (porque se queja el g++ más que nada)
-Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, std::string nombreEscenario, sf::IpAddress direccionIP, bool lider) : personajeJugador1(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ1).clonar()),
-                                                                                                                                                     personajeJugador2(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ2).clonar()),
+Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, std::string nombreEscenario, sf::IpAddress direccionIP, bool lider) : personajeJugador1(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ1)),
+                                                                                                                                                     personajeJugador2(ContenedorDePersonajes::unicaInstancia()->obtenerPersonaje(nombrePersonajeJ2)),
                                                                                                                                                      GUIJugador1(personajeJugador1, true), GUIJugador2(personajeJugador2, false),
                                                                                                                                                      escenario(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/escenarios/" + nombreEscenario + ".png")),
                                                                                                                                                      cartelTodoListo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-todo-listo")),
