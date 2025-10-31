@@ -198,6 +198,11 @@ namespace util{
         return primerFloat*factorPrimero + segundoFloat*(1-factorPrimero);
     }
 
+    sf::Vector2f aproximarVector2f(const sf::Vector2f& primerVector, const sf::Vector2f& segundoVector, float factorPrimero)
+    {
+        return primerVector*factorPrimero + segundoVector*(1-factorPrimero);
+    }
+
     int getPrioridadDibujo(EstadoPersonaje estado)
     {
         switch(estado)

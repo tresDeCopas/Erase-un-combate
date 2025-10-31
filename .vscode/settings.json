@@ -134,7 +134,9 @@
     "any": "cpp",
     "forward_list": "cpp",
     "valarray": "cpp",
-    "future": "cpp"
+    "future": "cpp",
+    "queue": "cpp",
+    "stack": "cpp"
   },
   "makefile.launchConfigurations": [
     {

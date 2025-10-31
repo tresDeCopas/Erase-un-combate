@@ -59,6 +59,10 @@ namespace util{
     // el factorPrimero y multiplicando el segundo por (1-factorPrimero), y sumando los dos resultados
     float aproximarFloat(const float& primerFloat, const float& segundoFloat, float factorPrimero);
 
+    // Dados dos vectores de dos floats, devuelve una aproximación del primero al segundo de forma similar
+    // a como lo hace aproximarFloat
+    sf::Vector2f aproximarVector2f(const sf::Vector2f& primerVector, const sf::Vector2f& segundoVector, float factorPrimero);
+
     // En base al estado en el que se encuentra un personaje, devuelve cuánta prioridad tiene a la hora
     // de ser dibujado. Si un personaje tiene más prioridad que otro, significa que se dibujará encima,
     // para que el personaje con menos prioridad esté más al fondo. Las prioridades son las siguientes:

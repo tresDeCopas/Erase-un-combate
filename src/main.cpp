@@ -20,14 +20,14 @@ int main(int argc, char* argv[]){
 
     while(true){
 
-        Seleccion seleccion = MenuPrincipal::unicaInstancia()->comenzar();
+        TipoSelectorMenuPrincipal seleccion = MenuPrincipal::unicaInstancia()->comenzar();
 
-        if(seleccion == Seleccion::BATALLA_VS)
+        if(seleccion == TipoSelectorMenuPrincipal::BATALLA_VS)
         {
             Combate combate("juan-cuesta-sin-casco", "juan-cuesta-sin-casco", "fachada-erase-unos-estatutos");
             combate.comenzar();
         }
-        else if (seleccion == Seleccion::MODO_HISTORIA)
+        else if (seleccion == TipoSelectorMenuPrincipal::MODO_HISTORIA)
         {
             std::unordered_map<Jugador,std::string> personajesElegidos = MenuSeleccionPersonaje::unicaInstancia()->comenzarEleccionDoble();
             if(!personajesElegidos.empty())
@@ -35,7 +35,7 @@ int main(int argc, char* argv[]){
                 // noseque
             }
         }
-        else if (seleccion == Seleccion::OPCIONES)
+        else if (seleccion == TipoSelectorMenuPrincipal::OPCIONES)
         {
             execl("EraseUnActualizador.exe","EraseUnActualizador.exe",nullptr);
             perror("No se pudo iniciar el actualizador");

@@ -5,7 +5,6 @@ Juego de peleas con personajes de Aquí No Hay Quien Viva
 COSAS POR HACER:
 
 - MENÚ DE SELECCIÓN DE PERSONAJE
-    - [ ] Diseñar el menú
     - [ ] Implementar el menú
 
 - MODO HISTORIA

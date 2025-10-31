@@ -162,25 +162,37 @@ constexpr float PROPORCION_RECORRIDO_MENGUAR_PARTICULA_LINEAL = 0.9;
 constexpr sf::Vector2f POSICION_TITULO = sf::Vector2f(VENTANA_ANCHURA/4,VENTANA_ALTURA/6);
 
 // Posición en el eje X de los selectores de opción
-constexpr float POSICION_X_SELECTOR_SIN_SELECCIONAR = VENTANA_ANCHURA/8;
-constexpr float POSICION_X_SELECTOR_SELECCIONADO = VENTANA_ANCHURA/7;
+constexpr float POSICION_X_SELECTOR = VENTANA_ANCHURA/4.f;
 
-// Posición en el eje Y de los selectores
-constexpr float POSICION_Y_SELECTOR_MODO_HISTORIA = 7*VENTANA_ALTURA/15;
-constexpr float POSICION_Y_SELECTOR_BATALLA_VS = 9*VENTANA_ALTURA/15;
-constexpr float POSICION_Y_SELECTOR_OPCIONES = 11*VENTANA_ALTURA/15;
+// Posición inicial en el eje Y de los selectores de opción
+constexpr float POSICION_INICIAL_Y_SELECTOR = 12*VENTANA_ALTURA/20.f;
 
-// Color de los selectores sin seleccionar
-constexpr sf::Color COLOR_SELECTOR_SIN_SELECCIONAR = sf::Color(50,50,50);
+// Diferencia en la posición en el eje Y entre dos selectores adyacentes
+constexpr float DIFERENCIA_POSICION_Y_SELECTOR = VENTANA_ALTURA/6.f;
 
-// Color de los selectores seleccionados
-constexpr sf::Color COLOR_SELECTOR_SELECCIONADO = sf::Color(255,255,255);
+// Diferencia en la posición en el eje Y entre dos fondos distintos usados
+// por los selectores del menú principal
+constexpr float DIFERENCIA_POSICION_Y_FONDO_SELECTOR = VENTANA_ALTURA/20.f;
 
-// Color de las capturas correspondientes a selectores sin seleccionar
-constexpr sf::Color COLOR_CAPTURA_SIN_SELECCIONAR = sf::Color(255,255,255,0);
+// Diferencia en las escalas de dos selectores adyacentes
+constexpr float DIFERENCIA_ESCALA_SELECTOR = 0.4f;
 
-// Color de las capturas correspondientes a selectores seleccionados
-constexpr sf::Color COLOR_CAPTURA_SELECCIONADA = sf::Color(255,255,255,255);
+// Color para el selector que estamos seleccionando actualmente
+constexpr sf::Color COLOR_SELECTOR_POSICION_RELATIVA_0 = sf::Color(255,255,255,255);
+
+// Diferencia de transparencia de un selector que está una posición
+// más arriba o abajo del selector actual
+constexpr int DIFERENCIA_TRANSPARENCIA_SELECTOR = 100;
+
+// Color para los selectores que están más de una posición alejados
+// del selector actual
+constexpr sf::Color COLOR_SELECTOR_POSICION_RELATIVA_MAYOR_QUE_1 = sf::Color(255,255,255,0);
+
+// Color del fondo correspondiente a selectores sin seleccionar
+constexpr sf::Color COLOR_FONDO_SELECTOR_SIN_SELECCIONAR = sf::Color(255,255,255,0);
+
+// Color del fondo correspondiente al selector seleccionado
+constexpr sf::Color COLOR_FONDO_SELECTOR_SELECCIONADO = sf::Color(255,255,255,255);
 
 /*
     CONSTANTES PARA EL SELECTOR DE MANDOS
