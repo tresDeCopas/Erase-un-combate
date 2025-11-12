@@ -307,6 +307,10 @@ estados:
           alto: 70
           ataque: 0
     fotogramas: [0,0,0,0,0,0,1,2,2,3,3,3,4,4,4,4,5,5,5,5,5]
+    movimientos:
+      - fotograma: 6
+        velX: 2
+        velY: 0
     sonido:
       tipo: "No repetir"
       fotogramas: [4]
