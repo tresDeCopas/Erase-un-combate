@@ -93,6 +93,7 @@ src/general/Configuracion.cpp
 src/general/Utilidades.cpp
 src/general/VentanaPrincipal.cpp
 src/main.cpp
+src/menus/SelectorMenuPrincipal.cpp
 src/menus/MenuPrincipal.cpp
 src/menus/MenuSeleccionPersonaje.cpp
 src/recursos/ContenedorDeEfectos.cpp

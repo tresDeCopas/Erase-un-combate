@@ -4,6 +4,66 @@
 #include "VentanaPrincipal.hpp"
 #include "GestorDeControles.hpp"
 #include "Configuracion.hpp"
+#include "Utilidades.hpp"
+
+#include <algorithm>
+
+SelectorPersonaje::SelectorPersonaje(const sf::Texture& texturaSelector, const std::string& nombrePersonaje, Jugador jugador) :
+spriteSelector(texturaSelector), nombrePersonaje(nombrePersonaje), posicionRelativa(0), jugador(jugador)
+{
+    // Se pone el origen en el centro a la izquierda del todo porque mola más
+    spriteSelector.setOrigin(sf::Vector2f(spriteSelector.getTextureRect().size)/2.f);
+    resetear();
+}
+
+void SelectorPersonaje::resetear()
+{
+    // Se pone el selector y el fondo en las posiciones correctas
+    float posicionX = jugador == Jugador::JUGADOR1 ?
+                      POSICION_X_SELECTOR_PERSONAJE_J1 :
+                      POSICION_X_SELECTOR_PERSONAJE_J2;
+    
+    spriteSelector.setPosition({posicionX + posicionRelativa*DIFERENCIA_POSICION_X_SELECTOR_PERSONAJE, POSICION_Y_SELECTOR_PERSONAJE});
+
+    // Se pone el color correcto para el selector y su fondo
+    sf::Color colorSelector = COLOR_SELECTOR_POSICION_RELATIVA_0;
+    colorSelector.a = std::clamp(colorSelector.a-std::abs(posicionRelativa)*DIFERENCIA_TRANSPARENCIA_SELECTOR,0,255);
+    spriteSelector.setColor(colorSelector);
+
+    // Se pone la escala correcta para el sprite
+    float escalaDeseadaSprite = 1.f - std::abs(posicionRelativa)*DIFERENCIA_ESCALA_SELECTOR;
+    if(escalaDeseadaSprite < 0.f) escalaDeseadaSprite = 0.f;
+    spriteSelector.setScale({escalaDeseadaSprite,escalaDeseadaSprite});
+}
+
+void SelectorPersonaje::actualizar()
+{
+    sf::Vector2f posicionDeseadaSprite;
+    sf::Color colorDeseadoSprite = COLOR_SELECTOR_POSICION_RELATIVA_0;
+    sf::Vector2f posicionDeseadaFondo;
+    sf::Color colorDeseadoFondo;
+
+    float escalaDeseadaSprite = 1.f - std::abs(posicionRelativa)*DIFERENCIA_ESCALA_SELECTOR;
+    if(escalaDeseadaSprite < 0.f) escalaDeseadaSprite = 0.f;
+
+    posicionDeseadaSprite.x = jugador == Jugador::JUGADOR1 ?
+                              POSICION_X_SELECTOR_PERSONAJE_J1 :
+                              POSICION_X_SELECTOR_PERSONAJE_J2;
+    posicionDeseadaSprite.x += posicionRelativa*DIFERENCIA_POSICION_X_SELECTOR_PERSONAJE*escalaDeseadaSprite;
+    posicionDeseadaSprite.y = POSICION_Y_SELECTOR_PERSONAJE;
+
+    colorDeseadoSprite.a = std::clamp(colorDeseadoSprite.a-std::abs(posicionRelativa)*DIFERENCIA_TRANSPARENCIA_SELECTOR,0,255);
+
+    spriteSelector.setPosition(util::aproximarVector2f(spriteSelector.getPosition(),posicionDeseadaSprite,0.8f));
+    spriteSelector.setColor(util::aproximarColor(spriteSelector.getColor(),colorDeseadoSprite,0.8f));
+    spriteSelector.setScale(util::aproximarVector2f(spriteSelector.getScale(),{escalaDeseadaSprite,escalaDeseadaSprite},0.8f));
+}
+
+void SelectorPersonaje::seleccionar()
+{
+    spriteSelector.setScale(spriteSelector.getScale()/2.f);
+}
+
 
 // La instancia es nula al principio
 MenuSeleccionPersonaje * MenuSeleccionPersonaje::menuSeleccionPersonaje = nullptr;

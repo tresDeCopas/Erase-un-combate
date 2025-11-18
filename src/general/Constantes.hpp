@@ -194,6 +194,29 @@ constexpr sf::Color COLOR_FONDO_SELECTOR_SIN_SELECCIONAR = sf::Color(255,255,255
 // Color del fondo correspondiente al selector seleccionado
 constexpr sf::Color COLOR_FONDO_SELECTOR_SELECCIONADO = sf::Color(255,255,255,255);
 
+// Número de frames que espera el juego desde que selecciona una opción del menú principal
+// hasta que la pantalla empieza a fundirse en negro para ir al menú de esa opción
+constexpr int FRAMES_ESPERA_SALIR_MENU_PRINCIPAL = 60;
+
+
+/*
+    CONSTANTES PARA EL MENÚ DE SELECCIÓN DE PERSONAJE
+*/
+
+// Posición en el eje X del selector de personaje para el jugador 1
+constexpr float POSICION_X_SELECTOR_PERSONAJE_J1 = VENTANA_ANCHURA/4.f;
+
+// Posición en el eje X del selector de personaje para el jugador 2
+constexpr float POSICION_X_SELECTOR_PERSONAJE_J2 = VENTANA_ANCHURA - POSICION_X_SELECTOR_PERSONAJE_J1;
+
+// Posición en el eje Y del selector de personaje
+constexpr float POSICION_Y_SELECTOR_PERSONAJE = VENTANA_ALTURA/8.f;
+
+// Diferencia en el eje X entre dos selectores seguidos
+constexpr float DIFERENCIA_POSICION_X_SELECTOR_PERSONAJE = VENTANA_ANCHURA/16.f;
+
+
+
 /*
     CONSTANTES PARA EL SELECTOR DE MANDOS
 */

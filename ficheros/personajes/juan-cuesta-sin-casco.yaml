@@ -496,6 +496,11 @@ estados:
           ancho: 27
           alto: 75
           ataque: 0
+      - - posX: 51
+          posY: 25
+          ancho: 27
+          alto: 75
+          ataque: 0
       - - posX: 92
           posY: 48
           ancho: 32
@@ -547,7 +552,7 @@ estados:
           ancho: 23
           alto: 19
           ataque: 0
-    fotogramas: [0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3]
+    fotogramas: [0,0,0,0,0,0,0,1,1,1,1,1,1,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]
     sonido:
       tipo: "No repetir"
       fotogramas: [11]

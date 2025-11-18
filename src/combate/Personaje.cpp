@@ -144,6 +144,12 @@ void Personaje::setAnimaciones(const std::map<EstadoPersonaje, std::shared_ptr<A
 
 void Personaje::cambiarEstado(EstadoPersonaje estadoNuevo)
 {
+    // Si hemos pasado a preparar el ataque super, o si hemos dejado de atacar super,
+    // el personaje destellea en color blanco durante un momento
+    if(estadoNuevo == EstadoPersonaje::PREPARANDO_SUPER || estado == EstadoPersonaje::ATAQUE_SUPER)
+    {
+        contadorBlanco = 255;
+    }
 
     animaciones.at(estadoNuevo)->setPosicion(animaciones.at(estado)->getPosicion());
     animaciones.at(estadoNuevo)->resetear();
@@ -296,7 +302,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
             if (medidorSuper == MAX_MEDIDOR_SUPER)
             {
-                contadorBlanco = 255;
                 medidorSuper = 0;
                 cambiarEstado(EstadoPersonaje::PREPARANDO_SUPER);
             }
@@ -791,7 +796,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
         if (animaciones.at(estado)->haTerminado())
         {
-            contadorBlanco = 255;
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
         break;
