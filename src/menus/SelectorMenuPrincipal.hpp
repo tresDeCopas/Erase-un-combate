@@ -3,25 +3,16 @@
 #include "Animacion.hpp"
 #include <list>
 #include <SFML/Graphics.hpp>
-
-/*
-    Especifica el tipo de un selector del menú principal
-*/
-enum class TipoSelectorMenuPrincipal {
-    MODO_HISTORIA, BATALLA_VS, OPCIONES,
-};
+#include "Enums.hpp"
 
 /*
     Esta es una clase auxiliar para guardar los selectores para
     cada uno de los sitios a los que puedes ir desde el menú principal
 */
-class SelectorMenuPrincipal {
+class SelectorMenuPrincipal : public sf::Drawable {
     private:
         // El sprite asociado al selector
         sf::Sprite spriteSelector;
-
-        // El fondo asociado al selector
-        sf::Sprite spriteFondo;
 
         // Indica a qué selección hace referencia este selector
         TipoSelectorMenuPrincipal tipoSelector;
@@ -36,9 +27,9 @@ class SelectorMenuPrincipal {
         int posicionRelativa;
     
     public:
-        // Se crea el selector en base a su textura para el sprite, su textura para
-        // el fondo y el tipo de selección al que hace referencia
-        SelectorMenuPrincipal(sf::Texture& texturaSelector, sf::Texture& texturaFondo, TipoSelectorMenuPrincipal tipoSelector);
+        // Se crea el selector en base a su textura para el sprite y el tipo de
+        // selección al que hace referencia
+        SelectorMenuPrincipal(sf::Texture& texturaSelector, TipoSelectorMenuPrincipal tipoSelector);
 
         // Se reestablece el selector a su estado inicial
         void resetear();
@@ -48,6 +39,9 @@ class SelectorMenuPrincipal {
 
         // Se actualiza la posición y la transparencia del selector y su fondo
         void actualizar();
+
+        // Permite dibujar el selector
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
         // Establece el valor de la posición relativa
         void setPosicionRelativa(int posicionRelativa)
@@ -65,11 +59,5 @@ class SelectorMenuPrincipal {
         sf::Sprite& getSprite()
         {
             return spriteSelector;
-        }
-
-        // Devuelve una referencia al sprite del fondo
-        sf::Sprite& getFondo()
-        {
-            return spriteFondo;
         }
 };

@@ -67,3 +67,8 @@ enum class TipoSombra {
     LARGA,
     SIN_SOMBRA
 };
+
+// Especifica el tipo de un selector del menú principal
+enum class TipoSelectorMenuPrincipal {
+    MODO_HISTORIA, BATALLA_VS, OPCIONES,
+};

@@ -32,15 +32,22 @@ MenuPrincipal::MenuPrincipal() : seleccionActual(0),
     resetear();
     
     selectores.emplace_back(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/menu-principal/selector-modo-historia.png"),
-                            ContenedorDeTexturas::unicaInstancia()->obtener("sprites/menu-principal/captura-modo-historia.png"),
                             TipoSelectorMenuPrincipal::MODO_HISTORIA);
     
     selectores.emplace_back(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/menu-principal/selector-batalla-vs.png"),
-                            ContenedorDeTexturas::unicaInstancia()->obtener("sprites/menu-principal/captura-batalla-vs.png"),
                             TipoSelectorMenuPrincipal::BATALLA_VS);
 
     selectores.emplace_back(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/menu-principal/selector-opciones.png"),
-                            ContenedorDeTexturas::unicaInstancia()->obtener("sprites/menu-principal/captura-opciones.png"),
+                            TipoSelectorMenuPrincipal::OPCIONES);
+    
+
+    fondos.emplace_back(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/menu-principal/captura-modo-historia.png"),
+                            TipoSelectorMenuPrincipal::MODO_HISTORIA);
+        
+    fondos.emplace_back(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/menu-principal/captura-batalla-vs.png"),
+                            TipoSelectorMenuPrincipal::BATALLA_VS);
+
+    fondos.emplace_back(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/menu-principal/captura-opciones.png"),
                             TipoSelectorMenuPrincipal::OPCIONES);
 
     rectanguloNegro.setFillColor(sf::Color::Black);
@@ -55,6 +62,11 @@ void MenuPrincipal::resetear() {
     {
         selector.resetear();
     }
+
+    for(FondoMenuPrincipal& fondo : fondos)
+    {
+        fondo.resetear();
+    }
 }
 
 void MenuPrincipal::cambiarPosicionRelativa()
@@ -62,6 +74,11 @@ void MenuPrincipal::cambiarPosicionRelativa()
     for(int i=0;i<selectores.size();i++)
     {
         selectores[i].setPosicionRelativa(i-seleccionActual);
+    }
+
+    for(int i=0;i<fondos.size();i++)
+    {
+        fondos[i].setPosicionRelativa(i-seleccionActual);
     }
 }
 
@@ -157,19 +174,24 @@ TipoSelectorMenuPrincipal MenuPrincipal::comenzar(){
             selector.actualizar();
         }
 
+        for(FondoMenuPrincipal& fondo : fondos)
+        {
+            fondo.actualizar();
+        }
+
         ventana->clear(sf::Color(0,0,0));
 
-        for(SelectorMenuPrincipal& selector : selectores)
+        for(FondoMenuPrincipal& fondo : fondos)
         {
-            ventana->draw(selector.getFondo());
+            ventana->draw(fondo);
         }
 
         ventana->draw(dientesSierraArriba);
         ventana->draw(dientesSierraAbajo);
 
-        for(SelectorMenuPrincipal& s : selectores)
+        for(SelectorMenuPrincipal& selector : selectores)
         {
-            ventana->draw(s.getSprite());
+            ventana->draw(selector);
         }
 
         for(std::shared_ptr<Animacion> &a : animaciones){

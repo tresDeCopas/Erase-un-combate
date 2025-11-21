@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "SelectorMenuPrincipal.hpp"
+#include "FondoMenuPrincipal.hpp"
 
 /*
     Esta clase representa el menú principal en el que puedes elegir el modo
@@ -20,10 +21,12 @@ class MenuPrincipal {
         // La única instancia
         static MenuPrincipal * menuPrincipal;
 
-        // Aquí se almacenan las cosas que se pueden
-        // hacer desde el menú principal, de las cuales
-        // tienes que elegir una para empezar a jugar
+        // Aquí se almacenan los selectores asociados a cada
+        // sitio al que se puede acceder desde el menú principal
         std::vector<SelectorMenuPrincipal> selectores;
+
+        // Aquí se almacenan los fondos asociados a cada selector
+        std::vector<FondoMenuPrincipal> fondos;
 
         // El índice de la selección actual
         unsigned int seleccionActual;
