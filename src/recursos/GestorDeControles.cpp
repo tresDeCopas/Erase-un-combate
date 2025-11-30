@@ -2,6 +2,7 @@
 #include "Constantes.hpp"
 #include "SelectorJugadorParaMando.hpp"
 #include "Configuracion.hpp"
+#include "VentanaPrincipal.hpp"
 #include <iostream>
 
 // La instancia es nula al principio
@@ -232,18 +233,33 @@ InfoEvento GestorDeControles::comprobarEvento(std::optional<sf::Event> evento)
                 switch(scancode)
                 {
                     case sf::Keyboard::Scancode::Num1:
-                        if(Configuracion::unicaInstancia()->getFPS() == 60)
-                            Configuracion::unicaInstancia()->setFPS(20);
+                        if(Configuracion::unicaInstancia()->getFPS() != NUMERO_FPS_INICIAL/3)
+                            Configuracion::unicaInstancia()->setFPS(NUMERO_FPS_INICIAL/3);
                         else
-                            Configuracion::unicaInstancia()->setFPS(60);
+                            Configuracion::unicaInstancia()->setFPS(NUMERO_FPS_INICIAL);
+                        break;
+
+                    case sf::Keyboard::Scancode::Num2:
+                        if(Configuracion::unicaInstancia()->getFPS() != NUMERO_FPS_INICIAL*3)
+                            Configuracion::unicaInstancia()->setFPS(NUMERO_FPS_INICIAL*3);
+                        else
+                            Configuracion::unicaInstancia()->setFPS(NUMERO_FPS_INICIAL);
                         break;
                     
-                    case sf::Keyboard::Scancode::Num2:
+                    case sf::Keyboard::Scancode::Num3:
                         Configuracion::unicaInstancia()->setHitboxesVisibles(!Configuracion::unicaInstancia()->isHitboxesVisibles());
                         break;
 
-                    case sf::Keyboard::Scancode::Num3:
+                    case sf::Keyboard::Scancode::Num4:
                         Configuracion::unicaInstancia()->setSalidaABitacora(!Configuracion::unicaInstancia()->isSalidaABitacora());
+                        break;
+                    
+                    case sf::Keyboard::Scancode::Down:
+                        VentanaPrincipal::disminuirZoom();
+                        break;
+                    
+                    case sf::Keyboard::Scancode::Up:
+                        VentanaPrincipal::aumentarZoom();
                         break;
                 }
             }

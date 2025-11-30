@@ -6,6 +6,7 @@
 #include "Escenario.hpp"
 #include "AnimacionAgrandable.hpp"
 #include "ConectorOnline.hpp"
+#include "Temporizador.hpp"
 #include <optional>
 #include <SFML/Network.hpp>
 
@@ -18,7 +19,6 @@
 */
 class Combate{
     private:
-
         // Personaje asignado al jugador 1
         Personaje personajeJugador1;
 
@@ -58,6 +58,9 @@ class Combate{
         // Conector para jugar online
         std::optional<ConectorOnline> conector;
 
+        // Temporizador para que el combate no se alargue hasta el infinito
+        Temporizador temporizador;
+
     private:
         // Devuelve todo a la normalidad para la siguiente ronda (excepto el contador
         // de rondas ganadas de cada GUI de personaje)
@@ -74,9 +77,10 @@ class Combate{
         void actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion>> &efectos);
 
         // Sé que el nombre es largo de cojones pero no se me ocurre otra cosa mejor. Actualiza como su propio nombre indica
-        // los dos personajes, los efectos, las GUIs, el escenario y la ventana. No comprueba colisiones, y no inserta nuevos
-        // efectos en la lista de efectos (los efectos nuevos se quedan en nuevosEfectos hasta que se vayan a meter luego)
-        void actualizarPersonajesEfectosGuisEscenarioVentana(std::list<std::shared_ptr<Animacion>> &efectos, std::list<std::shared_ptr<Animacion>> &nuevosEfectos);
+        // los dos personajes, los efectos, las GUIs, el escenario, la ventana y el temporizador. No comprueba colisiones,
+        // y no inserta nuevos efectos en la lista de efectos (los efectos nuevos se quedan en nuevosEfectos hasta que se
+        // vayan a meter luego). Además, se puede especificar si se quiere actualizar el temporizador o no (por defecto sí)
+        void actualizarPersonajesEfectosGuisEscenarioVentanaTemporizador(std::list<std::shared_ptr<Animacion>> &efectos, std::list<std::shared_ptr<Animacion>> &nuevosEfectos, bool actualizarTemporizador = true);
 
         // Procesa los eventos generados en la ventana actual e informa a los personajes para que se muevan si se está jugando offline
         void recibirEntradaPlayerVSPlayerOffline();
@@ -88,7 +92,6 @@ class Combate{
         void recibirEntradaPlayerVSBot();
 
     public:
-
         // Construye el combate en base a los nombres de los personajes
         // y del escenario en el que se va a pelear. También es necesario especificar la dirección IP del jugador
         // contra el que se va a luchar. Por defecto es un string vacío, por lo que será un combate offline. Además, el booleano lider
@@ -99,7 +102,4 @@ class Combate{
         // Comienza el combate (la clase pasa a tomar el control de
         // la ventana principal hasta que termine el combate)
         void comenzar();
-
 };
-
-

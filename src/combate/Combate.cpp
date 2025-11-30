@@ -21,9 +21,9 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
                                                                                                                                                      cartelAPelear(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-a-pelear")),
                                                                                                                                                      cartelJugador1Gana(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-jugador-1-gana")),
                                                                                                                                                      cartelJugador2Gana(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-jugador-2-gana")),
-                                                                                                                                                     cartelEmpate(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-empate"))
+                                                                                                                                                     cartelEmpate(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-empate")),
+                                                                                                                                                     temporizador(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/gui/temporizador.png"),ContenedorDeFuentes::unicaInstancia()->obtener("fuentes/daniela.ttf"),FOTOGRAMAS_POR_TICK_TEMPORIZADOR,TICKS_CONTADOR_TEMPORIZADOR)
 {
-
     rectanguloOscuro.setPosition({0, 0});
     rectanguloOscuro.setSize(sf::Vector2f(VENTANA_ANCHURA, VENTANA_ALTURA));
     rectanguloOscuro.setOutlineThickness(0);
@@ -77,6 +77,9 @@ void Combate::resetear()
 
     // Se coloca el escenario en el centro
     escenario.resetear();
+
+    // El temporizador se resetea
+    temporizador.resetear();
 }
 
 void Combate::actualizarFotogramaPreparandoSuper(std::list<std::shared_ptr<Animacion>> &efectos)
@@ -133,6 +136,8 @@ void Combate::actualizarFotogramaPreparandoSuper(std::list<std::shared_ptr<Anima
     }
 
     ventana->draw(*ContenedorDeCombos::unicaInstancia());
+
+    ventana->draw(temporizador);
 
     // Se dibuja un rectángulo oscuro encima
     sf::RectangleShape rectanguloOscuro(sf::Vector2f(VENTANA_ANCHURA, VENTANA_ALTURA));
@@ -314,7 +319,7 @@ void Combate::recibirEntradaPlayerVSPlayerOnline()
         personajeRemoto.detenerAccion(a);
 }
 
-void Combate::actualizarPersonajesEfectosGuisEscenarioVentana(std::list<std::shared_ptr<Animacion>> &efectos, std::list<std::shared_ptr<Animacion>> &nuevosEfectos)
+void Combate::actualizarPersonajesEfectosGuisEscenarioVentanaTemporizador(std::list<std::shared_ptr<Animacion>> &efectos, std::list<std::shared_ptr<Animacion>> &nuevosEfectos, bool actualizarTemporizador)
 {
     // Se preparan otra lista para meter nuevos efectos (dos listas porque se quiere paralelizar la actualización
     // de los personajes, así que si digo de meter cosas en la misma lista se nos va a la mi3rda todo)
@@ -364,11 +369,13 @@ void Combate::actualizarPersonajesEfectosGuisEscenarioVentana(std::list<std::sha
     escenario.actualizar(personajeJugador1, personajeJugador2, efectos);
 
     VentanaPrincipal::actualizar();
+
+    if(actualizarTemporizador)
+        temporizador.actualizar();
 }
 
 void Combate::actualizarFotogramaNormal(std::list<std::shared_ptr<Animacion>> &efectos)
 {
-
     sf::RenderWindow *ventana = VentanaPrincipal::unicaInstancia();
 
     // PRIMER PASO: RECIBIR ENTRADA DEL TECLADO O DE LOS MANDOS
@@ -393,12 +400,14 @@ void Combate::actualizarFotogramaNormal(std::list<std::shared_ptr<Animacion>> &e
     // else
     //     recibirEntradaPlayerVSPlayerOffline();
 
-    // SEGUNDO PASO: ACTUALIZAR PERSONAJES, EFECTOS, GUIS, ESCENARIO Y VENTANA
+    // SEGUNDO PASO: ACTUALIZAR PERSONAJES, EFECTOS, GUIS, ESCENARIO, VENTANA Y TEMPORIZADOR
 
     std::list<std::shared_ptr<Animacion>> nuevosEfectosA;
     std::list<std::shared_ptr<Animacion>> nuevosEfectosB;
 
-    actualizarPersonajesEfectosGuisEscenarioVentana(efectos, nuevosEfectosA);
+    // Solo se actualiza el temporizador si ha terminado el cartelito de "¿Todo listo?", porque mientras
+    // este cartel está en pantalla los personajes no se pueden mover y es un poco trampa
+    actualizarPersonajesEfectosGuisEscenarioVentanaTemporizador(efectos, nuevosEfectosA, cartelTodoListo->haTerminado());
 
     // TERCER PASO: COMPROBAR COLISIONES
 
@@ -440,7 +449,7 @@ void Combate::actualizarFotogramaNormal(std::list<std::shared_ptr<Animacion>> &e
     // Se actualizan los combos
     ContenedorDeCombos::unicaInstancia()->actualizar();
 
-    // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES Y LAS ANIMACIONES
+    // CUARTO PASO: DIBUJAR EL ESCENARIO, LOS PERSONAJES, LAS ANIMACIONES, LAS GUIS Y EL TEMPORIZADO
 
     ventana->clear(sf::Color(100, 100, 120));
     ventana->draw(escenario);
@@ -476,6 +485,8 @@ void Combate::actualizarFotogramaNormal(std::list<std::shared_ptr<Animacion>> &e
 
     ventana->draw(*ContenedorDeCombos::unicaInstancia());
 
+    ventana->draw(temporizador);
+
     if (!cartelTodoListo->haTerminado())
     {
         ventana->draw(*cartelTodoListo);
@@ -508,7 +519,8 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
 
     std::list<std::shared_ptr<Animacion>> nuevosEfectos;
 
-    actualizarPersonajesEfectosGuisEscenarioVentana(efectos, nuevosEfectos);
+    // El temporizador no se actualiza porque el combate ya ha terminado
+    actualizarPersonajesEfectosGuisEscenarioVentanaTemporizador(efectos, nuevosEfectos, false);
 
     // Se actualiza el cartel de personaje ganador si está celebrando
     if (personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::CELEBRANDO)
@@ -518,9 +530,9 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
     else if (personajeJugador2.getPuntosDeVida() > personajeJugador1.getPuntosDeVida() && personajeJugador2.getEstado() == EstadoPersonaje::CELEBRANDO)
     {
         cartelJugador2Gana->actualizar(nuevosEfectos);
-        // Si no, si los dos tienen la misma vida es porque ha habido empate
     }
-    else if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO)
+    else if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida() &&
+            ((personajeJugador1.getEstado() == EstadoPersonaje::QUIETO && personajeJugador2.getEstado() == EstadoPersonaje::QUIETO) || (personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO)))
     {
         cartelEmpate->actualizar(nuevosEfectos);
     }
@@ -543,15 +555,18 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
     }
     else
     {
-
         Personaje &ganador = personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() ? personajeJugador1 : personajeJugador2;
         Personaje &perdedor = personajeJugador1.getPuntosDeVida() < personajeJugador2.getPuntosDeVida() ? personajeJugador1 : personajeJugador2;
 
-        if (ganador.getEstado() == EstadoPersonaje::QUIETO && perdedor.getEstado() == EstadoPersonaje::TUMBADO)
+        if ((ganador.getEstado() == EstadoPersonaje::QUIETO && perdedor.getEstado() == EstadoPersonaje::TUMBADO && perdedor.getPuntosDeVida() == 0) ||
+            (ganador.getEstado() == EstadoPersonaje::QUIETO && perdedor.getEstado() == EstadoPersonaje::QUIETO && perdedor.getPuntosDeVida() > 0))
         {
             ganador.cambiarEstado(EstadoPersonaje::CELEBRANDO);
-            // ReproductorDeMusica::unicaInstancia()->reproducirCancionFinRonda();
-            if (personajeJugador1.getPuntosDeVida() > 0)
+            if(perdedor.getEstado() == EstadoPersonaje::QUIETO){
+                // perdedor.cambiarEstado(EstadoPersonaje::DERROTA_POR_TIEMPO);
+            }
+            
+            if (ganador.getJugador() == Jugador::JUGADOR1)
                 GUIJugador1.ganarRonda();
             else
                 GUIJugador2.ganarRonda();
@@ -583,6 +598,8 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
 
     ventana->draw(*ContenedorDeCombos::unicaInstancia());
 
+    ventana->draw(temporizador);
+
     ventana->draw(GUIJugador1);
     ventana->draw(GUIJugador2);
 
@@ -595,7 +612,7 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
     {
         ventana->draw(*cartelJugador2Gana);
     }
-    else if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO)
+    else if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida())
     {
         ventana->draw(*cartelEmpate);
     }
@@ -607,7 +624,6 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
 
 void Combate::comenzar()
 {
-
     // En esta lista hay efectos como objetos voladores o efectos de golpe
     std::list<std::shared_ptr<Animacion>> efectos;
 
@@ -623,7 +639,7 @@ void Combate::comenzar()
 
         // El bucle de cada ronda realiza acciones en un orden muy específico para evitar problemas
 
-        while (personajeJugador1.getPuntosDeVida() > 0 && personajeJugador2.getPuntosDeVida() > 0)
+        while (personajeJugador1.getPuntosDeVida() > 0 && personajeJugador2.getPuntosDeVida() > 0 && !temporizador.haTerminado())
         {
             // Se prepara un reloj para ver cuánto tiempo pasa entre fotogramas
             sf::Clock reloj;

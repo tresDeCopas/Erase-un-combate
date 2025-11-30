@@ -17,13 +17,13 @@ void FondoMenuPrincipal::resetear()
     posicionRelativa = static_cast<int>(tipoSelector);
 
     // Se coloca el sprite en la posición correcta
-    spriteFondo.setPosition({0.f, posicionRelativa*DIFERENCIA_POSICION_Y_FONDO_SELECTOR});
+    spriteFondo.setPosition({0.f, posicionRelativa*DIFERENCIA_POSICION_Y_FONDO_SELECTOR_MENU_PRINCIPAL});
 
     // Según si la posición relativa es 0 o no, el fondo tendrá un color distinto
     if(posicionRelativa == 0)
-        spriteFondo.setColor(COLOR_FONDO_SELECTOR_SELECCIONADO);
+        spriteFondo.setColor(COLOR_FONDO_SELECTOR_MENU_PRINCIPAL_SELECCIONADO);
     else
-        spriteFondo.setColor(COLOR_FONDO_SELECTOR_SIN_SELECCIONAR);
+        spriteFondo.setColor(COLOR_FONDO_SELECTOR_MENU_PRINCIPAL_SIN_SELECCIONAR);
 }
 
 void FondoMenuPrincipal::actualizar()
@@ -35,13 +35,13 @@ void FondoMenuPrincipal::actualizar()
 
     // Si el selector asociado al fondo está seleccionado, se debe ver
     if(posicionRelativa == 0)
-        colorDeseadoFondo = COLOR_FONDO_SELECTOR_SELECCIONADO;
+        colorDeseadoFondo = COLOR_FONDO_SELECTOR_MENU_PRINCIPAL_SELECCIONADO;
     else
-        colorDeseadoFondo = COLOR_FONDO_SELECTOR_SIN_SELECCIONAR;
+        colorDeseadoFondo = COLOR_FONDO_SELECTOR_MENU_PRINCIPAL_SIN_SELECCIONAR;
     
     // Según la posición relativa, el fondo tendrá una altura u otra
     posicionDeseadaFondo.x = 0;
-    posicionDeseadaFondo.y = posicionRelativa * DIFERENCIA_POSICION_Y_FONDO_SELECTOR;
+    posicionDeseadaFondo.y = posicionRelativa * DIFERENCIA_POSICION_Y_FONDO_SELECTOR_MENU_PRINCIPAL;
 
     // Se acerca la posición y el color del fondo a sus valores deseados
     spriteFondo.setPosition(util::aproximarVector2f(spriteFondo.getPosition(),posicionDeseadaFondo,0.8f));

@@ -88,6 +88,7 @@ src/combate/GUIPersonaje.cpp
 src/combate/Hitbox.cpp
 src/combate/InfoCombo.cpp
 src/combate/Personaje.cpp
+src/combate/Temporizador.cpp
 src/general/Bitacora.cpp
 src/general/Configuracion.cpp
 src/general/Utilidades.cpp
@@ -126,7 +127,7 @@ target_link_libraries(EraseUnActualizador PRIVATE SFML::Graphics SFML::Network S
 
 # Se especifica que el juego no debería tener una ventana de consola de comandos (pero
 # del actualizador no se dice nada porque este sí debería tener)
-target_link_options(EraseUnCombate PRIVATE -mwindows)
+target_link_options(EraseUnCombate PRIVATE) # -mwindows)
 
 # Opciones de compilación para que salgan warnings
 add_compile_options(-Wall -Wextra -Wpedantic)

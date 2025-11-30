@@ -11,9 +11,11 @@ sf::RenderWindow * VentanaPrincipal::unicaInstancia()
 {
     if(ventanaPrincipal==nullptr){
         ventanaPrincipal = new sf::RenderWindow(sf::VideoMode({VENTANA_ANCHURA, VENTANA_ALTURA}), VENTANA_NOMBRE, VENTANA_ESTILO);
+
         // Se desactiva lo de que si mantienes pulsada una tecla se vuelve a pulsar muchas veces
-        // porque que pereza
+        // porque esto es un juego no un editor de texto ni nada por el estilo
         ventanaPrincipal->setKeyRepeatEnabled(false);
+
         //vibracionActivada = false;
 
         aumentarZoom();

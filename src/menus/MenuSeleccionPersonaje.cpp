@@ -26,12 +26,12 @@ void SelectorPersonaje::resetear()
     spriteSelector.setPosition({posicionX + posicionRelativa*DIFERENCIA_POSICION_X_SELECTOR_PERSONAJE, POSICION_Y_SELECTOR_PERSONAJE});
 
     // Se pone el color correcto para el selector y su fondo
-    sf::Color colorSelector = COLOR_SELECTOR_POSICION_RELATIVA_0;
-    colorSelector.a = std::clamp(colorSelector.a-std::abs(posicionRelativa)*DIFERENCIA_TRANSPARENCIA_SELECTOR,0,255);
+    sf::Color colorSelector = COLOR_SELECTOR_PERSONAJE_POSICION_RELATIVA_0;
+    colorSelector.a = std::clamp(colorSelector.a-std::abs(posicionRelativa)*DIFERENCIA_TRANSPARENCIA_SELECTOR_PERSONAJE,0,255);
     spriteSelector.setColor(colorSelector);
 
     // Se pone la escala correcta para el sprite
-    float escalaDeseadaSprite = 1.f - std::abs(posicionRelativa)*DIFERENCIA_ESCALA_SELECTOR;
+    float escalaDeseadaSprite = 1.f - std::abs(posicionRelativa)*DIFERENCIA_ESCALA_SELECTOR_PERSONAJE;
     if(escalaDeseadaSprite < 0.f) escalaDeseadaSprite = 0.f;
     spriteSelector.setScale({escalaDeseadaSprite,escalaDeseadaSprite});
 }
@@ -39,11 +39,11 @@ void SelectorPersonaje::resetear()
 void SelectorPersonaje::actualizar()
 {
     sf::Vector2f posicionDeseadaSprite;
-    sf::Color colorDeseadoSprite = COLOR_SELECTOR_POSICION_RELATIVA_0;
+    sf::Color colorDeseadoSprite = COLOR_SELECTOR_PERSONAJE_POSICION_RELATIVA_0;
     sf::Vector2f posicionDeseadaFondo;
     sf::Color colorDeseadoFondo;
 
-    float escalaDeseadaSprite = 1.f - std::abs(posicionRelativa)*DIFERENCIA_ESCALA_SELECTOR;
+    float escalaDeseadaSprite = 1.f - std::abs(posicionRelativa)*DIFERENCIA_ESCALA_SELECTOR_PERSONAJE;
     if(escalaDeseadaSprite < 0.f) escalaDeseadaSprite = 0.f;
 
     posicionDeseadaSprite.x = jugador == Jugador::JUGADOR1 ?
@@ -52,7 +52,7 @@ void SelectorPersonaje::actualizar()
     posicionDeseadaSprite.x += posicionRelativa*DIFERENCIA_POSICION_X_SELECTOR_PERSONAJE*escalaDeseadaSprite;
     posicionDeseadaSprite.y = POSICION_Y_SELECTOR_PERSONAJE;
 
-    colorDeseadoSprite.a = std::clamp(colorDeseadoSprite.a-std::abs(posicionRelativa)*DIFERENCIA_TRANSPARENCIA_SELECTOR,0,255);
+    colorDeseadoSprite.a = std::clamp(colorDeseadoSprite.a-std::abs(posicionRelativa)*DIFERENCIA_TRANSPARENCIA_SELECTOR_PERSONAJE,0,255);
 
     spriteSelector.setPosition(util::aproximarVector2f(spriteSelector.getPosition(),posicionDeseadaSprite,0.8f));
     spriteSelector.setColor(util::aproximarColor(spriteSelector.getColor(),colorDeseadoSprite,0.8f));

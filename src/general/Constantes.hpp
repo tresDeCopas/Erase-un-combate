@@ -131,7 +131,7 @@ constexpr int OFFSET_POLVO = 15;
 constexpr double TASA_CRECIMIENTO_ANIMACION_AGRANDABLE = 0.1;
 
 // Posición de los carteles que aparecen durante los combates (los de "¿Todo listo?" y tal)
-constexpr sf::Vector2f POSICION_CARTELES_COMBATE = sf::Vector2f(VENTANA_ANCHURA/2, VENTANA_ALTURA/3);
+constexpr sf::Vector2f POSICION_CARTELES_COMBATE = sf::Vector2f(VENTANA_ANCHURA/2.f, 2.f*VENTANA_ALTURA/5.f);
 
 // El número de partículas lineales que aparecen cuando un personaje es golpeado
 // con un ataque peque
@@ -162,37 +162,37 @@ constexpr float PROPORCION_RECORRIDO_MENGUAR_PARTICULA_LINEAL = 0.9;
 constexpr sf::Vector2f POSICION_TITULO = sf::Vector2f(VENTANA_ANCHURA/4,VENTANA_ALTURA/6);
 
 // Posición en el eje X de los selectores de opción
-constexpr float POSICION_X_SELECTOR = VENTANA_ANCHURA/4.f;
+constexpr float POSICION_X_SELECTOR_MENU_PRINCIPAL = VENTANA_ANCHURA/4.f;
 
 // Posición inicial en el eje Y de los selectores de opción
-constexpr float POSICION_INICIAL_Y_SELECTOR = 12*VENTANA_ALTURA/20.f;
+constexpr float POSICION_INICIAL_Y_SELECTOR_MENU_PRINCIPAL = 12*VENTANA_ALTURA/20.f;
 
 // Diferencia en la posición en el eje Y entre dos selectores adyacentes
-constexpr float DIFERENCIA_POSICION_Y_SELECTOR = VENTANA_ALTURA/6.f;
+constexpr float DIFERENCIA_POSICION_Y_SELECTOR_MENU_PRINCIPAL = VENTANA_ALTURA/6.f;
 
 // Diferencia en la posición en el eje Y entre dos fondos distintos usados
 // por los selectores del menú principal
-constexpr float DIFERENCIA_POSICION_Y_FONDO_SELECTOR = VENTANA_ALTURA/20.f;
+constexpr float DIFERENCIA_POSICION_Y_FONDO_SELECTOR_MENU_PRINCIPAL = VENTANA_ALTURA/20.f;
 
 // Diferencia en las escalas de dos selectores adyacentes
-constexpr float DIFERENCIA_ESCALA_SELECTOR = 0.4f;
+constexpr float DIFERENCIA_ESCALA_SELECTOR_MENU_PRINCIPAL = 0.4f;
 
 // Color para el selector que estamos seleccionando actualmente
-constexpr sf::Color COLOR_SELECTOR_POSICION_RELATIVA_0 = sf::Color(255,255,255,255);
+constexpr sf::Color COLOR_SELECTOR_MENU_PRINCIPAL_POSICION_RELATIVA_0 = sf::Color(255,255,255,255);
 
 // Diferencia de transparencia de un selector que está una posición
 // más arriba o abajo del selector actual
-constexpr int DIFERENCIA_TRANSPARENCIA_SELECTOR = 100;
+constexpr int DIFERENCIA_TRANSPARENCIA_SELECTOR_MENU_PRINCIPAL = 100;
 
 // Color para los selectores que están más de una posición alejados
 // del selector actual
-constexpr sf::Color COLOR_SELECTOR_POSICION_RELATIVA_MAYOR_QUE_1 = sf::Color(255,255,255,0);
+constexpr sf::Color COLOR_SELECTOR_MENU_PRINCIPAL_POSICION_RELATIVA_MAYOR_QUE_1 = sf::Color(255,255,255,0);
 
 // Color del fondo correspondiente a selectores sin seleccionar
-constexpr sf::Color COLOR_FONDO_SELECTOR_SIN_SELECCIONAR = sf::Color(255,255,255,0);
+constexpr sf::Color COLOR_FONDO_SELECTOR_MENU_PRINCIPAL_SIN_SELECCIONAR = sf::Color(255,255,255,0);
 
 // Color del fondo correspondiente al selector seleccionado
-constexpr sf::Color COLOR_FONDO_SELECTOR_SELECCIONADO = sf::Color(255,255,255,255);
+constexpr sf::Color COLOR_FONDO_SELECTOR_MENU_PRINCIPAL_SELECCIONADO = sf::Color(255,255,255,255);
 
 // Número de frames que espera el juego desde que selecciona una opción del menú principal
 // hasta que la pantalla empieza a fundirse en negro para ir al menú de esa opción
@@ -214,6 +214,15 @@ constexpr float POSICION_Y_SELECTOR_PERSONAJE = VENTANA_ALTURA/8.f;
 
 // Diferencia en el eje X entre dos selectores seguidos
 constexpr float DIFERENCIA_POSICION_X_SELECTOR_PERSONAJE = VENTANA_ANCHURA/16.f;
+
+// Color para el selector de personaje que se está seleccionado actualmente
+constexpr sf::Color COLOR_SELECTOR_PERSONAJE_POSICION_RELATIVA_0 = sf::Color(255,255,255,255);
+
+// Diferencia de transparencia entre dos selectores de personajes adyacentes
+constexpr int DIFERENCIA_TRANSPARENCIA_SELECTOR_PERSONAJE = 150;
+
+// Diferencia de escala entre dos selectores de personajes adyacentes
+constexpr float DIFERENCIA_ESCALA_SELECTOR_PERSONAJE = 0.4f;
 
 
 
@@ -342,6 +351,31 @@ constexpr sf::Color COLOR_BARRA_SUPER(89,114,255);
 
 // Cada cuántos fotogramas se actualiza la vibración
 constexpr int CONTADOR_VIBRACION_MAX = 2;
+
+// La posición del temporizador
+constexpr sf::Vector2f POSICION_TEMPORIZADOR = {VENTANA_ANCHURA/2.f, 8.f*VENTANA_ALTURA/40.f};
+
+// La posición del texto del temporizador con respecto a la posición del temporizador
+
+constexpr sf::Vector2f POSICION_TEXTO_TEMPORIZADOR = {0.f,3.f};
+
+// Indica cuántos fotogramas tienen que pasar para que el contador baje en uno
+constexpr unsigned int FOTOGRAMAS_POR_TICK_TEMPORIZADOR = 60;
+
+// Indica cuántas veces tiene que bajar el contador del temporizador para que se termine el tiempo
+constexpr unsigned int TICKS_CONTADOR_TEMPORIZADOR = 90;
+
+// Indica el tamaño de la fuente de los numeritos del temporizador
+constexpr unsigned int TAMANO_FUENTE_TEMPORIZADOR = 10;
+
+// Indica el color del relleno de los números del temporizador
+constexpr sf::Color COLOR_RELLENO_NUMEROS_TEMPORIZADOR = sf::Color::White;
+
+// Indica el color del borde de los números del temporizador
+constexpr sf::Color COLOR_BORDE_NUMEROS_TEMPORIZADOR = sf::Color::Black;
+
+// Inidica la anchura del borde de los números del temporizador
+constexpr float ANCHURA_BORDE_NUMEROS_TEMPORIZADOR = 1.f;
 
 /*
     CONSTANTES PARA LOS COMBOS
