@@ -20,7 +20,9 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
                                                                                                                                                      cartelTodoListo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-todo-listo")),
                                                                                                                                                      cartelAPelear(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-a-pelear")),
                                                                                                                                                      cartelJugador1Gana(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-jugador-1-gana")),
+                                                                                                                                                     cartelJugador1Perfecto(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-jugador-1-perfecto")),
                                                                                                                                                      cartelJugador2Gana(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-jugador-2-gana")),
+                                                                                                                                                     cartelJugador2Perfecto(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-jugador-2-perfecto")),
                                                                                                                                                      cartelEmpate(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("cartel-empate")),
                                                                                                                                                      temporizador(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/gui/temporizador.png"),ContenedorDeFuentes::unicaInstancia()->obtener("fuentes/daniela.ttf"),FOTOGRAMAS_POR_TICK_TEMPORIZADOR,TICKS_CONTADOR_TEMPORIZADOR)
 {
@@ -44,7 +46,9 @@ Combate::Combate(std::string nombrePersonajeJ1, std::string nombrePersonajeJ2, s
     cartelTodoListo->setPosicion(POSICION_CARTELES_COMBATE);
     cartelAPelear->setPosicion(POSICION_CARTELES_COMBATE);
     cartelJugador1Gana->setPosicion(POSICION_CARTELES_COMBATE);
+    cartelJugador1Perfecto->setPosicion(POSICION_CARTELES_COMBATE);
     cartelJugador2Gana->setPosicion(POSICION_CARTELES_COMBATE);
+    cartelJugador2Perfecto->setPosicion(POSICION_CARTELES_COMBATE);
     cartelEmpate->setPosicion(POSICION_CARTELES_COMBATE);
 }
 
@@ -54,7 +58,9 @@ void Combate::resetear()
     cartelTodoListo->resetear();
     cartelAPelear->resetear();
     cartelJugador1Gana->resetear();
+    cartelJugador1Perfecto->resetear();
     cartelJugador2Gana->resetear();
+    cartelJugador2Perfecto->resetear();
     cartelEmpate->resetear();
 
     // Los personajes vuelven a su posición
@@ -525,11 +531,17 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
     // Se actualiza el cartel de personaje ganador si está celebrando
     if (personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::CELEBRANDO)
     {
-        cartelJugador1Gana->actualizar(nuevosEfectos);
+        if(personajeJugador1.getPuntosDeVida() == personajeJugador1.getMaxPuntosDeVida())
+            cartelJugador1Perfecto->actualizar(nuevosEfectos);
+        else
+            cartelJugador1Gana->actualizar(nuevosEfectos);
     }
     else if (personajeJugador2.getPuntosDeVida() > personajeJugador1.getPuntosDeVida() && personajeJugador2.getEstado() == EstadoPersonaje::CELEBRANDO)
     {
-        cartelJugador2Gana->actualizar(nuevosEfectos);
+        if(personajeJugador2.getPuntosDeVida() == personajeJugador2.getMaxPuntosDeVida())
+            cartelJugador2Perfecto->actualizar(nuevosEfectos);
+        else
+            cartelJugador2Gana->actualizar(nuevosEfectos);
     }
     else if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida() &&
             ((personajeJugador1.getEstado() == EstadoPersonaje::QUIETO && personajeJugador2.getEstado() == EstadoPersonaje::QUIETO) || (personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO)))
@@ -573,7 +585,10 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
         }
         // Si ya se le ha dicho que celebre, se oscurece el rectángulo si ha terminado de celebrar
         else if (ganador.getEstado() == EstadoPersonaje::CELEBRANDO && ganador.getAnimacionSegunEstado(EstadoPersonaje::CELEBRANDO)->haTerminado() &&
-                 ((ganador.getJugador() == Jugador::JUGADOR1 && cartelJugador1Gana->haTerminado()) || ((ganador.getJugador() == Jugador::JUGADOR2 && cartelJugador2Gana->haTerminado()))))
+                    ((ganador.getJugador() == Jugador::JUGADOR1 && cartelJugador1Gana->haTerminado()) ||
+                    ((ganador.getJugador() == Jugador::JUGADOR2 && cartelJugador2Gana->haTerminado())) ||
+                    (ganador.getJugador() == Jugador::JUGADOR1 && cartelJugador1Perfecto->haTerminado()) ||
+                    (ganador.getJugador() == Jugador::JUGADOR2 && cartelJugador2Perfecto->haTerminado())))
         {
             sf::Color nuevoColor(rectanguloOscuro.getFillColor());
             nuevoColor.a += 5;
@@ -606,11 +621,17 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
     // Se dibuja el cartel que se tenga que dibujar
     if (personajeJugador1.getPuntosDeVida() > personajeJugador2.getPuntosDeVida() && personajeJugador1.getEstado() == EstadoPersonaje::CELEBRANDO)
     {
-        ventana->draw(*cartelJugador1Gana);
+        if(personajeJugador1.getPuntosDeVida() == personajeJugador1.getMaxPuntosDeVida())
+            ventana->draw(*cartelJugador1Perfecto);
+        else
+            ventana->draw(*cartelJugador1Gana);
     }
     else if (personajeJugador2.getPuntosDeVida() > personajeJugador1.getPuntosDeVida() && personajeJugador2.getEstado() == EstadoPersonaje::CELEBRANDO)
     {
-        ventana->draw(*cartelJugador2Gana);
+        if(personajeJugador2.getPuntosDeVida() == personajeJugador2.getMaxPuntosDeVida())
+            ventana->draw(*cartelJugador2Perfecto);
+        else
+            ventana->draw(*cartelJugador2Gana);
     }
     else if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida())
     {

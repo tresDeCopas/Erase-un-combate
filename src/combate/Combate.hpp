@@ -49,8 +49,14 @@ class Combate{
         // Cartel que aparece al terminar una ronda en el que pone "Jugador 1 gana"
         std::shared_ptr<Animacion> cartelJugador1Gana;
 
+        // Cartel que aparece al terminar una ronda en el que pone "Jugador 1 perfecto"
+        std::shared_ptr<Animacion> cartelJugador1Perfecto;
+
         // Cartel que aparece al terminar una ronda en el que pone "Jugador 2 gana"
         std::shared_ptr<Animacion> cartelJugador2Gana;
+
+        // Cartel que aparece al terminar una ronda en el que pone "Jugador 2 perfecto"
+        std::shared_ptr<Animacion> cartelJugador2Perfecto;
 
         // Cartel que aparece al terminar una ronda en el que pone "Empate"
         std::shared_ptr<Animacion> cartelEmpate;
