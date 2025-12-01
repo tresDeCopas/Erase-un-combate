@@ -490,8 +490,13 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     case EstadoPersonaje::ATAQUE_NORMAL_1:
 
         pararMovimiento();
-
-        if (animaciones.at(estado)->haTerminado())
+        if (realizarAtaqueEspecial)
+        {
+            ataqueEspecial.resetear();
+            detenerAccion(Accion::ATACAR);
+            cambiarEstado(EstadoPersonaje::ATAQUE_ESPECIAL);
+        }
+        else if (animaciones.at(estado)->haTerminado())
         {
             if (accionesRealizadas[Accion::ATACAR])
             {
@@ -507,7 +512,13 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
         pararMovimiento();
 
-        if (animaciones.at(estado)->haTerminado())
+        if (realizarAtaqueEspecial)
+        {
+            ataqueEspecial.resetear();
+            detenerAccion(Accion::ATACAR);
+            cambiarEstado(EstadoPersonaje::ATAQUE_ESPECIAL);
+        }
+        else if (animaciones.at(estado)->haTerminado())
         {
             if (accionesRealizadas[Accion::ATACAR])
             {
@@ -524,7 +535,13 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
         pararMovimiento();
 
-        if (animaciones.at(estado)->haTerminado())
+        if (realizarAtaqueEspecial)
+        {
+            ataqueEspecial.resetear();
+            detenerAccion(Accion::ATACAR);
+            cambiarEstado(EstadoPersonaje::ATAQUE_ESPECIAL);
+        }
+        else if (animaciones.at(estado)->haTerminado())
         {
             cambiarEstado(EstadoPersonaje::QUIETO);
             accionesRealizadas[Accion::ATACAR] = false;
@@ -535,7 +552,13 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
         pararMovimiento();
 
-        if (animaciones.at(estado)->haTerminado())
+        if (realizarAtaqueEspecial)
+        {
+            ataqueEspecial.resetear();
+            detenerAccion(Accion::ATACAR);
+            cambiarEstado(EstadoPersonaje::ATAQUE_ESPECIAL);
+        }
+        else if (animaciones.at(estado)->haTerminado())
         {
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
@@ -545,7 +568,13 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
         pararMovimiento();
 
-        if (animaciones.at(estado)->haTerminado())
+        if (realizarAtaqueEspecial)
+        {
+            ataqueEspecial.resetear();
+            detenerAccion(Accion::ATACAR);
+            cambiarEstado(EstadoPersonaje::ATAQUE_ESPECIAL);
+        }
+        else if (animaciones.at(estado)->haTerminado())
         {
             cambiarEstado(EstadoPersonaje::QUIETO);
         }
