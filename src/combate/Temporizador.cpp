@@ -63,8 +63,6 @@ void Temporizador::draw(sf::RenderTarget& target, sf::RenderStates states) const
 void Temporizador::actualizarNumeroContador()
 {
     textoContador.setString(std::to_string(contadorActual));
-    // Esto es un poco fumada pero así en resumen estoy pasando el origen del texto y su posición
-    // a números enteros porque o si no se raya y se ve borroso y feo
-    textoContador.setOrigin(sf::Vector2f(sf::Vector2i(textoContador.getLocalBounds().size / 2.f)));
-    textoContador.setPosition(sf::Vector2f(sf::Vector2i(spriteFondo.getPosition() + POSICION_TEXTO_TEMPORIZADOR)));
+    textoContador.setOrigin(textoContador.getLocalBounds().size / 2.f);
+    textoContador.setPosition(spriteFondo.getPosition() + POSICION_TEXTO_TEMPORIZADOR);
 }

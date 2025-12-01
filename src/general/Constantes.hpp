@@ -357,7 +357,7 @@ constexpr sf::Vector2f POSICION_TEMPORIZADOR = {VENTANA_ANCHURA/2.f, 8.f*VENTANA
 
 // La posición del texto del temporizador con respecto a la posición del temporizador
 
-constexpr sf::Vector2f POSICION_TEXTO_TEMPORIZADOR = {0.f,3.f};
+constexpr sf::Vector2f POSICION_TEXTO_TEMPORIZADOR = {0.f,2.5f};
 
 // Indica cuántos fotogramas tienen que pasar para que el contador baje en uno
 constexpr unsigned int FOTOGRAMAS_POR_TICK_TEMPORIZADOR = 60;
