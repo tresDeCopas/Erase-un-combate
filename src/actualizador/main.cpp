@@ -4,6 +4,7 @@
 #include <fstream>
 #include <filesystem>
 #include <zip.h>
+#include <unistd.h>
 
 
 // Obtiene de GitHub el código de la última versión del juego (por ejemplo,

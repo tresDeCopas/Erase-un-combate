@@ -41,6 +41,11 @@ build*
 
 # Linux executables
 EraseUnCombate
+EraseUnActualizador
 parse
 read
 sandbox
+add-compressed-data
+autoclose-archive
+in-memory
+zip*
