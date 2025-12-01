@@ -50,7 +50,8 @@ endif()
 # que directamente le digo que use el curl que hay en el sistema
 # y ya está, no me complico la vida (para instalar curl con MSYS2:
 # pacman -S mingw-w64-x86_64-curl)
-set(CPR_FORCE_USE_SYSTEM_CURL ON CACHE BOOL "" FORCE) # Esto porque da problemas al compilar
+# (Para instalarlo en Linux: sudo apt-get install curl libssl-dev libcurl4-openssl-dev)
+set(CPR_USE_SYSTEM_CURL ON CACHE BOOL "" FORCE) # Esto porque da problemas al compilar
 FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
                          GIT_TAG master)
 FetchContent_MakeAvailable(cpr)
