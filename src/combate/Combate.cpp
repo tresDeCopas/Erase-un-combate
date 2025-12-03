@@ -429,6 +429,8 @@ void Combate::actualizarFotogramaNormal(std::list<std::shared_ptr<Animacion>> &e
     efectosA.push_back(personajeJugador2.getAnimacionSegunEstado(personajeJugador2.getEstado())->clonar());
     efectosB.push_back(personajeJugador1.getAnimacionSegunEstado(personajeJugador1.getEstado())->clonar());
 
+    // bool golpeadoMedioAntes = personajeJugador1.getEstado() == EstadoPersonaje::GOLPEADO_MEDIO || personajeJugador2.getEstado() == EstadoPersonaje::GOLPEADO_MEDIO;
+
     #pragma omp parallel num_threads(2)
     {
         #pragma omp single
@@ -440,6 +442,8 @@ void Combate::actualizarFotogramaNormal(std::list<std::shared_ptr<Animacion>> &e
             personajeJugador2.comprobarColisiones(efectosB, nuevosEfectosB);
         }
     }
+
+    // bool golpeadoMedioDespues = personajeJugador1.getEstado() == EstadoPersonaje::GOLPEADO_MEDIO || personajeJugador2.getEstado() == EstadoPersonaje::GOLPEADO_MEDIO;
 
     // Se añaden los efectos del jugador 2 a los del jugador 1 y así tenemos solo una lista
     for (std::shared_ptr<Animacion> &anim : nuevosEfectosB)
@@ -506,6 +510,11 @@ void Combate::actualizarFotogramaNormal(std::list<std::shared_ptr<Animacion>> &e
     ventana->draw(rectanguloOscuro);
 
     ventana->display();
+
+    // if(!golpeadoMedioAntes && golpeadoMedioDespues)
+    // {
+    //     sf::sleep(sf::seconds(6.f / Configuracion::unicaInstancia()->getFPS()));
+    // }
 }
 
 void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion>> &efectos)
