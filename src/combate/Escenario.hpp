@@ -9,7 +9,7 @@
 /*
     Esta clase define un escenario en el que pueden pelear los luchadores. Los escenarios
     están formados por una imagen de fondo que se va moviendo según se mueven los personajes.
-    El origen de este sprite se coloca justo enmedio en el eje X, y en el eje Y arriba del todo (y=0)
+    El origen de este sprite se coloca en su centro
 */
 
 class Escenario : public sf::Drawable {

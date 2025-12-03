@@ -6,7 +6,7 @@ Escenario::Escenario(sf::Texture& texturaFondo) : spriteFondo(texturaFondo) {
 
     // Se saca justo la mitad de la anchura de los sprites y se coloca el origen en esa X
     // (la Y da igual porque el escenario no se puede mover hacia arriba o abajo)
-    spriteFondo.setOrigin({spriteFondo.getTextureRect().size.x/2.f,0});
+    spriteFondo.setOrigin(sf::Vector2f(spriteFondo.getTextureRect().size/2));
 
     // El sprite se mueve al centro
     resetear();
@@ -19,6 +19,7 @@ void Escenario::actualizar(Personaje& personaje1, Personaje& personaje2, std::li
     sf::Vector2f posicion2(personaje2.getPosicion());
     int umbral_izquierda = ESCENARIO_UMBRAL_MOVIMIENTO;
     int umbral_derecha = VENTANA_ANCHURA-1 - ESCENARIO_UMBRAL_MOVIMIENTO;
+    int umbral_arriba = 3*(VENTANA_ALTURA-1) / 4;
 
     // Se calculan cosas para no hacer que las condiciones de los ifs sean de 352 km
 
@@ -27,6 +28,9 @@ void Escenario::actualizar(Personaje& personaje1, Personaje& personaje2, std::li
 
     // Hay un personaje en el borde derecho
     bool personajeEnLadoDerecho = posicion1.x >= umbral_derecha || posicion2.x >= umbral_derecha;
+
+    // Hay un personaje que ha saltado y está muy arriba
+    // bool personajeArriba = posicion1.y <= umbral_arriba || posicion2.y <= umbral_arriba;
 
     // El escenario ha alcanzado el tope del lado izquierdo y ya no puede seguir más hacia ese lado
     bool escenarioTopeIzquierda = (VENTANA_ANCHURA-(spriteFondo.getPosition().x-1)) > spriteFondo.getTextureRect().size.x/2;
@@ -56,10 +60,28 @@ void Escenario::actualizar(Personaje& personaje1, Personaje& personaje2, std::li
             efecto->mover(-1.f,0.f);
         }
     }
+
+    // if (personajeArriba){
+    //     spriteFondo.move({0.f,1.f});
+    //     personaje1.mover(0.f,1.f);
+    //     personaje2.mover(0.f,1.f);
+
+    //     for(std::shared_ptr<Animacion>& efecto : efectos){
+    //         efecto->mover(0.f,1.f);
+    //     }
+    // } else if (spriteFondo.getPosition().y > POSICION_INICIAL_ESCENARIO.y){
+    //     spriteFondo.move({0.f,-1.f});
+    //     personaje1.mover(0.f,-1.f);
+    //     personaje2.mover(0.f,-1.f);
+
+    //     for(std::shared_ptr<Animacion>& efecto : efectos){
+    //         efecto->mover(0.f,-1.f);
+    //     }
+    // }
 }
 
 void Escenario::resetear(){
-    spriteFondo.setPosition({VENTANA_ANCHURA/2,0});
+    spriteFondo.setPosition(sf::Vector2f(POSICION_INICIAL_ESCENARIO));
 }
 
 void Escenario::draw(sf::RenderTarget& target, sf::RenderStates states) const {

@@ -304,6 +304,10 @@ constexpr sf::Vector2f POSICION_DESTELLO_SUPER_CARGADA_J2 = {34.f,21.f};
 // personaje del borde (siempre y cuando el otro personaje no esté también en el umbral)
 constexpr int ESCENARIO_UMBRAL_MOVIMIENTO = 20;
 
+// Posición inicial del escenario (teniendo en cuenta que el origen del escenario está en el punto
+// central de la imagen del escenario)
+constexpr sf::Vector2i POSICION_INICIAL_ESCENARIO = {VENTANA_ANCHURA/2,VENTANA_ALTURA/2};
+
 // Altura en píxeles de las sombras
 constexpr int ALTURA_SOMBRA = 4;
 
