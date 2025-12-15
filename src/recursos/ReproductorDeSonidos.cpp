@@ -51,5 +51,8 @@ void ReproductorDeSonidos::setVolumen(float nuevoVolumen)
 }
 
 bool ReproductorDeSonidos::estaReproduciendo(std::string sonido){
-    return sonidos.at(sonido).getStatus() == sf::SoundSource::Status::Playing;
+    if(sonidos.count(sonido))
+        return sonidos.at(sonido).getStatus() == sf::SoundSource::Status::Playing;
+    else
+        return false;
 }

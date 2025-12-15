@@ -81,6 +81,9 @@ void Combate::resetear()
     personajeJugador1.cambiarEstado(EstadoPersonaje::QUIETO);
     personajeJugador2.cambiarEstado(EstadoPersonaje::QUIETO);
 
+    // Las animaciones de los personajes se resetean
+
+
     // Se coloca el escenario en el centro
     escenario.resetear();
 
@@ -553,7 +556,7 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
             cartelJugador2Gana->actualizar(nuevosEfectos);
     }
     else if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida() &&
-            ((personajeJugador1.getEstado() == EstadoPersonaje::QUIETO && personajeJugador2.getEstado() == EstadoPersonaje::QUIETO) || (personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO)))
+            ((personajeJugador1.getEstado() == EstadoPersonaje::DERROTA && personajeJugador2.getEstado() == EstadoPersonaje::DERROTA) || (personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO)))
     {
         cartelEmpate->actualizar(nuevosEfectos);
     }
@@ -567,11 +570,28 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
     // comprueba si ha habido empate, o si el jugador que ha ganado está celebrando
     if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida())
     {
-        if (cartelEmpate->haTerminado())
+        if (cartelEmpate->haTerminado()
+            &&
+                ((personajeJugador1.getEstado() == EstadoPersonaje::DERROTA && personajeJugador1.getAnimacionSegunEstado(personajeJugador1.getEstado())->haTerminado())
+                ||
+                (personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO))
+            &&
+                ((personajeJugador2.getEstado() == EstadoPersonaje::DERROTA && personajeJugador2.getAnimacionSegunEstado(personajeJugador2.getEstado())->haTerminado())
+                ||
+                (personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO))
+            )
         {
             sf::Color nuevoColor(rectanguloOscuro.getFillColor());
             nuevoColor.a += 5;
             rectanguloOscuro.setFillColor(nuevoColor);
+        }
+
+        // Nadie gana, así que los dos se lamentan de no haberse hinchado a yoyas durante
+        // el combate cuando tenían oportunidad
+        if(personajeJugador1.getEstado() == EstadoPersonaje::QUIETO && personajeJugador1.getEstado() == EstadoPersonaje::QUIETO)
+        {
+            personajeJugador1.cambiarEstado(EstadoPersonaje::DERROTA);
+            personajeJugador2.cambiarEstado(EstadoPersonaje::DERROTA);
         }
     }
     else
@@ -582,9 +602,13 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
         if ((ganador.getEstado() == EstadoPersonaje::QUIETO && perdedor.getEstado() == EstadoPersonaje::TUMBADO && perdedor.getPuntosDeVida() == 0) ||
             (ganador.getEstado() == EstadoPersonaje::QUIETO && perdedor.getEstado() == EstadoPersonaje::QUIETO && perdedor.getPuntosDeVida() > 0))
         {
+            // El ganador celebra
             ganador.cambiarEstado(EstadoPersonaje::CELEBRANDO);
+            
+            // Si el perdedor sigue en pie es porque ha perdido por tiempo (ya me
+            // jodería) así que se lamenta de su derrota
             if(perdedor.getEstado() == EstadoPersonaje::QUIETO){
-                // perdedor.cambiarEstado(EstadoPersonaje::DERROTA_POR_TIEMPO);
+                perdedor.cambiarEstado(EstadoPersonaje::DERROTA);
             }
             
             if (ganador.getJugador() == Jugador::JUGADOR1)

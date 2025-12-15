@@ -70,7 +70,8 @@ std::vector<Hitbox> AnimacionAgrandable::getHitboxes(){
     return std::vector<Hitbox>();
 }
 
-bool AnimacionAgrandable::haTerminado(){
+bool AnimacionAgrandable::haTerminado()
+{
     if(fotogramasEspera == -1) return !seEstaAgrandando && !ReproductorDeSonidos::unicaInstancia()->estaReproduciendo(rutaSonido);
     else return !seEstaAgrandando && escalaActual == 0;
 }

@@ -62,7 +62,12 @@ void VentanaPrincipal::actualizar(){
         return;
     }
 
-    ventanaPrincipal->setPosition({ventanaPrincipal->getPosition().x,ventanaPrincipal->getPosition().y+potenciaVibracion});
+    sf::View nuevaVista = ventanaPrincipal->getView();
+
+    nuevaVista.move({0,static_cast<float>(potenciaVibracion)});
+
+    ventanaPrincipal->setView(nuevaVista);
+    // ventanaPrincipal->setPosition({ventanaPrincipal->getPosition().x,ventanaPrincipal->getPosition().y+potenciaVibracion});
 
     if(potenciaVibracion < 0) potenciaVibracion++;
 
@@ -72,6 +77,8 @@ void VentanaPrincipal::actualizar(){
 }
 
 void VentanaPrincipal::vibrar(int potenciaVibracion){
-    if(vibracionActivada)
+    if(vibracionActivada){
+        ventanaPrincipal->setView(ventanaPrincipal->getDefaultView());
         VentanaPrincipal::potenciaVibracion = potenciaVibracion;
+    }
 }

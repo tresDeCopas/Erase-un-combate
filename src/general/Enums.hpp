@@ -42,7 +42,8 @@ enum class EstadoPersonaje {
     ATAQUE_SUPER,       // Está haciendo el super ataque
     TUMBADO,            // Está en el suelo tumbado después de que un ataque lo mandara volando
     LEVANTANDOSE,       // Se está levantando del suelo después de estar tumbado
-    CELEBRANDO          // Está celebrando su victoria
+    CELEBRANDO,         // Está celebrando su victoria
+    DERROTA             // Ha perdido por tiempo o ha empatado, así que se está lamentando
 };
 
 enum class TipoPlantilla {

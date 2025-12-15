@@ -10,8 +10,8 @@
 #include "ContenedorDeRecursos.hpp"
 
 AnimacionPorFotogramas::AnimacionPorFotogramas(IngredientesAnimacionPorFotogramas &ingredientes) :
-    Animacion(ContenedorDeTexturas::unicaInstancia()->obtener(ingredientes.rutaTextura)) {
-
+Animacion(ContenedorDeTexturas::unicaInstancia()->obtener(ingredientes.rutaTextura))
+{
     sprite.setTextureRect(sf::IntRect({0,0}, {static_cast<int>(sprite.getTextureRect().size.x/ingredientes.numRectangulos), static_cast<int>(sprite.getTextureRect().size.y)}));
     sprite.setOrigin(ingredientes.origen);
     sprite.setPosition(ingredientes.posicion);
@@ -32,7 +32,8 @@ AnimacionPorFotogramas::AnimacionPorFotogramas(IngredientesAnimacionPorFotograma
     resetear();
 }
 
-void AnimacionPorFotogramas::actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones) {
+void AnimacionPorFotogramas::actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones)
+{
 
     if(tipoBucle == TipoBucle::NORMAL){
         if(!primerFotograma) fotogramaActual++;
@@ -154,6 +155,8 @@ void AnimacionPorFotogramas::resetear(){
     fotogramaActual = 0;
     sonidoYaReproducido = false;
     primerFotograma = true;
+
+    sprite.setTextureRect(sf::IntRect({rectanguloCorrespondiente[fotogramaActual]*sprite.getTextureRect().size.x,0}, {sprite.getTextureRect().size.x,sprite.getTextureRect().size.y}));
 }
 
 std::shared_ptr<Animacion> AnimacionPorFotogramas::clonar(){

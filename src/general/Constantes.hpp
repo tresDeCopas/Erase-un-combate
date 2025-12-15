@@ -45,10 +45,10 @@ const std::string VENTANA_NOMBRE = "Erase un combate";
 constexpr int VENTANA_ESTILO = sf::Style::Close;
 
 // Vibración de la ventana para un ataque mediano
-constexpr int VIBRACION_ATAQUE_MEDIO = 7;
+constexpr int VIBRACION_ATAQUE_MEDIO = 4;
 
 // Vibración de la ventana para un ataque súper
-constexpr int VIBRACION_ATAQUE_SUPER = 30;
+constexpr int VIBRACION_ATAQUE_SUPER = 12;
 
 // Cada cuántos fotogramas se actualiza la vibración de la ventana principal para que el efecto no
 // sea tan violento a los ojos

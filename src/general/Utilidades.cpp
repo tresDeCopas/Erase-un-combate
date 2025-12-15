@@ -62,7 +62,8 @@ namespace util{
         {"ataque-super", EstadoPersonaje::ATAQUE_SUPER},
         {"tumbado", EstadoPersonaje::TUMBADO},
         {"levantandose", EstadoPersonaje::LEVANTANDOSE},
-        {"celebrando", EstadoPersonaje::CELEBRANDO}
+        {"celebrando", EstadoPersonaje::CELEBRANDO},
+        {"derrota", EstadoPersonaje::DERROTA}
     };
 
     EstadoPersonaje stringAEstadoPersonaje(std::string string)

@@ -29,7 +29,8 @@ namespace util{
     // Una tabla que permite implementar la función stringAEstadoPersonaje de forma eficiente
     extern std::unordered_map<std::string,EstadoPersonaje> tablaStringAEstadoPersonaje;
 
-    // Dado un string, devuelve el estado de personaje correspondiente
+    // Dado un string, devuelve el estado de personaje correspondiente. Esto es útil
+    // al leer los ficheros YAML de cada personaje
     EstadoPersonaje stringAEstadoPersonaje(std::string string);
 
     // Una tabla que permite implementar la función stringAAccion de forma eficiente

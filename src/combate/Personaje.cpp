@@ -224,7 +224,6 @@ void Personaje::levantarPolvo(std::list<std::shared_ptr<Animacion>> &efectosInse
 
 void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_ptr<Animacion>> &efectosInsertados)
 {
-
     // Se comprueba el ataque especial con los botones pulsados
     std::unordered_set<Accion> acciones;
     for (const std::pair<Accion, bool> par : accionesRealizadas)
@@ -830,6 +829,11 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
 
     case EstadoPersonaje::CELEBRANDO:
+        pararMovimiento();
+
+        break;
+    
+    case EstadoPersonaje::DERROTA:
         pararMovimiento();
 
         break;
