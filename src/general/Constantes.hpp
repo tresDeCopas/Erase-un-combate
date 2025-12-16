@@ -367,7 +367,7 @@ constexpr sf::Vector2f POSICION_TEXTO_TEMPORIZADOR = {0.f,2.5f};
 constexpr unsigned int FOTOGRAMAS_POR_TICK_TEMPORIZADOR = 60;
 
 // Indica cuántas veces tiene que bajar el contador del temporizador para que se termine el tiempo
-constexpr unsigned int TICKS_CONTADOR_TEMPORIZADOR = 90;
+constexpr unsigned int TICKS_CONTADOR_TEMPORIZADOR = 10;
 
 // Indica el tamaño de la fuente de los numeritos del temporizador
 constexpr unsigned int TAMANO_FUENTE_TEMPORIZADOR = 10;

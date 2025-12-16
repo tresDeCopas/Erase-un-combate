@@ -555,8 +555,14 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
         else
             cartelJugador2Gana->actualizar(nuevosEfectos);
     }
-    else if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida() &&
-            ((personajeJugador1.getEstado() == EstadoPersonaje::DERROTA && personajeJugador2.getEstado() == EstadoPersonaje::DERROTA) || (personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO)))
+    else if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida()
+            &&
+                (
+                (personajeJugador1.getEstado() == EstadoPersonaje::DERROTA && personajeJugador2.getEstado() == EstadoPersonaje::DERROTA)
+                ||
+                (personajeJugador1.getPuntosDeVida() == 0 && personajeJugador2.getPuntosDeVida() == 0 && personajeJugador1.getEstado() == EstadoPersonaje::TUMBADO && personajeJugador2.getEstado() == EstadoPersonaje::TUMBADO)
+                )
+            )
     {
         cartelEmpate->actualizar(nuevosEfectos);
     }
