@@ -638,7 +638,7 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
 
         // Nadie gana, así que los dos se lamentan de no haberse hinchado a yoyas durante
         // el combate cuando tenían oportunidad
-        if(personajeJugador1.getEstado() == EstadoPersonaje::QUIETO && personajeJugador1.getEstado() == EstadoPersonaje::QUIETO)
+        if(personajeJugador1.getEstado() == EstadoPersonaje::QUIETO && personajeJugador2.getEstado() == EstadoPersonaje::QUIETO)
         {
             personajeJugador1.cambiarEstado(EstadoPersonaje::DERROTA);
             personajeJugador2.cambiarEstado(EstadoPersonaje::DERROTA);
