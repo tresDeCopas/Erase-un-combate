@@ -22,8 +22,14 @@ Bitacora::Bitacora(){
     time(&tt);
     ti = localtime(&tt);
 
-    ficheroBitacora << "----------------------------------------------" << "\n";
-    ficheroBitacora << "Juan Cuesta: Queridos convecinos, gracias por asistir a esta junta. Hoy estamos a: " << asctime(ti) << "\n" << "\n";
+    std::ostream* destinoSalida = &ficheroBitacora;
+    if(!Configuracion::unicaInstancia()->isSalidaABitacora())
+    {
+        destinoSalida = &std::cerr;
+    }
+
+    *destinoSalida << "----------------------------------------------" << "\n";
+    *destinoSalida << "Juan Cuesta: Queridos convecinos, gracias por asistir a esta junta. Hoy estamos a: " << asctime(ti) << "\n" << "\n";
 
     comprobarGrafica();
 }
@@ -36,23 +42,34 @@ Bitacora::~Bitacora(){
 
 void Bitacora::escribir(std::string cosillas)
 {
-    ficheroBitacora << cosillas << "\n";
-    ficheroBitacora.flush();
-    if(Configuracion::unicaInstancia()->isSalidaABitacora())
-        std::cerr << cosillas << "\n";
+    std::ostream* destinoSalida = &ficheroBitacora;
+    if(!Configuracion::unicaInstancia()->isSalidaABitacora())
+    {
+        destinoSalida = &std::cerr;
+    }
+
+    *destinoSalida << cosillas << "\n";
+    destinoSalida->flush();
 }
 
-void Bitacora::comprobarGrafica(){
-    ficheroBitacora << "Juan Cuesta: Primer punto del día: comprobación rutinaria de la tarjeta gráfica." << "\n";
-    ficheroBitacora << "Emilio: Señor Juan, he estado mirando y la tarjeta gráfica soporta texturas de hasta " << sf::Texture::getMaximumSize() << " píxeles." << "\n";
+void Bitacora::comprobarGrafica()
+{
+    std::ostream* destinoSalida = &ficheroBitacora;
+    if(!Configuracion::unicaInstancia()->isSalidaABitacora())
+    {
+        destinoSalida = &std::cerr;
+    }
+
+    *destinoSalida << "Juan Cuesta: Primer punto del día: comprobación rutinaria de la tarjeta gráfica." << "\n";
+    *destinoSalida << "Emilio: Señor Juan, he estado mirando y la tarjeta gráfica soporta texturas de hasta " << sf::Texture::getMaximumSize() << " píxeles." << "\n";
     if(sf::Texture::getMaximumSize() < MAXIMA_LONGITUD_TEXTURA){
-        ficheroBitacora << "Juan Cuesta: ¡¿Cómo?! Pero bueno, esto es... no doy crédito..." << "\n";
-        ficheroBitacora << "Paloma: Ay Juan, ¡tranquilízate, hombre ya! ¡Recuerda la úlcera!" << "\n";
-        ficheroBitacora << "Juan Cuesta: Si es que no puede ser... este juego tiene texturas de hasta " << MAXIMA_LONGITUD_TEXTURA << " píxeles, esta tarjeta gráfica no va a poder aguantarlo..." << "\n";
-        ficheroBitacora << "Concha: ¡Váyase señor Cuesta! ¡¡VÁYASE!!" << "\n";
-        ficheroBitacora << "Marisa: La has cagao macho, esto no tira ni de puta coña." << "\n";
-        ficheroBitacora << "Emilio: A ver, las ultras, que se tranquilicen." << "\n" << "\n";
+        *destinoSalida << "Juan Cuesta: ¡¿Cómo?! Pero bueno, esto es... no doy crédito..." << "\n";
+        *destinoSalida << "Paloma: Ay Juan, ¡tranquilízate, hombre ya! ¡Recuerda la úlcera!" << "\n";
+        *destinoSalida << "Juan Cuesta: Si es que no puede ser... este juego tiene texturas de hasta " << MAXIMA_LONGITUD_TEXTURA << " píxeles, esta tarjeta gráfica no va a poder aguantarlo..." << "\n";
+        *destinoSalida << "Concha: ¡Váyase señor Cuesta! ¡¡VÁYASE!!" << "\n";
+        *destinoSalida << "Marisa: La has cagao macho, esto no tira ni de puta coña." << "\n";
+        *destinoSalida << "Emilio: A ver, las ultras, que se tranquilicen." << "\n" << "\n";
     } else {
-        ficheroBitacora << "Juan Cuesta: Perfecto, una buena cifra. Prosigamos." << "\n";
+        *destinoSalida << "Juan Cuesta: Perfecto, una buena cifra. Prosigamos." << "\n";
     }
 }

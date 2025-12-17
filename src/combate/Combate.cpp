@@ -572,8 +572,52 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
         efectos.push_back(efecto);
     }
 
-    // TERCER PASO: no se comprueban colisiones porque se supone que ya se ha terminado esta ronda. En su lugar, se
-    // comprueba si ha habido empate, o si el jugador que ha ganado está celebrando
+    // TERCER PASO: COMPROBAR COLISIONES
+
+    // Copias de la lista de efectos para poder meter las hitboxes del enemigo para cada uno
+    // de los dos personajes
+    std::list<std::shared_ptr<Animacion>> efectosA(efectos);
+    std::list<std::shared_ptr<Animacion>> efectosB(efectos);
+
+    // Se mete la hitbox del otro jugador para cada lista auxiliar de efectos. Esto es un poco follón pero de esta forma me
+    // aseguro que se puedan comprobar las colisiones en paralelo sin que haya problemas. Se crea una copia de la animación actual
+    // de cada jugador (empiezo a pensar que paralelizar esto va a ser más porculero que hacerlo secuencial)
+
+    efectosA.push_back(personajeJugador2.getAnimacionSegunEstado(personajeJugador2.getEstado())->clonar());
+    efectosB.push_back(personajeJugador1.getAnimacionSegunEstado(personajeJugador1.getEstado())->clonar());
+
+    // Aquí se meten los nuevos efectos que se generen al actualizar los personajes
+    std::list<std::shared_ptr<Animacion>> nuevosEfectosA;
+    std::list<std::shared_ptr<Animacion>> nuevosEfectosB;
+
+    // bool golpeadoMedioAntes = personajeJugador1.getEstado() == EstadoPersonaje::GOLPEADO_MEDIO || personajeJugador2.getEstado() == EstadoPersonaje::GOLPEADO_MEDIO;
+
+    #pragma omp parallel num_threads(2)
+    {
+        #pragma omp single
+        {
+            #pragma omp task
+            personajeJugador1.comprobarColisiones(efectosA, nuevosEfectosA);
+
+            #pragma omp task
+            personajeJugador2.comprobarColisiones(efectosB, nuevosEfectosB);
+        }
+    }
+
+    // bool golpeadoMedioDespues = personajeJugador1.getEstado() == EstadoPersonaje::GOLPEADO_MEDIO || personajeJugador2.getEstado() == EstadoPersonaje::GOLPEADO_MEDIO;
+
+    // Se añaden los efectos del jugador 2 a los del jugador 1 y así tenemos solo una lista
+    for (std::shared_ptr<Animacion> &anim : nuevosEfectosB)
+    {
+        nuevosEfectosA.push_back(anim);
+    }
+
+    for (auto iter = nuevosEfectosA.begin(); iter != nuevosEfectosA.end(); iter++)
+    {
+        efectos.push_back(*iter);
+    }
+
+    // CUARTO PASO: Se comprueba si ha habido empate, o si el jugador que ha ganado está celebrando
     if (personajeJugador1.getPuntosDeVida() == personajeJugador2.getPuntosDeVida())
     {
         if (cartelEmpate->haTerminado()
@@ -642,8 +686,26 @@ void Combate::actualizarFotogramaCelebracion(std::list<std::shared_ptr<Animacion
 
     ventana->clear(sf::Color(100, 100, 100));
     ventana->draw(escenario);
-    ventana->draw(personajeJugador1);
-    ventana->draw(personajeJugador2);
+
+    // Dependiendo de lo que estén haciendo los personajes, se dibuja uno encima de otro. Esto
+    // sobre todo es para que el jugador que haya ganado se dibuje encima del que ha perdido
+    int prioridadDibujoJugador1 = util::getPrioridadDibujo(personajeJugador1.getEstado());
+    int prioridadDibujoJugador2 = util::getPrioridadDibujo(personajeJugador2.getEstado());
+
+    // Puede parecer raro que si el jugador 1 tiene más prioridad se dibuje
+    // después, pero esto ocurre porque, al dibujarse después, se dibuja encima
+    // del jugador 2, haciendo que el jugador 1 esté en frente. A eso se refiere
+    // la prioridad más bien
+    if (prioridadDibujoJugador1 > prioridadDibujoJugador2)
+    {
+        ventana->draw(personajeJugador2);
+        ventana->draw(personajeJugador1);
+    }
+    else
+    {
+        ventana->draw(personajeJugador1);
+        ventana->draw(personajeJugador2);
+    }
 
     for (auto iter = efectos.begin(); iter != efectos.end(); iter++)
     {

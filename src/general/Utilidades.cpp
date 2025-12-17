@@ -214,6 +214,7 @@ namespace util{
             case EstadoPersonaje::TUMBADO:
             case EstadoPersonaje::GOLPEADO_PEQUE:
             case EstadoPersonaje::GOLPEADO_MEDIO:
+            case EstadoPersonaje::DERROTA:
                 return 1;
                 break;
             
