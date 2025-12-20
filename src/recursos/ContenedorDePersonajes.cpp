@@ -29,6 +29,19 @@ Personaje ContenedorDePersonajes::obtenerPersonaje(std::string nombre)
     return personajes.at(nombre).clonar();
 }
 
+std::vector<std::string> ContenedorDePersonajes::obtenerNombresPersonajes()
+{
+    // Creo que C++ no tiene una función .keys como Python para
+    // recuperar todas las claves de un mapa así que toca
+    // hacerlo artesanalmente
+    std::vector<std::string> vectorDeNombres;
+
+    for(const auto& [nombre, personaje] : personajes)
+        vectorDeNombres.push_back(nombre);
+
+    return vectorDeNombres;
+}
+
 void ContenedorDePersonajes::cargarTodosLosPersonajes()
 {
     Bitacora::unicaInstancia()->escribir("Juan Cuesta: Siguiente punto del día: registro de personajes en el listado oficial. Emilio, apunta, voy a dictarte los personajes en orden descendente de aparición.");
@@ -37,7 +50,7 @@ void ContenedorDePersonajes::cargarTodosLosPersonajes()
     for (const std::filesystem::directory_entry &entrada : std::filesystem::directory_iterator("ficheros/personajes"))
     {
         // En este mapa se van a guardar las animaciones según el estado
-        std::map<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> animaciones;
+        std::unordered_map<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> animaciones;
 
         // Las acciones que hay que hacer en orden para poder desencadenar el ataque especial
         std::vector<Accion> accionesAtaqueEspecial;

@@ -12,9 +12,9 @@
 #include "ContenedorDeCombos.hpp"
 #include <iostream>
 
-Personaje::Personaje(std::map<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> animaciones, std::string nombre, int maxPuntosDeVida, float velocidadMaxima, float fuerzaSalto, std::vector<Accion> accionesAtaqueEspecial) : puntosDeVida(maxPuntosDeVida), maxPuntosDeVida(maxPuntosDeVida), medidorSuper(0), velocidadMaxima(velocidadMaxima), fuerzaSalto(-fuerzaSalto), nombre(nombre), velocidad({0.f, 0.f}),
-                                                                                                                                                                                                                                  escalaSprite({1.f, 1.f}), contadorTumbado(0), contadorBlanco(0), contadorEsquiveSuper(0), estado(EstadoPersonaje::QUIETO), shader(std::make_shared<sf::Shader>()),
-                                                                                                                                                                                                                                  animaciones(animaciones), ataqueEspecial(accionesAtaqueEspecial)
+Personaje::Personaje(std::unordered_map<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> animaciones, std::string nombre, int maxPuntosDeVida, float velocidadMaxima, float fuerzaSalto, std::vector<Accion> accionesAtaqueEspecial) : puntosDeVida(maxPuntosDeVida), maxPuntosDeVida(maxPuntosDeVida), medidorSuper(0), velocidadMaxima(velocidadMaxima), fuerzaSalto(-fuerzaSalto), nombre(nombre), velocidad({0.f, 0.f}),
+                                                                                                                                                                                                                                                escalaSprite({1.f, 1.f}), contadorTumbado(0), contadorBlanco(0), contadorEsquiveSuper(0), estado(EstadoPersonaje::QUIETO), shader(std::make_shared<sf::Shader>()),
+                                                                                                                                                                                                                                                animaciones(animaciones), ataqueEspecial(accionesAtaqueEspecial)
 {
     if (!shader->loadFromFile("shaders/blendColor.frag", sf::Shader::Type::Fragment))
     {
@@ -137,7 +137,7 @@ std::shared_ptr<AnimacionPorFotogramas> Personaje::getAnimacionSegunEstado(Estad
     return animaciones.at(estado);
 }
 
-void Personaje::setAnimaciones(const std::map<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> &animaciones)
+void Personaje::setAnimaciones(const std::unordered_map<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> &animaciones)
 {
     this->animaciones = animaciones;
 }
@@ -146,7 +146,7 @@ void Personaje::cambiarEstado(EstadoPersonaje estadoNuevo)
 {
     // Si hemos pasado a preparar el ataque super, o si hemos dejado de atacar super,
     // el personaje destellea en color blanco durante un momento
-    if(estadoNuevo == EstadoPersonaje::PREPARANDO_SUPER || estado == EstadoPersonaje::ATAQUE_SUPER)
+    if (estadoNuevo == EstadoPersonaje::PREPARANDO_SUPER || estado == EstadoPersonaje::ATAQUE_SUPER)
     {
         contadorBlanco = 255;
     }
@@ -832,7 +832,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         pararMovimiento();
 
         break;
-    
+
     case EstadoPersonaje::DERROTA:
         pararMovimiento();
 
@@ -1343,16 +1343,16 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
     else if (fuerzaAtaque <= MAX_ATAQUE_PEQUE)
     {
         anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("golpeado-peque");
-        anim->setRotacion((rand()%2)*45);
+        anim->setRotacion((rand() % 2) * 45);
         ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/personajes/" + this->nombre + "/golpeado-peque.ogg");
 
         for (int i = 0; i < fuerzaAtaque; ++i)
         {
 
             auto particula = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("particula-golpeado-1");
-            dynamic_cast<AnimacionConGravedad*>(particula.get())->setPosicion(posicionMedia);
-            dynamic_cast<AnimacionConGravedad*>(particula.get())->setVelocidad(sf::Vector2f(((escalaSprite.x > 0) ? -1 : 1) * util::realAleatorio() * MAX_VELOCIDAD_PARTICULA_PEQUE, -1 * util::realAleatorio() * MAX_VELOCIDAD_PARTICULA_PEQUE));
-            dynamic_cast<AnimacionConGravedad*>(particula.get())->setVelocidadGiro((rand() % 2 == 0 ? -1 : 1) * util::realAleatorio() * MAX_VELOCIDAD_GIRO_PART);
+            dynamic_cast<AnimacionConGravedad *>(particula.get())->setPosicion(posicionMedia);
+            dynamic_cast<AnimacionConGravedad *>(particula.get())->setVelocidad(sf::Vector2f(((escalaSprite.x > 0) ? -1 : 1) * util::realAleatorio() * MAX_VELOCIDAD_PARTICULA_PEQUE, -1 * util::realAleatorio() * MAX_VELOCIDAD_PARTICULA_PEQUE));
+            dynamic_cast<AnimacionConGravedad *>(particula.get())->setVelocidadGiro((rand() % 2 == 0 ? -1 : 1) * util::realAleatorio() * MAX_VELOCIDAD_GIRO_PART);
 
             efectosInsertados.push_back(particula);
         }
@@ -1360,8 +1360,8 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
         for (int i = 0; i < NUM_PARTICULAS_LINEALES_ATAQUE_PEQUE; i++)
         {
             auto particula = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("particula-lineal-peque");
-            dynamic_cast<AnimacionParticulaLineal*>(particula.get())->setPosicionInicial(posicionMedia);
-            dynamic_cast<AnimacionParticulaLineal*>(particula.get())->setPosicionFinal(rand()%360,LONGITUD_MOVIMIENTO_PARTICULA_LINEAL_ATAQUE_PEQUE);
+            dynamic_cast<AnimacionParticulaLineal *>(particula.get())->setPosicionInicial(posicionMedia);
+            dynamic_cast<AnimacionParticulaLineal *>(particula.get())->setPosicionFinal(rand() % 360, LONGITUD_MOVIMIENTO_PARTICULA_LINEAL_ATAQUE_PEQUE);
 
             efectosInsertados.push_back(particula);
         }
@@ -1398,8 +1398,8 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
         for (int i = 0; i < NUM_PARTICULAS_LINEALES_ATAQUE_MEDIO; i++)
         {
             auto particula = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("particula-lineal-media");
-            dynamic_cast<AnimacionParticulaLineal*>(particula.get())->setPosicionInicial(posicionMedia);
-            dynamic_cast<AnimacionParticulaLineal*>(particula.get())->setPosicionFinal(rand()%360,LONGITUD_MOVIMIENTO_PARTICULA_LINEAL_ATAQUE_MEDIO);
+            dynamic_cast<AnimacionParticulaLineal *>(particula.get())->setPosicionInicial(posicionMedia);
+            dynamic_cast<AnimacionParticulaLineal *>(particula.get())->setPosicionFinal(rand() % 360, LONGITUD_MOVIMIENTO_PARTICULA_LINEAL_ATAQUE_MEDIO);
 
             efectosInsertados.push_back(particula);
         }
@@ -1464,7 +1464,7 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
     }
 
     // Si un personaje ha sido derrotado, se terminan todos los combos
-    if(puntosDeVida <= 0)
+    if (puntosDeVida <= 0)
     {
         ContenedorDeCombos::unicaInstancia()->informar(Jugador::JUGADOR1, false);
         ContenedorDeCombos::unicaInstancia()->informar(Jugador::JUGADOR2, false);

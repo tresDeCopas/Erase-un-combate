@@ -7,31 +7,32 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 #include <set>
-#include <map>
+#include <unordered_map>
 
 /*
     Esta estructura de datos es para pasar la info al constructor de forma más bonita
     y corta en vez de pasarle 1894178 parámetros que sería un coñazo
 */
-struct IngredientesAnimacionPorFotogramas{
+struct IngredientesAnimacionPorFotogramas
+{
     // Posición de la animación
     sf::Vector2f posicion = {0.f, 0.f};
-    
+
     // Origen a partir del cual se harán las operaciones estas de escalado,
     // traslación y rotación y tal y cual
     sf::Vector2f origen = {0.f, 0.f};
-    
+
     // Número de rectángulos distintos que tiene la animación
     int numRectangulos = 0;
-    
+
     // Ruta de la textura de la animación
     std::string rutaTextura = "";
-    
+
     // Tipo de repetición en bucle
     TipoBucle tipoBucle = TipoBucle::NORMAL;
-    
+
     // Correspondencia entre rectángulo y hitboxes
-    std::unordered_map<int,std::vector<Hitbox>> hitboxes;
+    std::unordered_map<int, std::vector<Hitbox>> hitboxes;
 
     // Correspondencia entre fotograma y rectángulo (por ejemplo, fotograma 0 rectángulo 0, o fotograma 5 rectángulo 2)
     std::unordered_map<int, int> rectanguloCorrespondiente;
@@ -40,17 +41,17 @@ struct IngredientesAnimacionPorFotogramas{
     std::unordered_set<int> fotogramasConSonido;
 
     // Indica qué fotogramas tienen movimiento
-    std::unordered_map<int,sf::Vector2f> fotogramasConMovimiento;
+    std::unordered_map<int, sf::Vector2f> fotogramasConMovimiento;
 
     // Indica qué fotogramas tienen estiramientos
-    std::unordered_map<int,sf::Vector2f> fotogramasConEstiramientos;
+    std::unordered_map<int, sf::Vector2f> fotogramasConEstiramientos;
 
     // Indica qué fotogramas hacen aparecer animaciones adicionales
-    std::unordered_map<int,IndicacionesSobreAnimacion> fotogramasConAnimaciones;
+    std::unordered_map<int, IndicacionesSobreAnimacion> fotogramasConAnimaciones;
 
     // Ruta del sonido a reproducir
     std::string rutaSonido = "";
-    
+
     // Indica si el sonido se debe repetir cada vez que vuelva a salir el fotograma o si una vez se
     // termine el bucle no hay que repetirlo
     bool repetirSonido = false;
@@ -79,13 +80,13 @@ private:
     std::unordered_set<int> fotogramasConSonido;
 
     // Indica qué fotogramas tienen movimiento
-    std::unordered_map<int,sf::Vector2f> fotogramasConMovimiento;
+    std::unordered_map<int, sf::Vector2f> fotogramasConMovimiento;
 
     // Indica qué fotogramas hacen que la animación se estire
-    std::unordered_map<int,sf::Vector2f> fotogramasConEstiramientos;
+    std::unordered_map<int, sf::Vector2f> fotogramasConEstiramientos;
 
     // Indica qué fotogramas hacen aparecer animaciones adicionales
-    std::unordered_map<int,IndicacionesSobreAnimacion> fotogramasConAnimaciones;
+    std::unordered_map<int, IndicacionesSobreAnimacion> fotogramasConAnimaciones;
 
     // Indica si el sonido se debe repetir cada vez que vuelva a salir el fotograma o si una vez se
     // termine el bucle no hay que repetirlo
@@ -105,12 +106,11 @@ private:
     TipoSombra tipoSombra;
 
 public:
-
     // Constructor que se pone a cocinar una animación por fotogramas en base a unos ingredientes
     AnimacionPorFotogramas(IngredientesAnimacionPorFotogramas &ingredientes);
 
     // Actualiza la animación (avanza un fotograma), reproduciendo el sonido si es necesario. En nuevasAnimaciones
-    // se insertan las nuevas animaciones que serán introducidas. Puede que se deba mover la animación, por lo que se 
+    // se insertan las nuevas animaciones que serán introducidas. Puede que se deba mover la animación, por lo que se
     virtual void actualizar(std::list<std::shared_ptr<Animacion>> &nuevasAnimaciones);
 
     // Le da la vuelta al sprite
@@ -147,4 +147,3 @@ public:
     // Las clases que heredan de sf::Drawable deben implementar draw
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };
-

@@ -74,12 +74,14 @@ include_directories(src/animaciones src/combate src/general src/menus src/recurs
 
 # Se ponen todos los ficheros .cpp
 add_executable(EraseUnCombate
+
 src/animaciones/Animacion.cpp
 src/animaciones/AnimacionAgrandable.cpp
 src/animaciones/AnimacionConGravedad.cpp
 src/animaciones/AnimacionDesvaneciente.cpp
 src/animaciones/AnimacionParticulaLineal.cpp
 src/animaciones/AnimacionPorFotogramas.cpp
+
 src/combate/AtaqueEspecial.cpp
 src/combate/Combate.cpp
 src/combate/ConectorOnline.cpp
@@ -90,22 +92,29 @@ src/combate/Hitbox.cpp
 src/combate/InfoCombo.cpp
 src/combate/Personaje.cpp
 src/combate/Temporizador.cpp
+
 src/general/Bitacora.cpp
 src/general/Configuracion.cpp
 src/general/Utilidades.cpp
 src/general/VentanaPrincipal.cpp
+
 src/main.cpp
+
 src/menus/SelectorMenuPrincipal.cpp
 src/menus/FondoMenuPrincipal.cpp
 src/menus/MenuPrincipal.cpp
+src/menus/SelectorPersonaje.cpp
 src/menus/MenuSeleccionPersonaje.cpp
+
 src/recursos/ContenedorDeEfectos.cpp
 src/recursos/ContenedorDePersonajes.cpp
 src/recursos/ContenedorDeRecursos.cpp
 src/recursos/GestorDeControles.cpp
 src/recursos/ReproductorDeMusica.cpp
 src/recursos/ReproductorDeSonidos.cpp
-src/recursos/SelectorJugadorParaMando.cpp)
+src/recursos/SelectorJugadorParaMando.cpp
+
+)
 
 # Este otro ejecutable es para el actualizador
 add_executable(EraseUnActualizador

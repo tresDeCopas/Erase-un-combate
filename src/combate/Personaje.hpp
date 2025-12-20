@@ -4,7 +4,7 @@
 #include "Enums.hpp"
 #include "AtaqueEspecial.hpp"
 #include <SFML/Graphics.hpp>
-#include <map>
+#include <unordered_map>
 #include <list>
 #include <memory>
 
@@ -71,10 +71,10 @@ class Personaje : public sf::Drawable {
 
         // Animación del personaje según el estado (siempre son animaciones por fotogramas pero es bueno
         // usar punteros compartidos con las animaciones)
-        std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFotogramas>> animaciones;
+        std::unordered_map<EstadoPersonaje,std::shared_ptr<AnimacionPorFotogramas>> animaciones;
 
         // Indica qué acciones están siendo realizadas
-        std::map<Accion,bool> accionesRealizadas;
+        std::unordered_map<Accion,bool> accionesRealizadas;
 
         // Sirve para comprobar si el jugador ha pulsado las teclas necesarias para hacer el ataque especial
         AtaqueEspecial ataqueEspecial;
@@ -94,7 +94,7 @@ class Personaje : public sf::Drawable {
     public:
 
         // Construye el personaje desde cero
-        Personaje(std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFotogramas>> animaciones, std::string nombre, int maxPuntosDeVida, float velocidadMaxima, float fuerzaSalto, std::vector<Accion> accionesAtaqueEspecial);
+        Personaje(std::unordered_map<EstadoPersonaje,std::shared_ptr<AnimacionPorFotogramas>> animaciones, std::string nombre, int maxPuntosDeVida, float velocidadMaxima, float fuerzaSalto, std::vector<Accion> accionesAtaqueEspecial);
 
         // Indica que se está pulsando un botón
         void realizarAccion(Accion accion);
@@ -158,7 +158,7 @@ class Personaje : public sf::Drawable {
         std::shared_ptr<AnimacionPorFotogramas> getAnimacionSegunEstado(EstadoPersonaje estado);
 
         // Establece el mapa de animaciones
-        void setAnimaciones(const std::map<EstadoPersonaje,std::shared_ptr<AnimacionPorFotogramas>> &animaciones);
+        void setAnimaciones(const std::unordered_map<EstadoPersonaje,std::shared_ptr<AnimacionPorFotogramas>> &animaciones);
 
         // Cambia el estado
         void cambiarEstado(EstadoPersonaje estadoNuevo);

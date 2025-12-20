@@ -5,65 +5,9 @@
 #include "GestorDeControles.hpp"
 #include "Configuracion.hpp"
 #include "Utilidades.hpp"
+#include "ContenedorDePersonajes.hpp"
 
 #include <algorithm>
-
-SelectorPersonaje::SelectorPersonaje(const sf::Texture& texturaSelector, const std::string& nombrePersonaje, Jugador jugador) :
-spriteSelector(texturaSelector), nombrePersonaje(nombrePersonaje), posicionRelativa(0), jugador(jugador)
-{
-    // Se pone el origen en el centro a la izquierda del todo porque mola más
-    spriteSelector.setOrigin(sf::Vector2f(spriteSelector.getTextureRect().size)/2.f);
-    resetear();
-}
-
-void SelectorPersonaje::resetear()
-{
-    // Se pone el selector y el fondo en las posiciones correctas
-    float posicionX = jugador == Jugador::JUGADOR1 ?
-                      POSICION_X_SELECTOR_PERSONAJE_J1 :
-                      POSICION_X_SELECTOR_PERSONAJE_J2;
-    
-    spriteSelector.setPosition({posicionX + posicionRelativa*DIFERENCIA_POSICION_X_SELECTOR_PERSONAJE, POSICION_Y_SELECTOR_PERSONAJE});
-
-    // Se pone el color correcto para el selector y su fondo
-    sf::Color colorSelector = COLOR_SELECTOR_PERSONAJE_POSICION_RELATIVA_0;
-    colorSelector.a = std::clamp(colorSelector.a-std::abs(posicionRelativa)*DIFERENCIA_TRANSPARENCIA_SELECTOR_PERSONAJE,0,255);
-    spriteSelector.setColor(colorSelector);
-
-    // Se pone la escala correcta para el sprite
-    float escalaDeseadaSprite = 1.f - std::abs(posicionRelativa)*DIFERENCIA_ESCALA_SELECTOR_PERSONAJE;
-    if(escalaDeseadaSprite < 0.f) escalaDeseadaSprite = 0.f;
-    spriteSelector.setScale({escalaDeseadaSprite,escalaDeseadaSprite});
-}
-
-void SelectorPersonaje::actualizar()
-{
-    sf::Vector2f posicionDeseadaSprite;
-    sf::Color colorDeseadoSprite = COLOR_SELECTOR_PERSONAJE_POSICION_RELATIVA_0;
-    sf::Vector2f posicionDeseadaFondo;
-    sf::Color colorDeseadoFondo;
-
-    float escalaDeseadaSprite = 1.f - std::abs(posicionRelativa)*DIFERENCIA_ESCALA_SELECTOR_PERSONAJE;
-    if(escalaDeseadaSprite < 0.f) escalaDeseadaSprite = 0.f;
-
-    posicionDeseadaSprite.x = jugador == Jugador::JUGADOR1 ?
-                              POSICION_X_SELECTOR_PERSONAJE_J1 :
-                              POSICION_X_SELECTOR_PERSONAJE_J2;
-    posicionDeseadaSprite.x += posicionRelativa*DIFERENCIA_POSICION_X_SELECTOR_PERSONAJE*escalaDeseadaSprite;
-    posicionDeseadaSprite.y = POSICION_Y_SELECTOR_PERSONAJE;
-
-    colorDeseadoSprite.a = std::clamp(colorDeseadoSprite.a-std::abs(posicionRelativa)*DIFERENCIA_TRANSPARENCIA_SELECTOR_PERSONAJE,0,255);
-
-    spriteSelector.setPosition(util::aproximarVector2f(spriteSelector.getPosition(),posicionDeseadaSprite,0.8f));
-    spriteSelector.setColor(util::aproximarColor(spriteSelector.getColor(),colorDeseadoSprite,0.8f));
-    spriteSelector.setScale(util::aproximarVector2f(spriteSelector.getScale(),{escalaDeseadaSprite,escalaDeseadaSprite},0.8f));
-}
-
-void SelectorPersonaje::seleccionar()
-{
-    spriteSelector.setScale(spriteSelector.getScale()/2.f);
-}
-
 
 // La instancia es nula al principio
 MenuSeleccionPersonaje * MenuSeleccionPersonaje::menuSeleccionPersonaje = nullptr;
@@ -85,6 +29,26 @@ spriteMarco(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/eleccion-pe
 rectanguloNegro({VENTANA_ANCHURA,VENTANA_ALTURA})
 {
     rectanguloNegro.setFillColor(sf::Color::Black);
+
+    // A la hora de colocar los selectores de personaje, la posición relativa
+    // del primero para el jugador 1 será 0, y la posición relativa del primero
+    // para el jugador 2 será -1. Luego se irán aumentando en 1 las posiciones
+    // relativas por cada personaje introducido
+    int posicionRelativaJugador1 = -indiceJugador1;
+    int posicionRelativaJugador2 = -indiceJugador2;
+
+    for(const std::string& nombrePersonaje : ContenedorDePersonajes::unicaInstancia()->obtenerNombresPersonajes())
+    {
+        sf::Texture& texturaPortraitPersonaje = ContenedorDeTexturas::unicaInstancia()->obtener("sprites/personajes/"+nombrePersonaje+"/portrait.png");
+
+        selectoresPersonajeJugador1.emplace_back(texturaPortraitPersonaje, nombrePersonaje, Jugador::JUGADOR1, posicionRelativaJugador1);
+        selectoresPersonajeJugador2.emplace_back(texturaPortraitPersonaje, nombrePersonaje, Jugador::JUGADOR2, posicionRelativaJugador2);
+                                        
+        posicionRelativaJugador1++;
+        posicionRelativaJugador2++;
+    }
+
+    resetear();
 }
 
 void MenuSeleccionPersonaje::resetear()
@@ -93,6 +57,12 @@ void MenuSeleccionPersonaje::resetear()
     indiceJugador2 = 1;
     personajeElegidoJugador1 = false;
     personajeElegidoJugador2 = false;
+
+    for(int i=0;i<selectoresPersonajeJugador1.size();i++)
+    {
+        selectoresPersonajeJugador1[i].resetear(i-indiceJugador1);
+        selectoresPersonajeJugador2[i].resetear(i-indiceJugador2);
+    }
 }
 
 std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccionDoble()
@@ -129,6 +99,32 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
                 saliendo = true;
                 ReproductorDeMusica::unicaInstancia()->detener();
             }
+            else if(infoEvento.accion == Accion::DERECHA && infoEvento.realizada)
+            {
+                if(infoEvento.jugador == Jugador::JUGADOR1 && indiceJugador1 < selectoresPersonajeJugador1.size()-1)
+                    indiceJugador1++;
+                else if(infoEvento.jugador == Jugador::JUGADOR2 && indiceJugador2 < selectoresPersonajeJugador2.size()-1)
+                    indiceJugador2++;
+            }
+            else if(infoEvento.accion == Accion::IZQUIERDA && infoEvento.realizada)
+            {
+                if(infoEvento.jugador == Jugador::JUGADOR1 && indiceJugador1 > 0)
+                    indiceJugador1--;
+                else if(infoEvento.jugador == Jugador::JUGADOR2 && indiceJugador2 > 0)
+                    indiceJugador2--;
+            }
+        }
+
+        // Asumimos que selectoresPersonajeJugador1 tiene la misma longitud
+        // que selectoresPersonajeJugador2 porque se supone que ambos jugadores
+        // tienen acceso a los mismos personajes
+        for(int i=0; i<selectoresPersonajeJugador1.size(); i++)
+        {
+            selectoresPersonajeJugador1[i].setPosicionRelativa(i-indiceJugador1);
+            selectoresPersonajeJugador2[i].setPosicionRelativa(i-indiceJugador2);
+
+            selectoresPersonajeJugador1[i].actualizar();
+            selectoresPersonajeJugador2[i].actualizar();
         }
 
         // Se cambia la opacidad del rectángulo negro según sea necesario
@@ -144,6 +140,12 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
         ventana->clear(sf::Color(0,0,0));
 
         ventana->draw(spriteMarco);
+
+        for(int i=0;i<selectoresPersonajeJugador1.size();i++)
+        {
+            ventana->draw(selectoresPersonajeJugador1[i]);
+            ventana->draw(selectoresPersonajeJugador2[i]);
+        }
 
         ventana->draw(rectanguloNegro);
         

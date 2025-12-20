@@ -4,7 +4,7 @@
 #include "Constantes.hpp"
 #include "Enums.hpp"
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 /*
@@ -13,50 +13,45 @@
 */
 class ReproductorDeSonidos
 {
-    private:
+private:
+    // Constructor privado para que sea más Singleton
+    ReproductorDeSonidos();
 
-        // Constructor privado para que sea más Singleton
-        ReproductorDeSonidos();
+    ~ReproductorDeSonidos();
 
-        ~ReproductorDeSonidos();
+    // Única instancia
+    static ReproductorDeSonidos *reproductorDeSonidos;
 
-        // Única instancia
-        static ReproductorDeSonidos * reproductorDeSonidos;
+    // Mapa donde se relaciona cada ruta de fichero de sonido con su sonido
+    std::unordered_map<std::string, sf::Sound> sonidos;
 
-        // Mapa donde se relaciona cada ruta de fichero de sonido con su sonido
-        std::map<std::string,sf::Sound> sonidos;
+    // Volumen actual para los efectos de sonido (del 0 al 100)
+    float volumenActual;
 
-        // Volumen actual para los efectos de sonido (del 0 al 100)
-        float volumenActual;
+public:
+    // Reproduce el sonido dado su identificador (ruta del fichero relativa al directorio donde
+    // se ejecuta el programa). Se puede especificar un tono en el que se reproducirá el
+    // sonido, o se puede dejar como está para que se reproduzca con el tono por defecto
+    void reproducir(std::string sonido, float tono = 1.f);
 
-    public:
+    // Detiene por completo la reproducción de la canción
+    void detener();
 
-        // Reproduce el sonido dado su identificador (ruta del fichero relativa al directorio donde
-        // se ejecuta el programa). Se puede especificar un tono en el que se reproducirá el
-        // sonido, o se puede dejar como está para que se reproduzca con el tono por defecto
-        void reproducir(std::string sonido, float tono = 1.f);
+    // Devuelve el volumen actual para efectos de sonido
+    float getVolumen();
 
-        // Detiene por completo la reproducción de la canción
-        void detener();
+    // Establece el nuevo volumen para los efectos de sonido
+    void setVolumen(float nuevoVolumen);
 
-        // Devuelve el volumen actual para efectos de sonido
-        float getVolumen();
+    // Devuelve true si el efecto de sonido se está reproduciendo
+    bool estaReproduciendo(std::string sonido);
 
-        // Establece el nuevo volumen para los efectos de sonido
-        void setVolumen(float nuevoVolumen);
+    // NUNCA SE COPIA UN SINGLETON
+    ReproductorDeSonidos(ReproductorDeSonidos &otro) = delete;
 
-        // Devuelve true si el efecto de sonido se está reproduciendo
-        bool estaReproduciendo(std::string sonido);
+    // NUNCA SE ASIGNA UN SINGLETON
+    void operator=(const ReproductorDeSonidos &) = delete;
 
-        // NUNCA SE COPIA UN SINGLETON
-        ReproductorDeSonidos(ReproductorDeSonidos &otro) = delete;
-
-        // NUNCA SE ASIGNA UN SINGLETON
-        void operator=(const ReproductorDeSonidos &) = delete;
-
-        // Devuelve la única instancia
-        static ReproductorDeSonidos * unicaInstancia();
-
+    // Devuelve la única instancia
+    static ReproductorDeSonidos *unicaInstancia();
 };
-
-

@@ -4,7 +4,7 @@
 #include "Enums.hpp"
 #include "Animacion.hpp"
 #include <string>
-#include <map>
+#include <unordered_map>
 
 /*
     Clase que se encarga de contener efectos, como efectos de golpe cuando te pegan o
@@ -12,33 +12,29 @@
 */
 class ContenedorDeEfectos
 {
-    private:
-        ContenedorDeEfectos(){}
-        ~ContenedorDeEfectos();
+private:
+    ContenedorDeEfectos() {}
+    ~ContenedorDeEfectos();
 
-        static ContenedorDeEfectos * contenedorDeEfectos;
+    static ContenedorDeEfectos *contenedorDeEfectos;
 
-        std::map<std::string, std::shared_ptr<Animacion>> animaciones;
+    std::unordered_map<std::string, std::shared_ptr<Animacion>> animaciones;
 
-    public:
+public:
+    // Devuelve una copia del efecto pedido. El nombre es el nombre del fichero sin extensión
+    // y sin incluir directorios. Por ejemplo, "bloqueado" para el círculo azul que aparece al
+    // bloquear un ataque
+    std::shared_ptr<Animacion> obtenerEfecto(std::string nombre);
 
-        // Devuelve una copia del efecto pedido. El nombre es el nombre del fichero sin extensión
-        // y sin incluir directorios. Por ejemplo, "bloqueado" para el círculo azul que aparece al
-        // bloquear un ataque
-        std::shared_ptr<Animacion> obtenerEfecto(std::string nombre);
+    // Carga todos los efectos, sacados de varios ficheros en la misma carpeta
+    void cargarTodosLosEfectos();
 
-        // Carga todos los efectos, sacados de varios ficheros en la misma carpeta
-        void cargarTodosLosEfectos();
+    // NUNCA SE COPIA UN SINGLETON
+    ContenedorDeEfectos(ContenedorDeEfectos &otro) = delete;
 
-        // NUNCA SE COPIA UN SINGLETON
-        ContenedorDeEfectos(ContenedorDeEfectos &otro) = delete;
+    // NUNCA SE ASIGNA UN SINGLETON
+    void operator=(const ContenedorDeEfectos &) = delete;
 
-        // NUNCA SE ASIGNA UN SINGLETON
-        void operator=(const ContenedorDeEfectos &) = delete;
-
-        // Devuelve la única instancia
-        static ContenedorDeEfectos * unicaInstancia();
-
+    // Devuelve la única instancia
+    static ContenedorDeEfectos *unicaInstancia();
 };
-
-

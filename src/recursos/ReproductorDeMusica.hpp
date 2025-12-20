@@ -4,7 +4,7 @@
 #include "Constantes.hpp"
 #include "Enums.hpp"
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 /*
@@ -13,66 +13,61 @@
 */
 class ReproductorDeMusica
 {
-    private:
+private:
+    // Constructor privado para que sea más Singleton
+    ReproductorDeMusica();
 
-        // Constructor privado para que sea más Singleton
-        ReproductorDeMusica();
+    ~ReproductorDeMusica();
 
-        ~ReproductorDeMusica();
+    // Única instancia
+    static ReproductorDeMusica *reproductorDeMusica;
 
-        // Única instancia
-        static ReproductorDeMusica * reproductorDeMusica;
+    // Ruta de la canción que se está reproduciendo actualmente
+    std::string cancionActual;
 
-        // Ruta de la canción que se está reproduciendo actualmente
-        std::string cancionActual;
+    // Mapa donde se guardan las canciones según se van reproduciendo
+    // para volver a reproducirlas después y así tenerlas disponibles
+    std::unordered_map<std::string, sf::Music> canciones;
 
-        // Mapa donde se guardan las canciones según se van reproduciendo
-        // para volver a reproducirlas después y así tenerlas disponibles
-        std::unordered_map<std::string,sf::Music> canciones;
+    // Todas las canciones de combate que hay
+    std::vector<std::string> cancionesCombate;
 
-        // Todas las canciones de combate que hay
-        std::vector<std::string> cancionesCombate;
+    // Volumen actual de la música (del 0 al 100)
+    float volumenActual;
 
-        // Volumen actual de la música (del 0 al 100)
-        float volumenActual;
+public:
+    // Reproduce la canción dado su identificador (ruta del fichero relativa al directorio donde
+    // se ejecuta el programa)
+    void reproducir(std::string cancion, bool bucle = true);
 
-    public:
+    // Reproduce aleatoriamente una canción de combate
+    void reproducirCancionCombate();
 
-        // Reproduce la canción dado su identificador (ruta del fichero relativa al directorio donde
-        // se ejecuta el programa)
-        void reproducir(std::string cancion, bool bucle = true);
+    // Detiene por completo la reproducción de la canción actual
+    void detener();
 
-        // Reproduce aleatoriamente una canción de combate
-        void reproducirCancionCombate();
+    // Pausa la reproducción de la canción actual. Si se reproduce de nuevo, seguirá
+    // por donde estaba
+    void pausar();
 
-        // Detiene por completo la reproducción de la canción actual
-        void detener();
+    // Devuelve el volumen de la canción actual
+    float getVolumen();
 
-        // Pausa la reproducción de la canción actual. Si se reproduce de nuevo, seguirá
-        // por donde estaba
-        void pausar();
+    // Establece el nuevo volumen para la canción actual y las siguientes
+    void setVolumen(float nuevoVolumen);
 
-        // Devuelve el volumen de la canción actual
-        float getVolumen();
+    // Dice si se está reproduciendo una canción o no
+    bool estaReproduciendo();
 
-        // Establece el nuevo volumen para la canción actual y las siguientes
-        void setVolumen(float nuevoVolumen);
+    // Devuelve la ruta de la canción que se está reproduciendo actualmente
+    std::string getCancionActual();
 
-        // Dice si se está reproduciendo una canción o no
-        bool estaReproduciendo();
+    // NUNCA SE COPIA UN SINGLETON
+    ReproductorDeMusica(ReproductorDeMusica &otro) = delete;
 
-        // Devuelve la ruta de la canción que se está reproduciendo actualmente
-        std::string getCancionActual();
+    // NUNCA SE ASIGNA UN SINGLETON
+    void operator=(const ReproductorDeMusica &) = delete;
 
-        // NUNCA SE COPIA UN SINGLETON
-        ReproductorDeMusica(ReproductorDeMusica &otro) = delete;
-
-        // NUNCA SE ASIGNA UN SINGLETON
-        void operator=(const ReproductorDeMusica &) = delete;
-
-        // Devuelve la única instancia
-        static ReproductorDeMusica * unicaInstancia();
-
+    // Devuelve la única instancia
+    static ReproductorDeMusica *unicaInstancia();
 };
-
-

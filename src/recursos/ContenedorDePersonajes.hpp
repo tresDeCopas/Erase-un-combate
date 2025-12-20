@@ -4,7 +4,7 @@
 #include "Enums.hpp"
 #include "Personaje.hpp"
 #include <string>
-#include <map>
+#include <unordered_map>
 
 /*
     Clase que se encarga de contener personajes preparados para pelear
@@ -17,12 +17,15 @@ class ContenedorDePersonajes
 
         static ContenedorDePersonajes * contenedorDePersonajes;
 
-        std::map<std::string, Personaje> personajes;
+        std::unordered_map<std::string, Personaje> personajes;
 
     public:
 
         // Devuelve una copia del personaje pedido
         Personaje obtenerPersonaje(std::string nombre);
+
+        // Devuelve un vector con los nombres de todos los personajes
+        std::vector<std::string> obtenerNombresPersonajes();
 
         // Carga todos los personajes, sacados del mismo fichero
         void cargarTodosLosPersonajes();
