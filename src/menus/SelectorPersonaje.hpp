@@ -13,6 +13,9 @@ class SelectorPersonaje : public sf::Drawable
         // El sprite asociado al selector
         sf::Sprite spriteSelector;
 
+        // El sprite con el nombre del personaje
+        sf::Sprite spriteNombrePersonaje;
+
         // Un borde cuadrado que rodea al sprite del selector
         sf::RectangleShape bordeCuadrado;
 

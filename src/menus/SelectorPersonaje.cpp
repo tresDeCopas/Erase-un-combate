@@ -1,19 +1,28 @@
 #include "SelectorPersonaje.hpp"
 #include "Constantes.hpp"
 #include "Utilidades.hpp"
+#include "ContenedorDeRecursos.hpp"
 
 #include <algorithm>
 
 SelectorPersonaje::SelectorPersonaje(const sf::Texture& texturaSelector, const std::string& nombrePersonaje, Jugador jugador, int posicionRelativa) :
-spriteSelector(texturaSelector), bordeCuadrado(sf::Vector2f(spriteSelector.getTextureRect().size)+sf::Vector2f(2.f, 2.f)), nombrePersonaje(nombrePersonaje), posicionRelativa(posicionRelativa), jugador(jugador)
+spriteSelector(texturaSelector), spriteNombrePersonaje(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/personajes/"+nombrePersonaje+"/nombre.png")),
+bordeCuadrado(sf::Vector2f(spriteSelector.getTextureRect().size)), nombrePersonaje(nombrePersonaje), posicionRelativa(posicionRelativa), jugador(jugador)
 {
-    // Se pone el origen en el centro a la izquierda del todo porque mola más
-    spriteSelector.setOrigin(sf::Vector2f(spriteSelector.getTextureRect().size)/2.f);
-
-    // Los selectores del jugador 2 están dados la vuelta
-    if(jugador == Jugador::JUGADOR2)
+    // Se pone el origen de los dos sprites en el centro
+    spriteSelector.setOrigin(sf::Vector2f(spriteSelector.getTextureRect().size/2));
+    spriteNombrePersonaje.setOrigin(sf::Vector2f(spriteNombrePersonaje.getTextureRect().size/2));
+    
+    if(jugador == Jugador::JUGADOR1)
     {
+        spriteNombrePersonaje.setPosition({POSICION_X_SELECTOR_PERSONAJE_J1,POSICION_Y_NOMBRE_SELECTOR_PERSONAJE});
+    }
+    else
+    {
+        // Los selectores del jugador 2 están dados la vuelta
         spriteSelector.setScale({-1.f,0.f});
+
+        spriteNombrePersonaje.setPosition({POSICION_X_SELECTOR_PERSONAJE_J2,POSICION_Y_NOMBRE_SELECTOR_PERSONAJE});
     }
 
     bordeCuadrado.setOrigin(bordeCuadrado.getSize()/2.f);
@@ -93,4 +102,7 @@ void SelectorPersonaje::seleccionar()
 void SelectorPersonaje::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(spriteSelector,states);
     target.draw(bordeCuadrado,states);
+
+    if(posicionRelativa == 0)
+        target.draw(spriteNombrePersonaje,states);
 }

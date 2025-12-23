@@ -212,6 +212,9 @@ constexpr float POSICION_X_SELECTOR_PERSONAJE_J2 = VENTANA_ANCHURA - POSICION_X_
 // Posición en el eje Y del selector de personaje
 constexpr float POSICION_Y_SELECTOR_PERSONAJE = 5.f*VENTANA_ALTURA/6.f;
 
+// Posición en el eje Y del nombre del selector de personaje
+constexpr float POSICION_Y_NOMBRE_SELECTOR_PERSONAJE = 7.f*VENTANA_ALTURA/10.f;
+
 // Diferencia en el eje X entre dos selectores seguidos
 constexpr float DIFERENCIA_POSICION_X_SELECTOR_PERSONAJE = VENTANA_ANCHURA/4.f;
 
