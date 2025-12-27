@@ -45,7 +45,7 @@ class SelectorPersonaje : public sf::Drawable
         // Se elige el selector, así que sale un brillito y el personaje es elegido
         void seleccionar();
 
-        // Se actualiza la posición y la transparencia del selector y su fondo
+        // Se actualiza la posición y la transparencia del selector
         void actualizar();
 
         // Permite dibujar el selector

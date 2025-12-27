@@ -1,54 +1,34 @@
-#include "SelectorPersonaje.hpp"
+#include "FondoPersonaje.hpp"
 #include "Constantes.hpp"
 #include "Utilidades.hpp"
 #include "ContenedorDeRecursos.hpp"
 
 #include <algorithm>
 
-SelectorPersonaje::SelectorPersonaje(const sf::Texture& texturaSelector, const std::string& nombrePersonaje, Jugador jugador, int posicionRelativa) :
-spriteSelector(texturaSelector), spriteNombrePersonaje(ContenedorDeTexturas::unicaInstancia()->obtener("sprites/personajes/"+nombrePersonaje+"/nombre.png")),
-bordeCuadrado(sf::Vector2f(spriteSelector.getTextureRect().size)), nombrePersonaje(nombrePersonaje), posicionRelativa(posicionRelativa), jugador(jugador)
+FondoPersonaje::FondoPersonaje(const sf::Texture& texturaFondo, const std::string& nombrePersonaje, Jugador jugador, int posicionRelativa) :
+spriteFondo(texturaFondo), nombrePersonaje(nombrePersonaje), posicionRelativa(posicionRelativa), jugador(jugador)
 {
-    // Se pone el origen de los dos sprites en el centro
-    spriteSelector.setOrigin(sf::Vector2f(spriteSelector.getTextureRect().size/2));
-    spriteNombrePersonaje.setOrigin(sf::Vector2f(spriteNombrePersonaje.getTextureRect().size/2));
-    
-    if(jugador == Jugador::JUGADOR1)
+    if(jugador == Jugador::JUGADOR2)
     {
-        spriteNombrePersonaje.setPosition({POSICION_X_SELECTOR_PERSONAJE_J1,POSICION_Y_NOMBRE_SELECTOR_PERSONAJE});
+        // Los fondos del jugador 2 están dados la vuelta
+        spriteFondo.setScale({-1.f,0.f});
     }
-    else
-    {
-        // Los selectores del jugador 2 están dados la vuelta
-        spriteSelector.setScale({-1.f,0.f});
-
-        spriteNombrePersonaje.setPosition({POSICION_X_SELECTOR_PERSONAJE_J2,POSICION_Y_NOMBRE_SELECTOR_PERSONAJE});
-    }
-
-    bordeCuadrado.setOrigin(bordeCuadrado.getSize()/2.f);
-    bordeCuadrado.setOutlineColor(sf::Color::White);
-    bordeCuadrado.setOutlineThickness(1.f);
-    bordeCuadrado.setFillColor(sf::Color::Transparent);
 
     resetear(posicionRelativa);
 }
 
-void SelectorPersonaje::resetear(int posicionRelativa)
+void FondoPersonaje::resetear(int posicionRelativa)
 {
     this->posicionRelativa = posicionRelativa;
 
-    // Se pone la escala correcta para el sprite
-    float escalaDeseadaSprite = 1.f - std::abs(posicionRelativa)*DIFERENCIA_ESCALA_SELECTOR_PERSONAJE;
-    if(escalaDeseadaSprite < 0.f) escalaDeseadaSprite = 0.f;
-
-    // Se pone el selector en las posiciones correctas
+    // Se pone el selector y el fondo en las posiciones correctas
     float posicionX = jugador == Jugador::JUGADOR1 ?
-                      POSICION_X_SELECTOR_PERSONAJE_J1 :
-                      POSICION_X_SELECTOR_PERSONAJE_J2;
+                      POSICION_X_FONDO_PERSONAJE_J1 :
+                      POSICION_X_FONDO_PERSONAJE_J2;
     
-    spriteSelector.setPosition({posicionX + posicionRelativa*DIFERENCIA_POSICION_X_SELECTOR_PERSONAJE*escalaDeseadaSprite, POSICION_Y_SELECTOR_PERSONAJE});
+    spriteFondo.setPosition({posicionX + posicionRelativa*DIFERENCIA_POSICION_X_FONDO_PERSONAJE, POSICION_Y_SELECTOR_PERSONAJE});
 
-    // Se pone el color correcto para el selector
+    // Se pone el color correcto para el fondo
     sf::Color colorSelector = COLOR_SELECTOR_PERSONAJE_POSICION_RELATIVA_0;
     colorSelector.a = std::clamp(colorSelector.a-std::abs(posicionRelativa)*DIFERENCIA_TRANSPARENCIA_SELECTOR_PERSONAJE,0,255);
     spriteSelector.setColor(colorSelector);

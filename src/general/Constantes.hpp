@@ -209,6 +209,15 @@ constexpr float POSICION_X_SELECTOR_PERSONAJE_J1 = VENTANA_ANCHURA/4.f;
 // Posición en el eje X del selector de personaje para el jugador 2
 constexpr float POSICION_X_SELECTOR_PERSONAJE_J2 = VENTANA_ANCHURA - POSICION_X_SELECTOR_PERSONAJE_J1;
 
+// Posición en el eje X del fondo de personaje para el jugador 1
+constexpr float POSICION_X_FONDO_PERSONAJE_J1 = VENTANA_ANCHURA/10.f;
+
+// Posición en el eje X del fondo de personaje para el jugador 2
+constexpr float POSICION_X_FONDO_PERSONAJE_J2 = 6*VENTANA_ANCHURA/10.f;
+
+// Diferencia en el eje X entre dos fondos de personaje que están uno al lado del otro
+constexpr int DIFERENCIA_POSICION_X_FONDO_PERSONAJE = 10;
+
 // Posición en el eje Y del selector de personaje
 constexpr float POSICION_Y_SELECTOR_PERSONAJE = 5.f*VENTANA_ALTURA/6.f;
 
