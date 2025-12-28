@@ -96,7 +96,7 @@ En cuanto termine de instalar, puedes desmarcar la casilla de `View Release Note
 
 - Paso 4: **Indicarle al ordenador dónde están todas las herramientas descargadas**
 
-Tal y como está la cosa, por muchas herramientas chulas que nos hayamos instalado, el ordenador no va a saber encontrarlas. Pulsa la tecla Windows y escribe `Variables de entorno`. Pulsa Enter. Saldrá una ventana blanca con botones grises. Haz clic en un botón gris abajo.
+Tal y como está la cosa, por muchas herramientas chulas que nos hayamos instalado, el ordenador no va a saber encontrarlas. Pulsa la tecla Windows y escribe `Variables de entorno`. Pulsa Enter. Saldrá una ventana blanca con botones grises. Haz clic en un botón gris abajo en el que pone `Variables de entorno...`.
 
 ![Botón Variables de entorno...](sprites/readme/variables-de-entorno.png)
 
@@ -104,7 +104,7 @@ Aparecerá una ventana con mucha información. Arriba pondrá "Variables de usua
 
 ![Path](sprites/readme/path.png)
 
-Ahora, haz clic en el botón Nuevo de la derecha, y escribe lo siguiente:
+Ahora, haz clic en el botón Nuevo de la derecha, escribe lo siguiente y pulsa Enter:
 
 ```
 C:\msys64\ucrt64\bin
