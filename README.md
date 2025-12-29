@@ -100,7 +100,7 @@ Tal y como está la cosa, por muchas herramientas chulas que nos hayamos instala
 
 ![Botón Variables de entorno...](sprites/readme/variables-de-entorno.png)
 
-Aparecerá una ventana con mucha información. Arriba pondrá "Variables de usuario para (nombre de tu usuario)". Dentro del recuadro blanco de arriba, aparecerá una variable que se llama `Path`. Haz doble clic ahí.
+Aparecerá una ventana con mucha información. Arriba pondrá "Variables de usuario para (nombre de tu usuario)", y abajo pondrá "Variables del sistema". Dentro del recuadro blanco de abajo, debe aparecer una variable llamada "Path" (puede que esté más abajo). Haz doble clic ahí.
 
 ![Path](sprites/readme/path.png)
 
@@ -110,9 +110,13 @@ Ahora, haz clic en el botón Nuevo de la derecha, escribe lo siguiente y pulsa E
 C:\msys64\ucrt64\bin
 ```
 
-Lo normal es que las herramientas se hayan instalado en la unidad C. Si no sabes de lo que estoy hablando, no te preocupes. Si sabes de lo que estoy hablando y sabes que lo has instalado en otro sitio, puedes cambiar la C del principio por la letra correcta.
+Lo normal es que las herramientas se hayan instalado en la unidad C. Si no sabes de lo que estoy hablando, no te preocupes. Si sabes de lo que estoy hablando y sabes que lo has instalado en otro sitio, puedes cambiar la C del principio por la letra correcta. Si pones mal la letra no te preocupes, no se va a fastidiar nada (la compilación de este código no va a funcionar, pero el resto del ordenador va a ir correctamente).
 
-Dale al botón Aceptar que hay más abajo. Sigue dando a botones Aceptar y cerrando ventanas hasta que no queda nada.
+Ahora, a la derecha verás un botón que pone "Subir". Dale varias veces hasta que la línea que acabas de escribir esté arriba del todo.
+
+![Ruta C:\msys64\ucrt64\bin arriba del todo del Path](sprites/readme/ucrt-bin-arriba-del-todo.png)
+
+Dale al botón Aceptar que hay más abajo. Sigue dando a botones Aceptar y cerrando ventanas hasta que no quede nada.
 
 - Paso 5: **Descargar el código**
 
