@@ -55,6 +55,8 @@ namespace util{
         {"saltando-bajando", EstadoPersonaje::SALTANDO_BAJANDO},
         {"tocando-suelo", EstadoPersonaje::TOCANDO_SUELO},
         {"andando-acercandose", EstadoPersonaje::ANDANDO_ACERCANDOSE},
+        {"corriendo", EstadoPersonaje::CORRIENDO},
+        {"frenando", EstadoPersonaje::FRENANDO},
         {"andando-alejandose", EstadoPersonaje::ANDANDO_ALEJANDOSE},
         {"bloqueando", EstadoPersonaje::BLOQUEANDO},
         {"esquive-super", EstadoPersonaje::ESQUIVE_SUPER},
@@ -223,6 +225,7 @@ namespace util{
             case EstadoPersonaje::AGACHADO:
             case EstadoPersonaje::ANDANDO_ACERCANDOSE:
             case EstadoPersonaje::ANDANDO_ALEJANDOSE:
+            case EstadoPersonaje::FRENANDO:
             case EstadoPersonaje::BLOQUEANDO:
             case EstadoPersonaje::ESQUIVE_SUPER:
                 return 2;
@@ -237,6 +240,7 @@ namespace util{
             case EstadoPersonaje::ATAQUE_NORMAL_2:
             case EstadoPersonaje::ATAQUE_NORMAL_3:
             case EstadoPersonaje::ATAQUE_SUPER:
+            case EstadoPersonaje::CORRIENDO:
             case EstadoPersonaje::PREPARANDO_SUPER:
             case EstadoPersonaje::CELEBRANDO:
                 return 3;

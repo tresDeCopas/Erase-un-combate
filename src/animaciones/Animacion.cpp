@@ -26,6 +26,11 @@ void Animacion::setEscala(const sf::Vector2f& escala)
     sprite.setScale(escala);
 }
 
+sf::Vector2f Animacion::getEscala()
+{
+    return sprite.getScale();
+}
+
 sf::Vector2f Animacion::getPosicion(){
     return sprite.getPosition();
 }

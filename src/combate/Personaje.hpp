@@ -60,6 +60,11 @@ class Personaje : public sf::Drawable {
         // Cuenta cuántos fotogramas lleva el personaje andando alejándose del enemigo
         int contadorEsquiveSuper;
 
+        // Empieza a 0, y cuando el personaje pasa al estado ANDANDO_ACERCANDOSE pasa a valer
+        // MAX_CUENTA_ATRAS_CORRER. Entonces comienza una cuenta atrás. Si el personaje vuelve a andar
+        // hacia el enemigo antes de que se termine la cuenta atrás, pasará a correr en vez de andar
+        int cuentaAtrasCorrer;
+
         // Jugador al que está asociado el personaje
         Jugador jugador;
 

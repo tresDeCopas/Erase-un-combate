@@ -12,9 +12,14 @@
 #include "ContenedorDeCombos.hpp"
 #include <iostream>
 
-Personaje::Personaje(std::unordered_map<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> animaciones, std::string nombre, int maxPuntosDeVida, float velocidadMaxima, float fuerzaSalto, std::vector<Accion> accionesAtaqueEspecial) : puntosDeVida(maxPuntosDeVida), maxPuntosDeVida(maxPuntosDeVida), medidorSuper(0), velocidadMaxima(velocidadMaxima), fuerzaSalto(-fuerzaSalto), nombre(nombre), velocidad({0.f, 0.f}),
-                                                                                                                                                                                                                                                escalaSprite({1.f, 1.f}), contadorTumbado(0), contadorBlanco(0), contadorEsquiveSuper(0), estado(EstadoPersonaje::QUIETO), shader(std::make_shared<sf::Shader>()),
-                                                                                                                                                                                                                                                animaciones(animaciones), ataqueEspecial(accionesAtaqueEspecial)
+Personaje::Personaje(std::unordered_map<EstadoPersonaje, std::shared_ptr<AnimacionPorFotogramas>> animaciones,
+                     std::string nombre, int maxPuntosDeVida, float velocidadMaxima, float fuerzaSalto,
+                     std::vector<Accion> accionesAtaqueEspecial)
+:
+puntosDeVida(maxPuntosDeVida), maxPuntosDeVida(maxPuntosDeVida), medidorSuper(0), velocidadMaxima(velocidadMaxima),
+fuerzaSalto(-fuerzaSalto), nombre(nombre), velocidad({0.f, 0.f}), escalaSprite({1.f, 1.f}), contadorTumbado(0),
+contadorBlanco(0), contadorEsquiveSuper(0), cuentaAtrasCorrer(0), estado(EstadoPersonaje::QUIETO),
+shader(std::make_shared<sf::Shader>()), animaciones(animaciones), ataqueEspecial(accionesAtaqueEspecial)
 {
     if (!shader->loadFromFile("shaders/blendColor.frag", sf::Shader::Type::Fragment))
     {
@@ -168,18 +173,24 @@ void Personaje::draw(sf::RenderTarget &target, sf::RenderStates states) const
 
 void Personaje::moverseIzquierda()
 {
-    // La velocidad disminuye un poco pero sin pasarse
+    // La velocidad aumenta un poco pero sin pasarse
     velocidad.x -= VELOCIDAD_ANDAR_AUMENTO;
-    if (velocidad.x <= -velocidadMaxima)
-        velocidad.x = -velocidadMaxima;
+
+    // Si el personaje está corriendo se permite ir un poco más rápido
+    float velocidadMaximaActual = estado == EstadoPersonaje::CORRIENDO ? velocidadMaxima*MULTIPLICADOR_VELOCIDAD_CORRIENDO : velocidadMaxima;
+    if (velocidad.x <= -velocidadMaximaActual)
+        velocidad.x = -velocidadMaximaActual;
 }
 
 void Personaje::moverseDerecha()
 {
     // La velocidad aumenta un poco pero sin pasarse
     velocidad.x += VELOCIDAD_ANDAR_AUMENTO;
-    if (velocidad.x >= velocidadMaxima)
-        velocidad.x = velocidadMaxima;
+
+    // Si el personaje está corriendo se permite ir un poco más rápido
+    float velocidadMaximaActual = estado == EstadoPersonaje::CORRIENDO ? velocidadMaxima*MULTIPLICADOR_VELOCIDAD_CORRIENDO : velocidadMaxima;
+    if (velocidad.x >= velocidadMaximaActual)
+        velocidad.x = velocidadMaximaActual;
 }
 
 void Personaje::pararMovimiento()
@@ -208,18 +219,39 @@ void Personaje::pararMovimiento()
 
 void Personaje::levantarPolvo(std::list<std::shared_ptr<Animacion>> &efectosInsertados)
 {
-    std::shared_ptr<Animacion> polvo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("polvo"));
+    // Si el personaje está corriendo se levanta polvo en sentido contrario
+    if(estado == EstadoPersonaje::CORRIENDO || estado == EstadoPersonaje::FRENANDO)
+    {
+        std::shared_ptr<Animacion> polvo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("polvo"));
+        
+        if((!isMirandoDerecha() && estado == EstadoPersonaje::CORRIENDO)
+           ||
+           (isMirandoDerecha() && estado == EstadoPersonaje::FRENANDO))
+        {
+            polvo->setPosicion(this->getPosicion().x + OFFSET_POLVO * (estado == EstadoPersonaje::FRENANDO ? MULTIPLO_OFFSET_POLVO : 1), this->getPosicion().y);
+        }
+        else
+        {
+            polvo->voltear();
+            polvo->setPosicion(this->getPosicion().x - OFFSET_POLVO * (estado == EstadoPersonaje::FRENANDO ? MULTIPLO_OFFSET_POLVO : 1), this->getPosicion().y);
+        }
+        efectosInsertados.push_back(polvo);
+    }
+    else
+    {
+        std::shared_ptr<Animacion> polvo(ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("polvo"));
 
-    std::shared_ptr<Animacion> polvoVolteado(polvo->clonar());
+        std::shared_ptr<Animacion> polvoVolteado(polvo->clonar());
 
-    polvoVolteado->voltear();
+        polvoVolteado->voltear();
 
-    polvoVolteado->setPosicion(this->getPosicion().x - OFFSET_POLVO, this->getPosicion().y);
+        polvoVolteado->setPosicion(this->getPosicion().x - OFFSET_POLVO, this->getPosicion().y);
 
-    polvo->setPosicion(this->getPosicion().x + OFFSET_POLVO, this->getPosicion().y);
+        polvo->setPosicion(this->getPosicion().x + OFFSET_POLVO, this->getPosicion().y);
 
-    efectosInsertados.push_back(polvoVolteado);
-    efectosInsertados.push_back(polvo);
+        efectosInsertados.push_back(polvoVolteado);
+        efectosInsertados.push_back(polvo);
+    }
 }
 
 void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_ptr<Animacion>> &efectosInsertados)
@@ -236,6 +268,11 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
     // Se comprueba si se han pulsado los botones necesarios para hacer el ataque especial
     bool realizarAtaqueEspecial = ataqueEspecial.actualizar(acciones);
+
+    // Se baja en 1 la cuenta atrás para volver a pulsar el botón de moverse
+    // hacia el enemigo y ponerse a correr
+    if(cuentaAtrasCorrer > 0)
+        cuentaAtrasCorrer--;
 
     // Según el estado, se hace una cosa u otra
     switch (estado)
@@ -263,36 +300,54 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         {
             velocidad.y = fuerzaSalto;
             accionesRealizadas[Accion::ARRIBA] = false;
-            levantarPolvo(efectosInsertados);
-            escalaSprite.x = (escalaSprite.x > 0) ? 0.8 : -0.8;
+            escalaSprite.x = isMirandoDerecha() ? 0.8 : -0.8;
             escalaSprite.y = 1.2;
             cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
+            levantarPolvo(efectosInsertados);
         }
         else if (accionesRealizadas[Accion::ABAJO])
         {
-            escalaSprite.x = (escalaSprite.x > 0) ? 1.05 : -1.05;
+            escalaSprite.x = isMirandoDerecha() ? 1.05 : -1.05;
             escalaSprite.y = 0.95;
             cambiarEstado(EstadoPersonaje::AGACHADO);
         }
         else if (accionesRealizadas[Accion::DERECHA])
         {
-            velocidad.x += VELOCIDAD_ANDAR_AUMENTO;
-            if (velocidad.x >= velocidadMaxima)
-                velocidad.x = velocidadMaxima;
+            moverseDerecha();
 
-            if ((escalaSprite.x > 0))
-                cambiarEstado(EstadoPersonaje::ANDANDO_ACERCANDOSE);
+            if (isMirandoDerecha())
+            {
+                if(cuentaAtrasCorrer > 0)
+                {
+                    cambiarEstado(EstadoPersonaje::CORRIENDO);
+                    levantarPolvo(efectosInsertados);
+                    cuentaAtrasCorrer = 0;
+                }
+                else
+                {
+                    cambiarEstado(EstadoPersonaje::ANDANDO_ACERCANDOSE);
+                }
+            }
             else
                 cambiarEstado(EstadoPersonaje::ANDANDO_ALEJANDOSE);
         }
         else if (accionesRealizadas[Accion::IZQUIERDA])
         {
-            velocidad.x -= VELOCIDAD_ANDAR_AUMENTO;
-            if (velocidad.x <= -velocidadMaxima)
-                velocidad.x = -velocidadMaxima;
+            moverseIzquierda();
 
-            if (!(escalaSprite.x > 0))
-                cambiarEstado(EstadoPersonaje::ANDANDO_ACERCANDOSE);
+            if (!isMirandoDerecha())
+            {
+                if(cuentaAtrasCorrer > 0)
+                {
+                    cambiarEstado(EstadoPersonaje::CORRIENDO);
+                    levantarPolvo(efectosInsertados);
+                    cuentaAtrasCorrer = 0;
+                }
+                else
+                {
+                    cambiarEstado(EstadoPersonaje::ANDANDO_ACERCANDOSE);
+                }
+            }
             else
                 cambiarEstado(EstadoPersonaje::ANDANDO_ALEJANDOSE);
         }
@@ -314,6 +369,9 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
 
     case EstadoPersonaje::ANDANDO_ACERCANDOSE:
 
+        // Comienza la cuenta atrás para correr
+        cuentaAtrasCorrer = MAX_CUENTA_ATRAS_CORRER;
+
         if (realizarAtaqueEspecial)
         {
             ataqueEspecial.resetear();
@@ -329,15 +387,15 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         {
             velocidad.y = fuerzaSalto;
             accionesRealizadas[Accion::ARRIBA] = false;
-            levantarPolvo(efectosInsertados);
-            escalaSprite.x = (escalaSprite.x > 0) ? 0.8 : -0.8;
+            escalaSprite.x = isMirandoDerecha() ? 0.8 : -0.8;
             escalaSprite.y = 1.2;
             cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
+            levantarPolvo(efectosInsertados);
         }
         else if (accionesRealizadas[Accion::DERECHA])
         {
             moverseDerecha();
-            if (!(escalaSprite.x > 0))
+            if (!isMirandoDerecha())
             {
                 cambiarEstado(EstadoPersonaje::ANDANDO_ALEJANDOSE);
             }
@@ -345,7 +403,7 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         else if (accionesRealizadas[Accion::IZQUIERDA])
         {
             moverseIzquierda();
-            if ((escalaSprite.x > 0))
+            if (isMirandoDerecha())
             {
                 cambiarEstado(EstadoPersonaje::ANDANDO_ALEJANDOSE);
             }
@@ -357,6 +415,135 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         }
 
         break;
+    
+    case EstadoPersonaje::CORRIENDO:
+
+        if (realizarAtaqueEspecial)
+        {
+            ataqueEspecial.resetear();
+            detenerAccion(Accion::ATACAR);
+            cambiarEstado(EstadoPersonaje::ATAQUE_ESPECIAL);
+        }
+        else if (accionesRealizadas[Accion::ATACAR])
+        {
+            detenerAccion(Accion::ATACAR);
+            cambiarEstado(EstadoPersonaje::ATAQUE_ACERCANDOSE);
+        }
+        else if (accionesRealizadas[Accion::ARRIBA])
+        {
+            velocidad.y = fuerzaSalto*MULTIPLICADOR_POTENCIA_SALTO_CORRIENDO;
+            accionesRealizadas[Accion::ARRIBA] = false;
+            escalaSprite.x = (escalaSprite.x > 0) ? 0.8 : -0.8;
+            escalaSprite.y = 1.2;
+            cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
+            levantarPolvo(efectosInsertados);
+        }
+        else if (accionesRealizadas[Accion::DERECHA])
+        {
+            if(isMirandoDerecha())
+                moverseDerecha();
+            else
+            {
+                cambiarEstado(EstadoPersonaje::FRENANDO);
+                levantarPolvo(efectosInsertados);
+            }
+        }
+        else if (accionesRealizadas[Accion::IZQUIERDA])
+        {
+            if(!isMirandoDerecha())
+                moverseIzquierda();
+            else
+            {
+                cambiarEstado(EstadoPersonaje::FRENANDO);
+                levantarPolvo(efectosInsertados);
+            }
+        }
+        else
+        {
+            pararMovimiento();
+            cambiarEstado(EstadoPersonaje::FRENANDO);
+            levantarPolvo(efectosInsertados);
+        }
+
+        break;
+
+    case EstadoPersonaje::FRENANDO:
+
+        pararMovimiento();
+
+        if (realizarAtaqueEspecial)
+        {
+            ataqueEspecial.resetear();
+            detenerAccion(Accion::ATACAR);
+            cambiarEstado(EstadoPersonaje::ATAQUE_ESPECIAL);
+        }
+        else if (accionesRealizadas[Accion::ARRIBA])
+        {
+            velocidad.y = fuerzaSalto;
+            accionesRealizadas[Accion::ARRIBA] = false;
+            escalaSprite.x = isMirandoDerecha() ? 0.8 : -0.8;
+            escalaSprite.y = 1.2;
+            cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
+            levantarPolvo(efectosInsertados);
+        }
+        else if (accionesRealizadas[Accion::ABAJO])
+        {
+            escalaSprite.x = isMirandoDerecha() ? 1.05 : -1.05;
+            escalaSprite.y = 0.95;
+            cambiarEstado(EstadoPersonaje::AGACHADO);
+        }
+        else if (accionesRealizadas[Accion::DERECHA] && accionesRealizadas[Accion::ATACAR])
+        {
+            accionesRealizadas[Accion::ATACAR] = false;
+            if(isMirandoDerecha())
+                cambiarEstado(EstadoPersonaje::ATAQUE_ACERCANDOSE);
+            else
+                cambiarEstado(EstadoPersonaje::ATAQUE_ALEJANDOSE);
+        }
+        else if (accionesRealizadas[Accion::IZQUIERDA] && accionesRealizadas[Accion::ATACAR])
+        {
+            accionesRealizadas[Accion::ATACAR] = false;
+            if(!isMirandoDerecha())
+                cambiarEstado(EstadoPersonaje::ATAQUE_ACERCANDOSE);
+            else
+                cambiarEstado(EstadoPersonaje::ATAQUE_ALEJANDOSE);
+        }
+        else if (accionesRealizadas[Accion::DERECHA] && animaciones.at(estado)->haTerminado())
+        {
+            moverseDerecha();
+            if (!isMirandoDerecha())
+            {
+                cambiarEstado(EstadoPersonaje::ANDANDO_ALEJANDOSE);
+            }
+            else
+            {
+                cambiarEstado(EstadoPersonaje::ANDANDO_ACERCANDOSE);
+            }
+        }
+        else if (accionesRealizadas[Accion::IZQUIERDA] && animaciones.at(estado)->haTerminado())
+        {
+            moverseIzquierda();
+            if (isMirandoDerecha())
+            {
+                cambiarEstado(EstadoPersonaje::ANDANDO_ALEJANDOSE);
+            }
+            else
+            {
+                cambiarEstado(EstadoPersonaje::ANDANDO_ACERCANDOSE);
+            }
+        }
+        else if (accionesRealizadas[Accion::ATACAR])
+        {
+            accionesRealizadas[Accion::ATACAR] = false;
+            cambiarEstado(EstadoPersonaje::ATAQUE_NORMAL_1);
+        }
+        else if (animaciones.at(estado)->haTerminado())
+        {
+            cambiarEstado(EstadoPersonaje::QUIETO);
+        }
+
+        break;
+
     case EstadoPersonaje::ANDANDO_ALEJANDOSE:
 
         contadorEsquiveSuper++;
@@ -378,11 +565,11 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         {
             velocidad.y = fuerzaSalto;
             accionesRealizadas[Accion::ARRIBA] = false;
-            levantarPolvo(efectosInsertados);
             contadorEsquiveSuper = 0;
             escalaSprite.x = (escalaSprite.x > 0) ? 0.8 : -0.8;
             escalaSprite.y = 1.2;
             cambiarEstado(EstadoPersonaje::SALTANDO_SUBIENDO);
+            levantarPolvo(efectosInsertados);
         }
         else if (accionesRealizadas[Accion::DERECHA])
         {
@@ -451,11 +638,10 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         {
             animaciones.at(estado)->setPosicion(animaciones.at(estado)->getPosicion().x, ALTURA_SUELO);
             velocidad.y = 0;
-            levantarPolvo(efectosInsertados);
-
             escalaSprite.x = (escalaSprite.x > 0) ? 1.1 : -1.1;
             escalaSprite.y = 0.9;
             cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
+            levantarPolvo(efectosInsertados);
         }
         break;
 
@@ -471,11 +657,10 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         {
             animaciones.at(estado)->setPosicion(animaciones.at(estado)->getPosicion().x, ALTURA_SUELO);
             velocidad.y = 0;
-            levantarPolvo(efectosInsertados);
-
             escalaSprite.x = (escalaSprite.x > 0) ? 1.1 : -1.1;
             escalaSprite.y = 0.9;
             cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
+            levantarPolvo(efectosInsertados);
         }
         else if (animaciones.at(estado)->haTerminado())
         {
@@ -607,9 +792,9 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
             // Ha caído
             velocidad.y = 0;
             animaciones.at(estado)->setPosicion(animaciones.at(estado)->getPosicion().x, ALTURA_SUELO);
+            escalaSprite.x = (escalaSprite.x > 0) ? 1.1 : -1.1;
+            escalaSprite.y = 0.9;
             levantarPolvo(efectosInsertados);
-
-            // cambiarEstado(EstadoPersonaje::TOCANDO_SUELO);
         }
         else
         {
@@ -863,6 +1048,8 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
     case EstadoPersonaje::ATAQUE_AEREO:
     case EstadoPersonaje::ATAQUE_AGACHADO:
     case EstadoPersonaje::ATAQUE_SUPER:
+    case EstadoPersonaje::CORRIENDO:
+    case EstadoPersonaje::FRENANDO:
     case EstadoPersonaje::GOLPEADO_BAJANDO:
     case EstadoPersonaje::GOLPEADO_SUBIENDO:
     case EstadoPersonaje::TUMBADO:
@@ -1029,6 +1216,12 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
     // por encima))
     if (colisionConEnemigo)
     {
+        // Si estamos corriendo, dejamos de correr al chocarnos con el enemigo
+        if(estado == EstadoPersonaje::CORRIENDO)
+        {
+            cambiarEstado(EstadoPersonaje::FRENANDO);
+            levantarPolvo(efectosInsertados);
+        }
 
         // Nos alejamos un poco del enemigo (si estamos agachados somos más difíciles de mover, y si
         // estamos haciendo el súper ataque no no no nos moverán)
@@ -1114,6 +1307,8 @@ void Personaje::comprobarColisiones(const std::list<std::shared_ptr<Animacion>> 
         case EstadoPersonaje::GOLPEADO_MEDIO:
         case EstadoPersonaje::QUIETO:
         case EstadoPersonaje::ANDANDO_ACERCANDOSE:
+        case EstadoPersonaje::CORRIENDO:
+        case EstadoPersonaje::FRENANDO:
         case EstadoPersonaje::ATAQUE_NORMAL_1:
         case EstadoPersonaje::ATAQUE_NORMAL_2:
         case EstadoPersonaje::ATAQUE_NORMAL_3:

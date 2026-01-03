@@ -127,6 +127,10 @@ constexpr int MAX_VELOCIDAD_PARTICULA_SUPER = 8;
 // Cómo de desplazada está la animación del polvo en el eje X con respecto al centro del personaje
 constexpr int OFFSET_POLVO = 15;
 
+// El offset del polvo se multiplica por esto cuando el personaje está frenando porque si no
+// se ve feo (el polvo se junta mucho con el personaje)
+constexpr float MULTIPLO_OFFSET_POLVO = 2.2f;
+
 // Cuánto se agrandan o disminuyen las animaciones agrandables cada fotograma
 constexpr double TASA_CRECIMIENTO_ANIMACION_AGRANDABLE = 0.1;
 
@@ -307,6 +311,16 @@ constexpr int MAX_CONTADOR_ESQUIVE_SUPER = 4;
 // La posición en la que aparece el destello
 constexpr sf::Vector2f POSICION_DESTELLO_SUPER_CARGADA_J1 = {108.f,21.f};
 constexpr sf::Vector2f POSICION_DESTELLO_SUPER_CARGADA_J2 = {34.f,21.f};
+
+// El número de frames de los que dispones entre que pulsar el botón de moverte hacia
+// el enemigo por primera vez y lo pulsas por segunda vez para ponerte a correr
+constexpr int MAX_CUENTA_ATRAS_CORRER = 10;
+
+// El número por el que se multiplica la potencia de salto de un personaje cuando está corriendo
+constexpr float MULTIPLICADOR_POTENCIA_SALTO_CORRIENDO = 1.2f;
+
+// El número por el que se multiplica la velocidad de un personaje cuando está corriendo
+constexpr float MULTIPLICADOR_VELOCIDAD_CORRIENDO = 1.5f;
 
 /*
     CONSTANTES PARA EL ESCENARIO

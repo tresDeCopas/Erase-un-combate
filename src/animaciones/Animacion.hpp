@@ -50,6 +50,9 @@ class Animacion : public sf::Drawable {
         // espachurrar o estirarla o esas cosas
         void setEscala(const sf::Vector2f& escala);
 
+        // Devuelve la escala de la animación
+        sf::Vector2f getEscala();
+
         // Devuelve la posición actual del sprite (teniendo en cuenta el origen, sea cual sea)
         sf::Vector2f getPosicion();
 

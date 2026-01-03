@@ -35,6 +35,8 @@ enum class EstadoPersonaje {
     SALTANDO_BAJANDO,   // Está en el aire bajando después de saltar y alcanzar la máxima altura
     TOCANDO_SUELO,      // Acaba de caer bien después de saltar y se está colocando
     ANDANDO_ACERCANDOSE,// Está andando hacia el enemigo
+    CORRIENDO,          // Está corriendo con intención asesina hacia el enemigo
+    FRENANDO,           // Está arrastrando los pies contra el suelo para frenar después de correr
     ANDANDO_ALEJANDOSE, // Está andando alejándose del enemigo
     BLOQUEANDO,         // Está bloqueando un ataque
     ESQUIVE_SUPER,      // Está esquivando un ataque súper
