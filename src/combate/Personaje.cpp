@@ -149,6 +149,11 @@ void Personaje::setAnimaciones(const std::unordered_map<EstadoPersonaje, std::sh
 
 void Personaje::cambiarEstado(EstadoPersonaje estadoNuevo)
 {
+    // Si hemos pasado a ANDANDO_ACERCANDOSE, comienza la cuenta atrás
+    // para poder correr
+    if(estadoNuevo == EstadoPersonaje::ANDANDO_ACERCANDOSE)
+        cuentaAtrasCorrer = MAX_CUENTA_ATRAS_CORRER;
+
     // Si hemos pasado a preparar el ataque super, o si hemos dejado de atacar super,
     // el personaje destellea en color blanco durante un momento
     if (estadoNuevo == EstadoPersonaje::PREPARANDO_SUPER || estado == EstadoPersonaje::ATAQUE_SUPER)
@@ -368,9 +373,6 @@ void Personaje::actualizar(sf::Vector2f posicionEnemigo, std::list<std::shared_p
         break;
 
     case EstadoPersonaje::ANDANDO_ACERCANDOSE:
-
-        // Comienza la cuenta atrás para correr
-        cuentaAtrasCorrer = MAX_CUENTA_ATRAS_CORRER;
 
         if (realizarAtaqueEspecial)
         {

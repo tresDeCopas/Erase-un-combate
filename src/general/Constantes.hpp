@@ -314,7 +314,7 @@ constexpr sf::Vector2f POSICION_DESTELLO_SUPER_CARGADA_J2 = {34.f,21.f};
 
 // El número de frames de los que dispones entre que pulsar el botón de moverte hacia
 // el enemigo por primera vez y lo pulsas por segunda vez para ponerte a correr
-constexpr int MAX_CUENTA_ATRAS_CORRER = 10;
+constexpr int MAX_CUENTA_ATRAS_CORRER = 20;
 
 // El número por el que se multiplica la potencia de salto de un personaje cuando está corriendo
 constexpr float MULTIPLICADOR_POTENCIA_SALTO_CORRIENDO = 1.2f;
