@@ -134,6 +134,11 @@ TipoSelectorMenuPrincipal MenuPrincipal::comenzar(){
                         
                         selectorPulsado = true;
 
+                        for(SelectorMenuPrincipal& s : selectores)
+                        {
+                            s.ajustarPosicion();
+                        }
+
                         std::list<std::shared_ptr<Animacion>> nuevasAnimaciones;
                         
                         selectores[seleccionActual].seleccionar(nuevasAnimaciones);
@@ -167,6 +172,18 @@ TipoSelectorMenuPrincipal MenuPrincipal::comenzar(){
 
         for(std::shared_ptr<Animacion> &nA : nuevasAnimaciones){
             animaciones.push_back(nA);
+        }
+
+        // Se itera por cada animación de la lista de animaciones y se van
+        // eliminando las que hayan terminado
+        std::list<std::shared_ptr<Animacion>>::iterator it = animaciones.begin();
+
+        while(it != animaciones.end())
+        {
+            if((*it)->haTerminado())
+                it = animaciones.erase(it);
+            else
+                it++;
         }
 
         for(SelectorMenuPrincipal& selector : selectores)

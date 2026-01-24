@@ -60,6 +60,31 @@ void SelectorMenuPrincipal::actualizar()
     spriteSelector.setScale(util::aproximarVector2f(spriteSelector.getScale(),{escalaDeseadaSprite,escalaDeseadaSprite},0.8f));
 }
 
+void SelectorMenuPrincipal::ajustarPosicion()
+{
+    // Primero se calcula la posición y el color deseados
+    sf::Vector2f posicionDeseadaSprite;
+    sf::Color colorDeseadoSprite = COLOR_SELECTOR_MENU_PRINCIPAL_POSICION_RELATIVA_0;
+
+    // La escala depende de la posición relativa del selector. Si se está
+    // seleccionando, el tamaño del selector será el normal. Si no, será más
+    // pequeño cuanto más lejos esté de la selección actual
+    float escalaDeseadaSprite = 1.f - std::abs(posicionRelativa)*DIFERENCIA_ESCALA_SELECTOR_MENU_PRINCIPAL;
+    if(escalaDeseadaSprite < 0.f) escalaDeseadaSprite = 0.f;
+
+    // El color se irá trasparentando conforme el selector se aleja de la selección actual
+    colorDeseadoSprite.a = std::clamp(colorDeseadoSprite.a-std::abs(posicionRelativa)*DIFERENCIA_TRANSPARENCIA_SELECTOR_MENU_PRINCIPAL,0,255);
+
+    // La posición en el eje Y depende de la posición relativa
+    posicionDeseadaSprite.x = POSICION_X_SELECTOR_MENU_PRINCIPAL;
+    posicionDeseadaSprite.y = POSICION_INICIAL_Y_SELECTOR_MENU_PRINCIPAL + posicionRelativa*DIFERENCIA_POSICION_Y_SELECTOR_MENU_PRINCIPAL*std::sqrt(escalaDeseadaSprite);
+
+    // Se acerca la posición, el color y la escala del selector a sus valores deseados
+    spriteSelector.setPosition(posicionDeseadaSprite);
+    spriteSelector.setColor(colorDeseadoSprite);
+    spriteSelector.setScale({escalaDeseadaSprite,escalaDeseadaSprite});
+}
+
 void SelectorMenuPrincipal::seleccionar(std::list<std::shared_ptr<Animacion>>& nuevasAnimaciones)
 {
     std::shared_ptr<Animacion> anim;

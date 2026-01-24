@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Enums.hpp"
+#include "Animacion.hpp"
 #include <SFML/Graphics.hpp>
+#include <list>
 
 /*
     Esta es una clase auxiliar para guardar los selectores para
@@ -43,10 +45,14 @@ class SelectorPersonaje : public sf::Drawable
         void resetear(int posicionRelativa);
 
         // Se elige el selector, así que sale un brillito y el personaje es elegido
-        void seleccionar();
+        void seleccionar(std::list<std::shared_ptr<Animacion>>& nuevasAnimaciones);
 
         // Se actualiza la posición y la transparencia del selector
         void actualizar();
+
+        // Se lleva el selector a la posición exacta a la que debería estar, y también
+        // se pone la escala correcta inmediatemente en vez de esperar a que lo haga
+        void ajustarPosicion();
 
         // Permite dibujar el selector
         void draw(sf::RenderTarget& target, sf::RenderStates states) const;

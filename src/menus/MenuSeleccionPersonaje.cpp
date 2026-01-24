@@ -83,6 +83,9 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
     // El mapa que se va a devolver, con el personaje que ha elegido cada jugador
     std::unordered_map<Jugador,std::string> personajesElegidos;
 
+    // Aquí se guardan las animaciones que se van mostrando
+    std::list<std::shared_ptr<Animacion>> animaciones;
+
     while(!(saliendo && rectanguloNegro.getFillColor().a == 255)){
         // Se prepara un reloj para ver cuánto tiempo pasa entre fotogramas
         sf::Clock reloj;
@@ -133,7 +136,18 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
                     if(!personajeElegidoJugador1)
                     {
                         ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-1-elegir.ogg");
-                        selectoresPersonajeJugador1[indiceJugador1].seleccionar();
+
+                        for(SelectorPersonaje& s : selectoresPersonajeJugador1)
+                        {
+                            s.ajustarPosicion();
+                        }
+                        
+                        std::list<std::shared_ptr<Animacion>> nuevasAnimaciones;
+
+                        selectoresPersonajeJugador1[indiceJugador1].seleccionar(nuevasAnimaciones);
+
+                        animaciones.splice(animaciones.end(),nuevasAnimaciones);
+
                         personajesElegidos[Jugador::JUGADOR1] = selectoresPersonajeJugador1[indiceJugador1].getNombrePersonaje();
                         personajeElegidoJugador1 = true;
                     }
@@ -149,7 +163,18 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
                     if(!personajeElegidoJugador2)
                     {
                         ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-2-elegir.ogg");
-                        selectoresPersonajeJugador2[indiceJugador2].seleccionar();
+
+                        for(SelectorPersonaje& s : selectoresPersonajeJugador2)
+                        {
+                            s.ajustarPosicion();
+                        }
+
+                        std::list<std::shared_ptr<Animacion>> nuevasAnimaciones;
+
+                        selectoresPersonajeJugador2[indiceJugador2].seleccionar(nuevasAnimaciones);
+
+                        animaciones.splice(animaciones.end(),nuevasAnimaciones);
+
                         personajesElegidos[Jugador::JUGADOR2] = selectoresPersonajeJugador2[indiceJugador2].getNombrePersonaje();
                         personajeElegidoJugador2 = true;
                     }
@@ -187,9 +212,28 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
         {
             rectanguloNegro.setFillColor(sf::Color(rectanguloNegro.getFillColor().r, rectanguloNegro.getFillColor().g, rectanguloNegro.getFillColor().b, rectanguloNegro.getFillColor().a-5));
         }
-        else if (saliendo && rectanguloNegro.getFillColor().a < 255)
+        else if (saliendo && animaciones.empty() && rectanguloNegro.getFillColor().a < 255)
         {
             rectanguloNegro.setFillColor(sf::Color(rectanguloNegro.getFillColor().r, rectanguloNegro.getFillColor().g, rectanguloNegro.getFillColor().b, rectanguloNegro.getFillColor().a+5));
+        }
+
+        // Se actualizan las animaciones
+        std::list<std::shared_ptr<Animacion>> nuevasAnimaciones;
+
+        for(std::shared_ptr<Animacion> &a : animaciones){
+            a->actualizar(nuevasAnimaciones);
+        }
+
+        // Se itera por cada animación de la lista de animaciones y se van
+        // eliminando las que hayan terminado
+        std::list<std::shared_ptr<Animacion>>::iterator it = animaciones.begin();
+
+        while(it != animaciones.end())
+        {
+            if((*it)->haTerminado())
+                it = animaciones.erase(it);
+            else
+                it++;
         }
 
         ventana->clear(sf::Color(0,0,0));
@@ -200,6 +244,10 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
         {
             ventana->draw(selectoresPersonajeJugador1[i]);
             ventana->draw(selectoresPersonajeJugador2[i]);
+        }
+
+        for(std::shared_ptr<Animacion> &a : animaciones){
+            ventana->draw(*a);
         }
 
         ventana->draw(rectanguloNegro);
