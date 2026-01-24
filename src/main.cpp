@@ -6,6 +6,7 @@
 
 #include "yaml-cpp/yaml.h"
 #include <iostream>
+#include <random>
 
 #include <unistd.h>
 
@@ -18,22 +19,26 @@ int main(int argc, char* argv[]){
 
     ContenedorDeEfectos::unicaInstancia()->cargarTodosLosEfectos();
 
+    // Se inicializa el generador de números pseudoaleatorios con el tiempo
+    // actual como se suele hacer
+    std::srand(std::time(nullptr));
+
     while(true){
 
         TipoSelectorMenuPrincipal seleccion = MenuPrincipal::unicaInstancia()->comenzar();
 
         if(seleccion == TipoSelectorMenuPrincipal::BATALLA_VS)
         {
-            Combate combate("juan-cuesta-sin-casco", "juan-cuesta-sin-casco", "fachada-erase-unos-estatutos");
-            combate.comenzar();
+            std::unordered_map<Jugador,std::string> personajesElegidos = MenuSeleccionPersonaje::unicaInstancia()->comenzarEleccionDoble();
+            if(personajesElegidos.size() == 2)
+            {
+                Combate combate(personajesElegidos[Jugador::JUGADOR1], personajesElegidos[Jugador::JUGADOR2], "fachada-erase-unos-estatutos");
+                combate.comenzar();
+            }
         }
         else if (seleccion == TipoSelectorMenuPrincipal::MODO_HISTORIA)
         {
-            std::unordered_map<Jugador,std::string> personajesElegidos = MenuSeleccionPersonaje::unicaInstancia()->comenzarEleccionDoble();
-            if(!personajesElegidos.empty())
-            {
-                // noseque
-            }
+            
         }
         else if (seleccion == TipoSelectorMenuPrincipal::OPCIONES)
         {

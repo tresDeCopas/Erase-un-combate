@@ -439,7 +439,7 @@ estados:
     sonido:
       tipo: "No repetir"
       fotogramas: [7]
-    acciones: ["DERECHA","IZQUIERDA","DERECHA","ATACAR"]
+    acciones: ["DERECHA","DERECHA","DERECHA","ATACAR"]
 
   golpeado-peque:
     bucle: "Sin bucle"

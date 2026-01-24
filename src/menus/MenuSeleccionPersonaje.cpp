@@ -6,6 +6,7 @@
 #include "Configuracion.hpp"
 #include "Utilidades.hpp"
 #include "ContenedorDePersonajes.hpp"
+#include "ReproductorDeSonidos.hpp"
 
 #include <algorithm>
 
@@ -101,17 +102,64 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
             }
             else if(infoEvento.accion == Accion::DERECHA && infoEvento.realizada)
             {
-                if(infoEvento.jugador == Jugador::JUGADOR1 && indiceJugador1 < selectoresPersonajeJugador1.size()-1)
+                if(infoEvento.jugador == Jugador::JUGADOR1 && !personajeElegidoJugador1 && indiceJugador1 < selectoresPersonajeJugador1.size()-1)
+                {
+                    ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-1-derecha.ogg");
                     indiceJugador1++;
-                else if(infoEvento.jugador == Jugador::JUGADOR2 && indiceJugador2 < selectoresPersonajeJugador2.size()-1)
+                }
+                else if(infoEvento.jugador == Jugador::JUGADOR2 && !personajeElegidoJugador2 && indiceJugador2 < selectoresPersonajeJugador2.size()-1)
+                {
+                    ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-2-derecha.ogg");
                     indiceJugador2++;
+                }
             }
             else if(infoEvento.accion == Accion::IZQUIERDA && infoEvento.realizada)
             {
-                if(infoEvento.jugador == Jugador::JUGADOR1 && indiceJugador1 > 0)
+                if(infoEvento.jugador == Jugador::JUGADOR1 && !personajeElegidoJugador1 && indiceJugador1 > 0)
+                {
+                    ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-1-izquierda.ogg");
                     indiceJugador1--;
-                else if(infoEvento.jugador == Jugador::JUGADOR2 && indiceJugador2 > 0)
+                }
+                else if(infoEvento.jugador == Jugador::JUGADOR2 && !personajeElegidoJugador2 && indiceJugador2 > 0)
+                {
+                    ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-2-izquierda.ogg");
                     indiceJugador2--;
+                }
+            }
+            else if(infoEvento.accion == Accion::ATACAR && infoEvento.realizada)
+            {
+                if(infoEvento.jugador == Jugador::JUGADOR1)
+                {
+                    if(!personajeElegidoJugador1)
+                    {
+                        ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-1-elegir.ogg");
+                        selectoresPersonajeJugador1[indiceJugador1].seleccionar();
+                        personajesElegidos[Jugador::JUGADOR1] = selectoresPersonajeJugador1[indiceJugador1].getNombrePersonaje();
+                        personajeElegidoJugador1 = true;
+                    }
+                    else
+                    {
+                        ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-1-rechazar.ogg");
+                        personajesElegidos.erase(Jugador::JUGADOR1);
+                        personajeElegidoJugador1 = false;
+                    }
+                }
+                else if(infoEvento.jugador == Jugador::JUGADOR2)
+                {
+                    if(!personajeElegidoJugador2)
+                    {
+                        ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-2-elegir.ogg");
+                        selectoresPersonajeJugador2[indiceJugador2].seleccionar();
+                        personajesElegidos[Jugador::JUGADOR2] = selectoresPersonajeJugador2[indiceJugador2].getNombrePersonaje();
+                        personajeElegidoJugador2 = true;
+                    }
+                    else
+                    {
+                        ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-2-rechazar.ogg");
+                        personajesElegidos.erase(Jugador::JUGADOR2);
+                        personajeElegidoJugador2 = false;
+                    }
+                }
             }
         }
 
@@ -125,6 +173,13 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
 
             selectoresPersonajeJugador1[i].actualizar();
             selectoresPersonajeJugador2[i].actualizar();
+        }
+
+        // Si ambos jugadores han elegido ya a su personaje, nos vamos yendo
+        if(personajeElegidoJugador1 && personajeElegidoJugador2)
+        {
+            ReproductorDeMusica::unicaInstancia()->detener();
+            saliendo = true;
         }
 
         // Se cambia la opacidad del rectángulo negro según sea necesario
