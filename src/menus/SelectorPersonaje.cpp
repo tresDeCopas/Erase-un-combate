@@ -128,8 +128,13 @@ void SelectorPersonaje::ajustarPosicion()
     bordeCuadrado.setOutlineColor(spriteSelector.getColor());
 }
 
-void SelectorPersonaje::seleccionar(std::list<std::shared_ptr<Animacion>>& nuevasAnimaciones)
+bool SelectorPersonaje::seleccionar(std::list<std::shared_ptr<Animacion>>& nuevasAnimaciones)
 {
+    // Si el selector aún se está moviendo (y, por tanto, aún tiene un
+    // tamaño más pequeño que el que debería), no se puede seleccionar
+    if(spriteSelector.getScale().x < 0.95f || spriteSelector.getScale().y < 0.95f)
+        return false;
+
     std::shared_ptr<Animacion> anim = ContenedorDeEfectos::unicaInstancia()->obtenerEfecto("menu-seleccion-personaje-destello-selector");
 
     sf::Vector2f posicionEfecto = spriteSelector.getPosition();
@@ -138,6 +143,8 @@ void SelectorPersonaje::seleccionar(std::list<std::shared_ptr<Animacion>>& nueva
     nuevasAnimaciones.push_back(anim);
 
     spriteSelector.setScale(spriteSelector.getScale()/2.f);
+
+    return true;
 }
 
 void SelectorPersonaje::draw(sf::RenderTarget& target, sf::RenderStates states) const {

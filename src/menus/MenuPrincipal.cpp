@@ -129,21 +129,17 @@ TipoSelectorMenuPrincipal MenuPrincipal::comenzar(){
                     }
                     else if (infoEvento.accion == Accion::ATACAR)
                     {
-                        ReproductorDeMusica::unicaInstancia()->detener();
-                        ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-principal/seleccionar.ogg");
-                        
-                        selectorPulsado = true;
-
-                        for(SelectorMenuPrincipal& s : selectores)
-                        {
-                            s.ajustarPosicion();
-                        }
-
                         std::list<std::shared_ptr<Animacion>> nuevasAnimaciones;
                         
-                        selectores[seleccionActual].seleccionar(nuevasAnimaciones);
+                        selectorPulsado = selectores[seleccionActual].seleccionar(nuevasAnimaciones);
 
                         animaciones.splice(animaciones.end(),nuevasAnimaciones);
+
+                        if(selectorPulsado)
+                        {
+                            ReproductorDeMusica::unicaInstancia()->detener();
+                            ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-principal/seleccionar.ogg");
+                        }
                     }
                 }
             }

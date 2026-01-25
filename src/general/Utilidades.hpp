@@ -71,5 +71,8 @@ namespace util{
     // Prioridad 2 (media): el personaje está quieto o andando.
     // Prioridad 3 (alta): el personaje está atacando, saltando o celebrando.
     int getPrioridadDibujo(EstadoPersonaje estado);
+
+    // Devuelve true si los dos floats dados difieren en menos que UMBRAL_FLOAT
+    bool floatsIguales(float float1, float float2);
 }
 

@@ -85,8 +85,13 @@ void SelectorMenuPrincipal::ajustarPosicion()
     spriteSelector.setScale({escalaDeseadaSprite,escalaDeseadaSprite});
 }
 
-void SelectorMenuPrincipal::seleccionar(std::list<std::shared_ptr<Animacion>>& nuevasAnimaciones)
+bool SelectorMenuPrincipal::seleccionar(std::list<std::shared_ptr<Animacion>>& nuevasAnimaciones)
 {
+    // Si el selector aún se está moviendo (y, por tanto, aún tiene un
+    // tamaño más pequeño que el que debería), no se puede seleccionar
+    if(spriteSelector.getScale().x < 0.95f || spriteSelector.getScale().y < 0.95f)
+        return false;
+
     std::shared_ptr<Animacion> anim;
 
     switch(tipoSelector){
@@ -107,6 +112,8 @@ void SelectorMenuPrincipal::seleccionar(std::list<std::shared_ptr<Animacion>>& n
     nuevasAnimaciones.push_back(anim);
 
     spriteSelector.setScale(spriteSelector.getScale()/2.f);
+
+    return true;
 }
 
 void SelectorMenuPrincipal::draw(sf::RenderTarget& target, sf::RenderStates states) const {

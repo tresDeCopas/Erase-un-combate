@@ -135,21 +135,19 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
                 {
                     if(!personajeElegidoJugador1)
                     {
-                        ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-1-elegir.ogg");
-
-                        for(SelectorPersonaje& s : selectoresPersonajeJugador1)
-                        {
-                            s.ajustarPosicion();
-                        }
-                        
                         std::list<std::shared_ptr<Animacion>> nuevasAnimaciones;
 
-                        selectoresPersonajeJugador1[indiceJugador1].seleccionar(nuevasAnimaciones);
+                        personajeElegidoJugador1 = selectoresPersonajeJugador1[indiceJugador1].seleccionar(nuevasAnimaciones);
 
                         animaciones.splice(animaciones.end(),nuevasAnimaciones);
 
-                        personajesElegidos[Jugador::JUGADOR1] = selectoresPersonajeJugador1[indiceJugador1].getNombrePersonaje();
-                        personajeElegidoJugador1 = true;
+                        if(personajeElegidoJugador1)
+                        {
+                            ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-1-elegir.ogg");
+                            
+                            personajesElegidos[Jugador::JUGADOR1] = selectoresPersonajeJugador1[indiceJugador1].getNombrePersonaje();
+                        }
+                        
                     }
                     else
                     {

@@ -44,8 +44,12 @@ class SelectorPersonaje : public sf::Drawable
         // eso se lo tienes que poner tú antes de resetear)
         void resetear(int posicionRelativa);
 
-        // Se elige el selector, así que sale un brillito y el personaje es elegido
-        void seleccionar(std::list<std::shared_ptr<Animacion>>& nuevasAnimaciones);
+        // Se elige el selector, así que sale un brillito y el personaje es elegido.
+        // Solo se puede elegir el selector si estamos justo encima, es decir,
+        // nada de seleccionarlo a mitad de camino porque queda raro. Devuelve false
+        // si estamos a mitad de camino entre un selector y otro y por lo tanto
+        // no ha sido posible seleccionarlo, y true si sí que se ha seleccionado
+        bool seleccionar(std::list<std::shared_ptr<Animacion>>& nuevasAnimaciones);
 
         // Se actualiza la posición y la transparencia del selector
         void actualizar();

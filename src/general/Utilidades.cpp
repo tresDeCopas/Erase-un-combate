@@ -249,4 +249,9 @@ namespace util{
 
         return 1;
     }
+
+    bool floatsIguales(float float1, float float2)
+    {
+        return std::fabsf(float1-float2) < UMBRAL_FLOAT;
+    }
 }
