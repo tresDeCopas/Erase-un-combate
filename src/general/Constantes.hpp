@@ -376,8 +376,11 @@ constexpr sf::Color COLOR_BARRA_VIDA_REAL(106,206,64);
 // Color de la barra de vida atrasada
 constexpr sf::Color COLOR_BARRA_VIDA_ATRASADA(204,65,65);
 
-// Color de la barra de súper
-constexpr sf::Color COLOR_BARRA_SUPER(89,114,255);
+// Color de la barra de súper del jugador 1
+constexpr sf::Color COLOR_BARRA_SUPER_J1(89,114,255);
+
+// Color de la barra de súper del jugador 2
+constexpr sf::Color COLOR_BARRA_SUPER_J2(255,102,102);
 
 // Cada cuántos fotogramas se actualiza la vibración
 constexpr int CONTADOR_VIBRACION_MAX = 2;
@@ -493,4 +496,3 @@ constexpr uint8_t BIT_ATAQUE = 16;
 
 // Si dos floats se diferencian en menos que este número, se consideran iguales
 constexpr float UMBRAL_FLOAT = 0.001;
-

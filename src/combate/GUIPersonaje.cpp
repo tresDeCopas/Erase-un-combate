@@ -19,7 +19,10 @@ GUIPersonaje::GUIPersonaje(Personaje &personaje, bool parteIzquierda) : personaj
     rectanguloVidaAtrasada.setFillColor(COLOR_BARRA_VIDA_ATRASADA);
 
     rectanguloSuper.setSize(sf::Vector2f(0, TAMANO_BARRA_SUPER.y));
-    rectanguloSuper.setFillColor(COLOR_BARRA_SUPER);
+    if(parteIzquierda)
+        rectanguloSuper.setFillColor(COLOR_BARRA_SUPER_J1);
+    else
+        rectanguloSuper.setFillColor(COLOR_BARRA_SUPER_J2);
 
     contadorVidaAtrasado = personaje.getMaxPuntosDeVida();
     retrasoContadorVidaAtrasado = 0;

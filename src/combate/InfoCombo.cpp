@@ -128,7 +128,10 @@ void InfoCombo::continuarCombo(int ataque)
             tono = MAX_TONO_SONIDO_CONTINUAR_COMBO;
         }
 
-        ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/combos/continuar-combo.ogg",tono);
+        if(jugador == Jugador::JUGADOR1)
+            ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/combos/continuar-combo-j1.ogg",tono);
+        else if(jugador == Jugador::JUGADOR2)
+            ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/combos/continuar-combo-j2.ogg",tono);
     }
 }
 
@@ -136,7 +139,10 @@ void InfoCombo::terminarCombo()
 {
     if(comboActivo && numeroGolpes >= MIN_GOLPES_MOSTRAR_COMBO)
     {
-        ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/combos/terminar-combo.ogg");
+        if(jugador == Jugador::JUGADOR1)
+            ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/combos/terminar-combo-j1.ogg");
+        else if(jugador == Jugador::JUGADOR2)
+            ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/combos/terminar-combo-j2.ogg");
 
         posicionDeseada.y = spriteTexto.getPosition().y+spriteTexto.getTextureRect().size.y;
         
