@@ -23,7 +23,7 @@ bordeCuadrado(sf::Vector2f(spriteSelector.getTextureRect().size)), nombrePersona
     else
     {
         // Los selectores del jugador 2 están dados la vuelta
-        spriteSelector.setScale({-1.f,0.f});
+        spriteSelector.setScale({-1.f,1.f});
 
         spriteNombrePersonaje.setPosition({POSICION_X_SELECTOR_PERSONAJE_J2,POSICION_Y_NOMBRE_SELECTOR_PERSONAJE});
     }

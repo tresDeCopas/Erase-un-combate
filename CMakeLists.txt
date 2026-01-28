@@ -104,6 +104,7 @@ src/menus/SelectorMenuPrincipal.cpp
 src/menus/FondoMenuPrincipal.cpp
 src/menus/MenuPrincipal.cpp
 src/menus/SelectorPersonaje.cpp
+src/menus/FondoPersonaje.cpp
 src/menus/MenuSeleccionPersonaje.cpp
 
 src/recursos/ContenedorDeEfectos.cpp

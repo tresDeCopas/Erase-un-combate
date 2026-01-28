@@ -44,7 +44,12 @@ rectanguloNegro({VENTANA_ANCHURA,VENTANA_ALTURA})
 
         selectoresPersonajeJugador1.emplace_back(texturaPortraitPersonaje, nombrePersonaje, Jugador::JUGADOR1, posicionRelativaJugador1);
         selectoresPersonajeJugador2.emplace_back(texturaPortraitPersonaje, nombrePersonaje, Jugador::JUGADOR2, posicionRelativaJugador2);
-                                        
+
+        sf::Texture& texturaFondoPersonaje = ContenedorDeTexturas::unicaInstancia()->obtener("sprites/personajes/"+nombrePersonaje+"/fondo-seleccion-personaje.png");
+
+        fondosPersonajeJugador1.emplace_back(texturaFondoPersonaje, nombrePersonaje, Jugador::JUGADOR1, posicionRelativaJugador1);
+        fondosPersonajeJugador2.emplace_back(texturaFondoPersonaje, nombrePersonaje, Jugador::JUGADOR2, posicionRelativaJugador2);
+
         posicionRelativaJugador1++;
         posicionRelativaJugador2++;
     }
@@ -63,6 +68,9 @@ void MenuSeleccionPersonaje::resetear()
     {
         selectoresPersonajeJugador1[i].resetear(i-indiceJugador1);
         selectoresPersonajeJugador2[i].resetear(i-indiceJugador2);
+
+        fondosPersonajeJugador1[i].resetear(i-indiceJugador1);
+        fondosPersonajeJugador2[i].resetear(i-indiceJugador2);
     }
 }
 
@@ -139,10 +147,10 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
 
                         personajeElegidoJugador1 = selectoresPersonajeJugador1[indiceJugador1].seleccionar(nuevasAnimaciones);
 
-                        animaciones.splice(animaciones.end(),nuevasAnimaciones);
-
                         if(personajeElegidoJugador1)
                         {
+                            fondosPersonajeJugador1[indiceJugador1].seleccionar();
+
                             ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-1-elegir.ogg");
                             
                             personajesElegidos[Jugador::JUGADOR1] = selectoresPersonajeJugador1[indiceJugador1].getNombrePersonaje();
@@ -167,6 +175,8 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
 
                         if(personajeElegidoJugador2)
                         {
+                            fondosPersonajeJugador2[indiceJugador2].seleccionar();
+
                             ReproductorDeSonidos::unicaInstancia()->reproducir("sonidos/menu-seleccion-personaje/jugador-2-elegir.ogg");
                             
                             personajesElegidos[Jugador::JUGADOR2] = selectoresPersonajeJugador2[indiceJugador2].getNombrePersonaje();
@@ -192,6 +202,12 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
 
             selectoresPersonajeJugador1[i].actualizar();
             selectoresPersonajeJugador2[i].actualizar();
+
+            fondosPersonajeJugador1[i].setPosicionRelativa(i-indiceJugador1);
+            fondosPersonajeJugador2[i].setPosicionRelativa(i-indiceJugador2);
+
+            fondosPersonajeJugador1[i].actualizar();
+            fondosPersonajeJugador2[i].actualizar();
         }
 
         // Si ambos jugadores han elegido ya a su personaje, nos vamos yendo
@@ -231,6 +247,12 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
         }
 
         ventana->clear(sf::Color(0,0,0));
+
+        for(int i=0;i<fondosPersonajeJugador1.size();i++)
+        {
+            ventana->draw(fondosPersonajeJugador1[i]);
+            ventana->draw(fondosPersonajeJugador2[i]);
+        }
 
         ventana->draw(spriteMarco);
 

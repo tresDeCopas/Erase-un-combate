@@ -1,11 +1,14 @@
 #pragma once
 
+#include "SelectorPersonaje.hpp"
+#include "FondoPersonaje.hpp"
+#include "Enums.hpp"
+
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include "Enums.hpp"
+
 #include <SFML/Graphics.hpp>
-#include <SelectorPersonaje.hpp>
 
 /*
     Esta clase representa el menú principal en el que tú y tu rival elegís
@@ -43,6 +46,10 @@ class MenuSeleccionPersonaje {
         // Vector con todos los selectores de personaje de cada jugador
         std::vector<SelectorPersonaje> selectoresPersonajeJugador1;
         std::vector<SelectorPersonaje> selectoresPersonajeJugador2;
+
+        // Vector con todos los fondos de personaje de cada jugador
+        std::vector<FondoPersonaje> fondosPersonajeJugador1;
+        std::vector<FondoPersonaje> fondosPersonajeJugador2;
 
         // Se devuelve todo a su posición inicial
         void resetear();

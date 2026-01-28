@@ -214,10 +214,13 @@ constexpr float POSICION_X_SELECTOR_PERSONAJE_J1 = VENTANA_ANCHURA/4.f;
 constexpr float POSICION_X_SELECTOR_PERSONAJE_J2 = VENTANA_ANCHURA - POSICION_X_SELECTOR_PERSONAJE_J1;
 
 // Posición en el eje X del fondo de personaje para el jugador 1
-constexpr float POSICION_X_FONDO_PERSONAJE_J1 = VENTANA_ANCHURA/10.f;
+constexpr float POSICION_X_FONDO_PERSONAJE_J1 = 5.f;
 
 // Posición en el eje X del fondo de personaje para el jugador 2
-constexpr float POSICION_X_FONDO_PERSONAJE_J2 = 6*VENTANA_ANCHURA/10.f;
+constexpr float POSICION_X_FONDO_PERSONAJE_J2 = 154.f;
+
+// Posición en el eje X del fondo de personaje para ambos jugadores
+constexpr float POSICION_Y_FONDO_PERSONAJE = 30.f;
 
 // Diferencia en el eje X entre dos fondos de personaje que están uno al lado del otro
 constexpr int DIFERENCIA_POSICION_X_FONDO_PERSONAJE = 10;
@@ -239,6 +242,9 @@ constexpr int DIFERENCIA_TRANSPARENCIA_SELECTOR_PERSONAJE = 150;
 
 // Diferencia de escala entre dos selectores de personajes adyacentes
 constexpr float DIFERENCIA_ESCALA_SELECTOR_PERSONAJE = 0.4f;
+
+// Color para el fondo del personaje que se está seleccionado actualmente
+constexpr sf::Color COLOR_FONDO_PERSONAJE_POSICION_RELATIVA_0 = sf::Color(255,255,255,255);
 
 
 
