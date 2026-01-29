@@ -146,6 +146,8 @@ std::unordered_map<Jugador,std::string> MenuSeleccionPersonaje::comenzarEleccion
                         std::list<std::shared_ptr<Animacion>> nuevasAnimaciones;
 
                         personajeElegidoJugador1 = selectoresPersonajeJugador1[indiceJugador1].seleccionar(nuevasAnimaciones);
+                        
+                        animaciones.splice(animaciones.end(),nuevasAnimaciones);
 
                         if(personajeElegidoJugador1)
                         {
